@@ -81,6 +81,19 @@ x
 #> #   klason_lignin_hodgkins <quantits>
 ```
 
+All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
+
+``` r
+x$holocellulose_hodgkins
+#> Units: [1]
+#> Errors: 0.02036807 0.01831568 0.01417601 0.01739213 0.01470077
+#> [1] 0.2075278 0.2449965 0.3330658 0.2627388 0.3201480
+x$klason_lignin_hodgkins
+#> Units: [1]
+#> Errors: 0.009186901 0.012959204 0.008012160 0.009944541 0.008883946
+#> [1] 0.3034853 0.3438460 0.2877991 0.3123732 0.2997209
+```
+
 ### How to cite
 
 Please cite this R package as:

@@ -64,6 +64,11 @@ x <- irpeat::irp_hi(ir::ir_sample_data[1:5, ]) %>%    # humification indices
 x
 ```
 
+All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
+```{r x_klh_inspect_quantities}
+x$holocellulose_hodgkins
+x$klason_lignin_hodgkins
+```
 
 ### How to cite
 
