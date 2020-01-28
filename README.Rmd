@@ -69,7 +69,7 @@ x
 
 Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
 ```{r x_plot}
-ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins), y = hi1)) + 
+ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) * 100, y = hi1)) + 
   ggplot2::geom_point() +
   ggplot2::labs(x = "Klason lignin content [mass-%]", 
                 y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
