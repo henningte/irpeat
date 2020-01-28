@@ -53,16 +53,29 @@ ir::ir_sample_data
 
 `ir::ir_sample_data` contains various ATR-MIR spectra of organic reference material (e.g. newspaper, wood, grass).
 
-A simple workflow could be, for example, to compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
+A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
 ```{r sample_data_workflow}
-x <- irpeat::irp_hi(ir::ir_sample_data[1:5, ]) %>%    # humification indices
-  irpeat::irp_content(variable = c("klason_lignin_hodgkins", "holocellulose_hodgkins"))
+x <- ir::ir_sample_data[1:10, ] %>%                             # data
+  ir::ir_bc(method = "rubberband") %>%                          # baseline correction
+  irpeat::irp_hi() %>%                                          # humification indices
+  irpeat::irp_content(variable = c("klason_lignin_hodgkins",    # Klason lignin and
+                                   "holocellulose_hodgkins"))   # holocellulose content
 ```
 
 `x` is identical to `ir::ir_sample_data[1:5, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason_lignin_hodgkins) and holocellulose content (holocellulose_hodgkins).
 ```{r x_inspect}
 x
 ```
+
+Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
+```{r x_plot}
+ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins), y = hi1)) + 
+  ggplot2::geom_point() +
+  ggplot2::labs(x = "Klason lignin content [mass-%]", 
+                y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
+
+```
+
 
 All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
 ```{r x_klh_inspect_quantities}
@@ -74,7 +87,7 @@ x$klason_lignin_hodgkins
 
 Please cite this R package as:
 
-> Henning Teickner, (`r format(Sys.Date(), "%Y")`). _irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples'_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner (`r format(Sys.Date(), "%Y")`). _irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples'_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://github.com/henningte/irpeat>.
 
 
 ### Licenses
