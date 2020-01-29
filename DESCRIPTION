@@ -2,10 +2,15 @@ Package: irpeat
 Title: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Henning",
+    c(person(given = "Henning",
            family = "Teickner",
            role = c("aut", "cre"),
            email = "h_teic01@wwu.de")
+     person(given = "Suzanne B.",
+           family = "Hodgkins",
+           role = c("ctb"),
+           email = "hodgkins.3@osu.edu")
+           )
 Description: irpeat provides simple functions to analyse mid infrared
   spectra of peat samples (various humification indices, Klason lignin content,
   holocellulose content).
