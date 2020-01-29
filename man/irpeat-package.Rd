@@ -13,5 +13,10 @@ irpeat provides simple functions to analyse mid infrared
 \author{
 \strong{Maintainer}: Henning Teickner \email{h_teic01@wwu.de}
 
+Other contributors:
+\itemize{
+  \item Suzanne B. Hodgkins \email{hodgkins.3@osu.edu} [contributor]
+}
+
 }
 \keyword{internal}
