@@ -36,3 +36,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Date: 2020-01-30
