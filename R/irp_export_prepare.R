@@ -30,7 +30,6 @@ irp_export_prepare <- function(x) {
 
   d_units_units <- purrr::map2(d$units  & !d$quantities, seq_along(d$quantities), function(y, z) {
     if(y) {
-      print(as.character(attr(x[, z, drop = TRUE], "units")))
       d <- data.frame(x = rep(as.character(attr(x[, z, drop = TRUE], "units")), nrow(x)),
                       stringsAsFactors = FALSE)
       colnames(d) <- paste0(colnames(x)[[z]], "_units")
