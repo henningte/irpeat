@@ -16,6 +16,7 @@ irp_export_prepare <- function(x) {
 
   d <- data.frame(errors = purrr::map_lgl(x, inherits, "errors"),
                   units = purrr::map_lgl(x, inherits, "units"),
+                  quantities = purrr::map_lgl(x, inherits, "quantities"),
                   stringsAsFactors = FALSE)
 
   d_errors <- purrr::map2(d$errors, seq_along(d$errors), function(y, z) {
@@ -27,7 +28,17 @@ irp_export_prepare <- function(x) {
     }
   })
 
-  d_units <- purrr::map2(d$units, seq_along(d$units), function(y, z) {
+  d_units_units <- purrr::map2(d$units  & !d$quantities, seq_along(d$quantities), function(y, z) {
+    if(y) {
+      print(as.character(attr(x[, z, drop = TRUE], "units")))
+      d <- data.frame(x = rep(as.character(attr(x[, z, drop = TRUE], "units")), nrow(x)),
+                      stringsAsFactors = FALSE)
+      colnames(d) <- paste0(colnames(x)[[z]], "_units")
+      d
+    }
+  })
+
+  d_quantities_units <- purrr::map2(d$quantities, seq_along(d$quantities), function(y, z) {
     if(y) {
       d <- data.frame(x = rep(as.character(quantities::quantities(x[, z, drop = TRUE])$units), nrow(x)),
                       stringsAsFactors = FALSE)
@@ -36,6 +47,6 @@ irp_export_prepare <- function(x) {
     }
   })
 
-  dplyr::bind_cols(x, d_errors, d_units)
+  dplyr::bind_cols(x, d_errors, d_units_units, d_quantities_units)
 
 }
