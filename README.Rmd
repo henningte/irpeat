@@ -88,7 +88,7 @@ x$klason_lignin_hodgkins
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (`r format(Sys.Date(), "%Y")`). _irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples_. Accessed `r format(Sys.Date(), "%d %b %Y")`. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner, Suzanne B. Hodgkins (`r format(Sys.Date(), "%Y")`). _irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples_. Accessed `r format(Sys.Date(), "%Y-%m-%d")`. Online at <https://github.com/henningte/irpeat>.
 
 
 ### Licenses

@@ -120,7 +120,7 @@ x$klason_lignin_hodgkins
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed 23 Mrz 2020. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed 2020-03-23. Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
