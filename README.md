@@ -7,9 +7,9 @@ irpeat is an R package that contains simple functions to analyse infrared spectr
 
 Provided functions for analysing infrared spectra of peat are:
 
-1.  computation of several humification indices.
+1.  Computation of several humification indices.
 2.  Klason lignin mass fraction (following Hodgkins et al. (2018)).
-3.  Holocellulose lignin mass fraction (following Hodgkins et al. (2018)).
+3.  Holocellulose mass fraction (following Hodgkins et al. (2018)).
 
 ### How to install
 
@@ -23,7 +23,7 @@ irpeat relies on the R package [ir](https://github.com/henningte/ir) for handlin
 
 ### How to use
 
-You can load ir in R with:
+You can load irpeat in R with:
 
 ``` r
 library(irpeat)
@@ -60,14 +60,15 @@ ir::ir_sample_data
 A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
 
 ``` r
-x <- ir::ir_sample_data[1:10, ] %>%                             # data
+x <- 
+  ir::ir_sample_data[1:10, ] %>%                                # data
   ir::ir_bc(method = "rubberband") %>%                          # baseline correction
   irpeat::irp_hi() %>%                                          # humification indices
   irpeat::irp_content(variable = c("klason_lignin_hodgkins",    # Klason lignin and
                                    "holocellulose_hodgkins"))   # holocellulose content
 ```
 
-`x` is identical to `ir::ir_sample_data[1:5, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason\_lignin\_hodgkins) and holocellulose content (holocellulose\_hodgkins).
+`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason\_lignin\_hodgkins) and holocellulose content (holocellulose\_hodgkins).
 
 ``` r
 x
@@ -119,7 +120,7 @@ x$klason_lignin_hodgkins
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed 29 Jan 2020. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed 23 Mrz 2020. Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
