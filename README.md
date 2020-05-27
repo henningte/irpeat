@@ -1,9 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-irpeat
-======
 
-irpeat is an R package that contains simple functions to analyse infrared spectra of peat samples. Some functions may also work with organic matter samples in general.
+# irpeat
+
+<!-- badges: start -->
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
+irpeat is an R package that contains simple functions to analyse
+infrared spectra of peat samples. Some functions may also work with
+organic matter samples in general.
 
 Provided functions for analysing infrared spectra of peat are:
 
@@ -19,7 +27,8 @@ You can install irpeat from GitHub using R via:
 remotes::install_github(repo = "henningte/irpeat")
 ```
 
-irpeat relies on the R package [ir](https://github.com/henningte/ir) for handling infrared spectra.
+irpeat relies on the R package [ir](https://github.com/henningte/ir) for
+handling infrared spectra.
 
 ### How to use
 
@@ -55,9 +64,14 @@ ir::ir_sample_data
 #> #   spectra <list>
 ```
 
-`ir::ir_sample_data` contains various ATR-MIR spectra of organic reference material (e.g. newspaper, wood, grass).
+`ir::ir_sample_data` contains various ATR-MIR spectra of organic
+reference material (e.g. newspaper, wood, grass).
 
-A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
+A simple workflow could be, for example, to baseline correct the spectra
+(using functions of the package ir) compute various humification indices
+and Klason lignin and holocellulose mass fractions in the samples. We
+use only the first few spectra from `ir::ir_sample_data` to speed the
+computations a bit up.
 
 ``` r
 x <- 
@@ -68,7 +82,10 @@ x <-
                                    "holocellulose_hodgkins"))   # holocellulose content
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason\_lignin\_hodgkins) and holocellulose content (holocellulose\_hodgkins).
+`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains
+additional columns for the computed humification indices (h1, h2, h3,
+h4) and the computed Klason lignin content (klason\_lignin\_hodgkins)
+and holocellulose content (holocellulose\_hodgkins).
 
 ``` r
 x
@@ -90,7 +107,9 @@ x
 #> #   holocellulose_hodgkins <quantits>, klason_lignin_hodgkins <quantits>
 ```
 
-Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> (Broder et al. 2012)) versus the Klason lignin content:
+Plot of the humification index (ratio of the intensities at 1420 and
+1090 cm<sup>-1</sup> (Broder et al. 2012)) versus the Klason lignin
+content:
 
 ``` r
 ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) * 100, y = hi1)) + 
@@ -99,9 +118,10 @@ ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) *
                 y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
 ```
 
-![](README-x_plot-1.png)
+![](README-x_plot-1.png)<!-- -->
 
-All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
+All computed quantities come with units and standard errors (thanks to
+the [quantities](https://github.com/r-quantities/quantities) package):
 
 ``` r
 x$holocellulose_hodgkins
@@ -120,40 +140,113 @@ x$klason_lignin_hodgkins
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed 2020-03-23. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple
+> Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed
+> 2020-05-27. Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
-**Text and figures :** [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
+**Text and figures :**
+[CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
 
 **Code :** See the [DESCRIPTION](DESCRIPTION) file
 
-**Data :** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) attribution requested in reuse. See the sources section for data sources and how to give credit to the original author(s) and the source.
+**Data :** [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+attribution requested in reuse. See the sources section for data sources
+and how to give credit to the original author(s) and the source.
 
 ### Contributions
 
-We welcome contributions from everyone. Before you get started, please see our [contributor guidelines](CONTRIBUTING.md). Please note that this project is released with a [Contributor Code of Conduct](CONDUCT.md). By participating in this project you agree to abide by its terms.
+We welcome contributions from everyone. Before you get started, please
+see our [contributor guidelines](CONTRIBUTING.md). Please note that this
+project is released with a [Contributor Code of Conduct](CONDUCT.md). By
+participating in this project you agree to abide by its terms.
 
 ### Sources
 
-The complete data in this package is derived from Hodgkins et al. (2018) and was restructured to match the requirements of ir. The original article containing the data can be downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and is distributed under the Creative Commons Attribution 4.0 International License (<http://creativecommons.org/licenses/by/4.0/>). The data on Klason lignin and holocellulose content was originally derived from De La Cruz, Florentino B., Osborne, and Barlaz (2016).
+The complete data in this package is derived from Hodgkins et al. (2018)
+and was restructured to match the requirements of ir. The original
+article containing the data can be downloaded from
+<https://www.nature.com/articles/s41467-018-06050-2> and is distributed
+under the Creative Commons Attribution 4.0 International License
+(<http://creativecommons.org/licenses/by/4.0/>). The data on Klason
+lignin and holocellulose content was originally derived from De La Cruz,
+Florentino B., Osborne, and Barlaz (2016).
 
-This packages was developed in R (R version 3.5.3 (2019-03-11)) (R Core Team 2019) using functions from devtools (Wickham, Hester, and Chang 2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019) and roxygen2 (Wickham et al. 2019).
+This packages was developed in R (R version 3.5.3 (2019-03-11)) (R Core
+Team 2019) using functions from devtools (Wickham, Hester, and Chang
+2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019) and
+roxygen2 (Wickham et al. 2019).
 
 ### References
 
-Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat decomposition records in three pristine ombrotrophic bogs in southern Patagonia.” *Biogeosciences* 9 (4): 1479–91. doi:[10.5194/bg-9-1479-2012](https://doi.org/10.5194/bg-9-1479-2012).
+<div id="refs" class="references hanging-indent">
 
-De La Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016. “Determination of Sources of Organic Matter in Solid Waste by Analysis of Phenolic Copper Oxide Oxidation Products of Lignin.” *Journal of Environmental Engineering* 142 (2): 04015076. doi:[10.1061/(ASCE)EE.1943-7870.0001038](https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038).
+<div id="ref-Broder.2012">
 
-Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang, Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018. “Tropical peatland carbon storage linked to global latitudinal trends in peat recalcitrance.” *Nature communications* 9 (1): 3640. doi:[10.1038/s41467-018-06050-2](https://doi.org/10.1038/s41467-018-06050-2).
+Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat
+decomposition records in three pristine ombrotrophic bogs in southern
+Patagonia.” *Biogeosciences* 9 (4): 1479–91.
+<https://doi.org/10.5194/bg-9-1479-2012>.
 
-Marwick, Ben. 2019. “rrtools: Creates a Reproducible Research Compendium.” <https://github.com/benmarwick/rrtools>.
+</div>
 
-R Core Team. 2019. “R: A Language and Environment for Statistical Computing.” Vienna, Austria: R Foundation for Statistical Computing. <https://www.R-project.org/>.
+<div id="ref-LaCruz.2016">
 
-Wickham, Hadley, and Jennifer Bryan. 2019. “usethis: Automate Package and Project Setup.” <https://CRAN.R-project.org/package=usethis>.
+De La Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016.
+“Determination of Sources of Organic Matter in Solid Waste by Analysis
+of Phenolic Copper Oxide Oxidation Products of Lignin.” *Journal of
+Environmental Engineering* 142 (2): 04015076.
+<https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
 
-Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster. 2019. “roxygen2: In-Line Documentation for R.” <https://CRAN.R-project.org/package=roxygen2>.
+</div>
 
-Wickham, Hadley, Jim Hester, and Winston Chang. 2019. “devtools: Tools to Make Developing R Packages Easier.” <https://CRAN.R-project.org/package=devtools>.
+<div id="ref-Hodgkins.2018">
+
+Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang,
+Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018.
+“Tropical peatland carbon storage linked to global latitudinal trends
+in peat recalcitrance.” *Nature communications* 9 (1): 3640.
+<https://doi.org/10.1038/s41467-018-06050-2>.
+
+</div>
+
+<div id="ref-Marwick.2019">
+
+Marwick, Ben. 2019. “rrtools: Creates a Reproducible Research
+Compendium.” <https://github.com/benmarwick/rrtools>.
+
+</div>
+
+<div id="ref-RCoreTeam.2019">
+
+R Core Team. 2019. “R: A Language and Environment for Statistical
+Computing.” Vienna, Austria: R Foundation for Statistical Computing.
+<https://www.R-project.org/>.
+
+</div>
+
+<div id="ref-Wickham.2019b">
+
+Wickham, Hadley, and Jennifer Bryan. 2019. “usethis: Automate Package
+and Project Setup.” <https://CRAN.R-project.org/package=usethis>.
+
+</div>
+
+<div id="ref-Wickham.2019c">
+
+Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster.
+2019. “roxygen2: In-Line Documentation for R.”
+<https://CRAN.R-project.org/package=roxygen2>.
+
+</div>
+
+<div id="ref-Wickham.2019">
+
+Wickham, Hadley, Jim Hester, and Winston Chang. 2019. “devtools: Tools
+to Make Developing R Packages Easier.”
+<https://CRAN.R-project.org/package=devtools>.
+
+</div>
+
+</div>

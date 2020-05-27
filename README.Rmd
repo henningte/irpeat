@@ -17,6 +17,10 @@ knitr::opts_chunk$set(
 
 # irpeat
 
+<!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+<!-- badges: end -->
+
 irpeat is an R package that contains simple functions to analyse infrared spectra of peat samples. Some functions may also work with organic matter samples in general.
 
 Provided functions for analysing infrared spectra of peat are:
