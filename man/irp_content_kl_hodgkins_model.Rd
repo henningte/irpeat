@@ -4,7 +4,9 @@
 \name{irp_content_kl_hodgkins_model}
 \alias{irp_content_kl_hodgkins_model}
 \title{Linear model to predict Klason lignin content from MIR spectra.}
-\format{An object of class \code{\link[stats:lm]{lm}}.}
+\format{
+An object of class \code{\link[stats:lm]{lm}}.
+}
 \source{
 The data set was derived from \url{https://www.nature.com/articles/s41467-018-06050-2}
 and published by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license \url{https://creativecommons.org/licenses/by/4.0/}.

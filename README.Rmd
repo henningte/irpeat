@@ -88,6 +88,10 @@ x$holocellulose_hodgkins
 x$klason_lignin_hodgkins
 ```
 
+### Future development
+
+Henning Teickner plans, as part of his PhD project, to extensively extent irpeat by developing a set of calibration models that can predict various peat physicochemical properties from mid infrared spectra. These models should be finished by November 2022. Currently, a data compendium ([pmird](https://henningte.github.io/pmird/index.html)) is developed to collect the data required for this task.
+
 ### How to cite
 
 Please cite this R package as:

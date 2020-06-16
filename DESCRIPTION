@@ -29,7 +29,7 @@ Imports:
   graphics,
   utils,
   stats
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 RdMacros: 
   Rdpack
 Suggests: 

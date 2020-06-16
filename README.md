@@ -49,18 +49,18 @@ You can test irpeat with sample data from the R package ir:
 ir::ir_sample_data
 #> # A tibble: 58 x 7
 #>    measurement_id sample_id sample_type sample_comment klason_lignin
-#>  *          <int> <chr>     <chr>       <chr>                  <dbl>
-#>  1              1 GN 11-389 needles     Abies Firma M~         0.360
-#>  2              2 GN 11-400 needles     Cupressocypar~         0.339
-#>  3              3 GN 11-407 needles     Juniperus chi~         0.268
-#>  4              4 GN 11-411 needles     Metasequoia g~         0.350
-#>  5              5 GN 11-416 needles     Pinus strobus~         0.331
-#>  6              6 GN 11-419 needles     Pseudolarix a~         0.279
-#>  7              7 GN 11-422 needles     Sequoia sempe~         0.330
-#>  8              8 GN 11-423 needles     Taxodium dist~         0.357
-#>  9              9 GN 11-428 needles     Thuja occiden~         0.369
-#> 10             10 GN 11-434 needles     Tsuga carolin~         0.289
-#> # ... with 48 more rows, and 2 more variables: holocellulose <dbl>,
+#>  *          <int> <chr>     <chr>       <chr>          <units>      
+#>  1              1 GN 11-389 needles     Abies Firma M~ 0.359944     
+#>  2              2 GN 11-400 needles     Cupressocypar~ 0.339405     
+#>  3              3 GN 11-407 needles     Juniperus chi~ 0.267552     
+#>  4              4 GN 11-411 needles     Metasequoia g~ 0.350016     
+#>  5              5 GN 11-416 needles     Pinus strobus~ 0.331100     
+#>  6              6 GN 11-419 needles     Pseudolarix a~ 0.279360     
+#>  7              7 GN 11-422 needles     Sequoia sempe~ 0.329672     
+#>  8              8 GN 11-423 needles     Taxodium dist~ 0.356950     
+#>  9              9 GN 11-428 needles     Thuja occiden~ 0.369360     
+#> 10             10 GN 11-434 needles     Tsuga carolin~ 0.289050     
+#> # ... with 48 more rows, and 2 more variables: holocellulose <units>,
 #> #   spectra <list>
 ```
 
@@ -91,20 +91,20 @@ and holocellulose content (holocellulose\_hodgkins).
 x
 #> # A tibble: 10 x 13
 #>    measurement_id sample_id sample_type sample_comment klason_lignin
-#>             <int> <chr>     <chr>       <chr>                  <dbl>
-#>  1              1 GN 11-389 needles     Abies Firma M~         0.360
-#>  2              2 GN 11-400 needles     Cupressocypar~         0.339
-#>  3              3 GN 11-407 needles     Juniperus chi~         0.268
-#>  4              4 GN 11-411 needles     Metasequoia g~         0.350
-#>  5              5 GN 11-416 needles     Pinus strobus~         0.331
-#>  6              6 GN 11-419 needles     Pseudolarix a~         0.279
-#>  7              7 GN 11-422 needles     Sequoia sempe~         0.330
-#>  8              8 GN 11-423 needles     Taxodium dist~         0.357
-#>  9              9 GN 11-428 needles     Thuja occiden~         0.369
-#> 10             10 GN 11-434 needles     Tsuga carolin~         0.289
-#> # ... with 8 more variables: holocellulose <dbl>, spectra <named list>,
-#> #   hi1 <dbl>, hi2 <dbl>, hi3 <dbl>, hi4 <dbl>,
-#> #   holocellulose_hodgkins <quantits>, klason_lignin_hodgkins <quantits>
+#>             <int> <chr>     <chr>       <chr>                    [1]
+#>  1              1 GN 11-389 needles     Abies Firma M~      0.359944
+#>  2              2 GN 11-400 needles     Cupressocypar~      0.339405
+#>  3              3 GN 11-407 needles     Juniperus chi~      0.267552
+#>  4              4 GN 11-411 needles     Metasequoia g~      0.350016
+#>  5              5 GN 11-416 needles     Pinus strobus~      0.331100
+#>  6              6 GN 11-419 needles     Pseudolarix a~      0.279360
+#>  7              7 GN 11-422 needles     Sequoia sempe~      0.329672
+#>  8              8 GN 11-423 needles     Taxodium dist~      0.356950
+#>  9              9 GN 11-428 needles     Thuja occiden~      0.369360
+#> 10             10 GN 11-434 needles     Tsuga carolin~      0.289050
+#> # ... with 8 more variables: holocellulose [1], spectra <named list>,
+#> #   hi1 <dbl>, hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, holocellulose_hodgkins (err)
+#> #   [1], klason_lignin_hodgkins (err) [1]
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -127,14 +127,27 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 x$holocellulose_hodgkins
 #> Units: [1]
 #> Errors: 0.02034155 0.01827250 0.01411164 0.01735219 0.01465642 ...
-#>  [1] 0.2079986 0.2458115 0.3347145 0.2635220 0.3212075 0.2866602 0.2290746
-#>  [8] 0.2094640 0.2964282 0.2998223
+#>         1         2         3         4         5         6         7         8 
+#> 0.2079986 0.2458115 0.3347145 0.2635220 0.3212075 0.2866602 0.2290746 0.2094640 
+#>         9        10 
+#> 0.2964282 0.2998223
 x$klason_lignin_hodgkins
 #> Units: [1]
 #> Errors: 0.009226441 0.013044535 0.008079990 0.010003568 0.008940154 ...
-#>  [1] 0.3039663 0.3446851 0.2888067 0.3130406 0.3004306 0.2663081 0.3177061
-#>  [8] 0.3251141 0.3147190 0.2541749
+#>         1         2         3         4         5         6         7         8 
+#> 0.3039663 0.3446851 0.2888067 0.3130406 0.3004306 0.2663081 0.3177061 0.3251141 
+#>         9        10 
+#> 0.3147190 0.2541749
 ```
+
+### Future development
+
+Henning Teickner plans, as part of his PhD project, to extensively
+extent irpeat by developing a set of calibration models that can predict
+various peat physicochemical properties from mid infrared spectra. These
+models should be finished by November 2022. Currently, a data compendium
+([pmird](https://henningte.github.io/pmird/index.html)) is developed to
+collect the data required for this task.
 
 ### How to cite
 
@@ -142,7 +155,7 @@ Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2020). *irpeat: Simple
 > Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed
-> 2020-05-27. Online at <https://github.com/henningte/irpeat>.
+> 2020-06-16. Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
@@ -173,7 +186,7 @@ under the Creative Commons Attribution 4.0 International License
 lignin and holocellulose content was originally derived from De La Cruz,
 Florentino B., Osborne, and Barlaz (2016).
 
-This packages was developed in R (R version 3.5.3 (2019-03-11)) (R Core
+This packages was developed in R (R version 4.0.1 (2020-06-06)) (R Core
 Team 2019) using functions from devtools (Wickham, Hester, and Chang
 2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019) and
 roxygen2 (Wickham et al. 2019).
