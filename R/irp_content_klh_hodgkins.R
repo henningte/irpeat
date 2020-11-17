@@ -105,7 +105,7 @@ irp_content_klh_hodgkins_predict <- function(x,
                                           se.fit = TRUE)
   x$holocellulose_hodgkins <- quantities::set_quantities(
     prediction_h_hodgkins$fit
-    , "1",
+    , "g/g",
     prediction_h_hodgkins$se.fit)
 
   # Klason lignin
@@ -116,7 +116,7 @@ irp_content_klh_hodgkins_predict <- function(x,
                                            se.fit = TRUE)
   x$klason_lignin_hodgkins <- quantities::set_quantities(
     prediction_kl_hodgkins$fit
-    , "1",
+    , "g/g",
     prediction_kl_hodgkins$se.fit)
 
   x
