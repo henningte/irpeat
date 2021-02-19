@@ -4,31 +4,72 @@
 \alias{irp_hi}
 \title{Humification indices from mid infrared spectra.}
 \usage{
-irp_hi(x)
+irp_hi(x, x1 = NULL, x2 = NULL)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}.}
+
+\item{x1}{A numeric vector with values representing x axis values in the spectra
+of \code{x}. This is \eqn{x1} in the equation displayed above. If
+multiple humification indices for the same \code{x2} should be computed, \code{x1}
+can contain multiple values. If \code{x1 = NULL},
+the default humification indices will be computed (see details section).}
+
+\item{x2}{A numeric value representing an x axis value in the spectra
+of \code{x}. This is \eqn{x2} in the equation displayed above. If \code{x2 = NULL},
+the default humification indices will be computed (see details section).}
 }
 \value{
-An object of class \code{\link[ir:ir_new_ir]{ir}} with three new
-columns (hi1, hi2, hi3 and hi4) that correspond to the humification indices
-defined in the description.
+An object of class \code{\link[ir:ir_new_ir]{ir}} with additional
+columns for additional humification indices. If \code{x1 = NULL} and \code{x2 = NULL},
+these are four new columns (hi1, hi2, hi3 and hi4) that correspond to the humification
+indices defined in the details section. If \code{x1} and \code{x2} are not \code{NULL},
+the columns have names \code{"hi_x1_x2"} where \code{x1} and \code{x2} are replaced by the
+respective values.
 }
 \description{
-\code{irp_hi} computes various humification indices as reported by
-\insertCite{Broder.2012;textual}{irpeat} for mid infrared
-spectra with the x values representing wavenumber values (no checks are performed):
-The following humification indices are computed (values
-represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat}:
+\code{irp_hi} computes either custom humification indices or a predefined set of
+humification indices as reported by \insertCite{Broder.2012;textual}{irpeat}
+for mid infrared spectra with the x values representing wavenumber values
+(no checks are performed) (see the details section for the humification indices
+computed by default). A humification index is the ratio of the intensity
+values at two different x axis values (e.g. wavenumbers) and defined as:
+\deqn{
+  HI = \frac{y_x1}{y_x2}
+},
+where \eqn{y_x1} is the intensity of the spectrum at x axis value \eqn{x1} and
+\eqn{y_x2} is the intensity of the spectrum at x axis value \eqn{x2}.
+}
+\details{
+The following humification indices are computed by
+default (if \code{x1 = NULL} and \code{x2 = NULL}) (values
+represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat} :
 \describe{
-  \item{1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
+  \item{hi1: 1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
   groups (phenolic and aliphatic structures)/polysaccharides}
-  \item{1510/1090}{Aromatic C=C or C=O of amides/polysaccharides}
-  \item{1630/1090}{Aromatic C=C and COO\eqn{^{-1}} (aromatics and aromatic
+  \item{hi2: 1510/1090}{Aromatic C=C or C=O of amides/polysaccharides}
+  \item{hi3: 1630/1090}{Aromatic C=C and COO\eqn{^{-1}} (aromatics and aromatic
   or aliphatic carboxylates)/polysaccharides}
-  \item{1720/1090}{carbonylic and carboxylic C=O (carboxylic acids and
+  \item{hi4: 1720/1090}{carbonylic and carboxylic C=O (carboxylic acids and
   aromatic esters)/polysaccharides}
 }
+}
+\examples{
+# get sample data
+library(ir)
+
+# compute default humification indices
+d <- ir_sample_data
+d <- irp_hi(d)
+
+# compute custom humification index
+d <- ir_sample_data
+d <- irp_hi(d, x1 = 2900, x2 = 1090)
+
+# compute custom humification indices
+d <- ir_sample_data
+d <- irp_hi(d, x1 = c(2900, 1630), x2 = 1090)
+
 }
 \references{
 \insertAllCited{}
