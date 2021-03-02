@@ -162,7 +162,7 @@ irp_content_klh_hodgkins_main <- function(data,
     crossing <- c(just.crossed, just.crossed-1)
     if(length(crossing) > 0) {
       # Find the absolute minimum among the local minima candidates.
-      index.min <- which(region$y==min(region$y[crossing]) & region$x %in% region$x[crossing])
+      index.min <- which(region$y==min(region$y[crossing]) & region$x %in% region$x[crossing]) # --- todo: to avoid cases, where there are multiple values with the same minimum intensity, let it select just the first value by default, by adding a "[[1]]" at the end.
       # Location of absolute minimum in region of index.min, for cases where multi-point derivative causes slight error.
       # Deactivate if this causes problems.
       index.min <- which(region$y==min(region$y[(index.min-min(m, index.min-1)):(index.min+min(m, nrow(region)-index.min))]) & region$x %in% region$x[(index.min-min(m, index.min-1)):(index.min+min(m, nrow(region)-index.min))])
