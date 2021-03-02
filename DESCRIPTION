@@ -34,6 +34,8 @@ RdMacros:
   Rdpack
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    redoxpeat,
+    elco
 VignetteBuilder: knitr
 Date: 2020-01-30
