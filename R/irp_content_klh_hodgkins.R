@@ -100,25 +100,29 @@ irp_content_klh_hodgkins_predict <- function(x,
   # holocellulose
   newdata_h_hodgkins <- data.frame(lm_x = res$norm.Acorr$carb,
                                    stringsAsFactors = FALSE)
-  prediction_h_hodgkins <- stats::predict(irp_content_h_hodgkins_model,
-                                          newdata = newdata_h_hodgkins,
-                                          se.fit = TRUE)
-  x$holocellulose_hodgkins <- quantities::set_quantities(
-    prediction_h_hodgkins$fit
-    , "g/g",
-    prediction_h_hodgkins$se.fit)
+  prediction_h_hodgkins <- as.data.frame(stats::predict(irp_content_h_hodgkins_model,
+                                                        newdata = newdata_h_hodgkins,
+                                                        se.fit = TRUE))
+  prediction_h_hodgkins$se_pi <- sqrt(prediction_h_hodgkins$se.fit^2 + prediction_h_hodgkins$residual.scale^2)
+  x$holocellulose_hodgkins <-
+    quantities::set_quantities(
+      prediction_h_hodgkins$fit,
+      unit = "g/g",
+      errors = prediction_h_hodgkins$se_pi
+    )
 
   # Klason lignin
   newdata_kl_hodgkins <- data.frame(lm_x = res$norm.Acorr$arom15 + res$norm.Acorr$arom16,
                                     stringsAsFactors = FALSE)
-  prediction_kl_hodgkins <- stats::predict(irp_content_kl_hodgkins_model,
-                                           newdata = newdata_kl_hodgkins,
-                                           se.fit = TRUE)
-  x$klason_lignin_hodgkins <- quantities::set_quantities(
-    prediction_kl_hodgkins$fit
-    , "g/g",
-    prediction_kl_hodgkins$se.fit)
-
+  prediction_kl_hodgkins <- as.data.frame(stats::predict(irp_content_kl_hodgkins_model,
+                                                         newdata = newdata_kl_hodgkins,
+                                                         se.fit = TRUE))
+  prediction_kl_hodgkins$se_pi <- sqrt(prediction_kl_hodgkins$se.fit^2 + prediction_kl_hodgkins$residual.scale^2)
+  x$klason_lignin_hodgkins <-
+    quantities::set_quantities(
+      prediction_kl_hodgkins$fit, unit = "g/g",
+      errors = prediction_kl_hodgkins$se_pi
+    )
   x
 
 }
@@ -745,4 +749,3 @@ irp_content_klh_hodgkins_main <- function(data,
   )
 
 }
-
