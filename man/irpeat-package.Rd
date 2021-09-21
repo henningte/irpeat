@@ -16,6 +16,8 @@ irpeat provides simple functions to analyse mid infrared
 Other contributors:
 \itemize{
   \item Suzanne B. Hodgkins \email{hodgkins.3@osu.edu} [contributor]
+  \item Chuanyu Gao \email{gaochuanyu@iga.ac.cn} [contributor]
+  \item Klaus-Holger Knorr \email{kh.knorrr@wwu.de} [contributor]
 }
 
 }
