@@ -1,11 +1,12 @@
 Package: irpeat
-Title: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples
+Title: Simple Functions to Analyze Mid Infrared Spectra of Peat Samples
 Version: 0.0.0.9001
 Authors@R: 
     c(person(given = "Henning",
            family = "Teickner",
            role = c("aut", "cre"),
-           email = "h_teic01@wwu.de"),
+           email = "henning.teickner@uni-muenster.de",
+           comment = c(ORCID = "0000-0002-3993-1182")),
      person(given = "Suzanne B.",
            family = "Hodgkins",
            role = c("ctb"),
@@ -21,14 +22,15 @@ Authors@R:
            )
 Description: irpeat provides simple functions to analyse mid infrared
   spectra of peat samples (various humification indices, Klason lignin content,
-  holocellulose content).
+  holocellulose content, electron accepting capacity, electron donating 
+  capacity).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-  R (>= 3.5.0)
+  R (>= 4.0.1)
 Imports:
-    ir,
+    ir (>= 0.0.0.9000),
     dplyr,
     purrr,
     rlang,
@@ -37,14 +39,13 @@ Imports:
     graphics,
     utils,
     stats,
-    rstanarm
-RoxygenNote: 7.1.0
+    rstanarm (>= 2.19.3)
+RoxygenNote: 7.1.2
 RdMacros: 
   Rdpack
 Suggests: 
     knitr,
     rmarkdown,
-    redoxpeat,
     elco
 VignetteBuilder: knitr
-Date: 2020-01-30
+Date: 2021-12-02

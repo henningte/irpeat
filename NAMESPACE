@@ -2,8 +2,8 @@
 
 export(irp_content)
 export(irp_content_klh_hodgkins)
-export(irp_eac)
-export(irp_edc)
+export(irp_eac_1)
+export(irp_edc_1)
 export(irp_export_prepare)
 export(irp_hi)
 export(irp_preprocess)

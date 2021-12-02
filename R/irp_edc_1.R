@@ -1,29 +1,12 @@
-#' Predicts the electron accepting capacity from mid infrared spectra.
+#' Predicts the electron donating capacity from mid infrared spectra.
 #'
-#' \code{irp_eac} predicts the electron accepting capacity (EAC) from mid
+#' \code{irp_edc_1} predicts the electron accepting capacity (EDC) from mid
 #' infrared spectra of the peat samples. This function may also work for
 #' organic matter in general. [--- todo: add reference]
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}. Some tests
-#' are applied to check if the supplied spectra match the spectra used to
-#' fit the models (the spectral range is checked). The spectral resolution of
-#' the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
-#' is not checked if this assumption is met.
-#' @param ... Additional arguments passed to
-#' \code{\link[rstanarm:posterior_predict]{posterior_predict}}.
-#' @param do_summary A logical value indicating if the predicted values should
-#' be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
-#' \itemize{
-#'   \item If \code{do_summary = FALSE}, a list column is returned and each
-#'   element of the list column is a numeric vector with draws from the
-#'   posterior distribution, including the residual variance of the model.
-#'   \item If \code{do_summary = TRUE}, each element is a
-#'   \code{\link[quantities:quantities]{quantities}} object with the
-#'   \code{error} attribute being the standard deviation of the unsummarised
-#'   values.
-#' }
-#' @return \code{x} with a new column "eac" with the predicted EAC values
-#' [µmol g\eqn{_\text{C}^{-1}}].
+#' @inheritParams irp_eac_1
+#' @return \code{x} with a new column "edc" with the predicted EDC values
+#' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
 #' with few samples.
 #' @examples
@@ -32,12 +15,12 @@
 #' x <- ir::ir_sample_data
 #'
 #' # make predictions
-#' x <- irpeat::irp_eac(x, do_summary = TRUE)
+#' x <- irpeat::irp_edc_1(x, do_summary = TRUE)
 #' }
 #' @references
 #'   \insertAllCited{}
 #' @export
-irp_eac <- function(x,
+irp_edc_1 <- function(x,
                     ...,
                     do_summary = FALSE)
 {
@@ -48,10 +31,12 @@ irp_eac <- function(x,
   x_or <- x
 
   # get data
-  data("model_eac_1", envir=environment())
-  data("model_eac_1_config", envir=environment())
-  m <- model_eac_1
-  config <- model_eac_1_config
+  model_edc_1 <- NULL
+  model_edc_1_config <- NULL
+  utils::data("model_edc_1", envir = environment())
+  utils::data("model_edc_1_config", envir = environment())
+  m <- model_edc_1
+  config <- model_edc_1_config
 
   # check spectra
   x_flat <- ir::ir_flatten(x)
@@ -87,18 +72,18 @@ irp_eac <- function(x,
     )
 
   # predict
-  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = tibble::tibble(x = as.matrix(x)), ...))
+  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = as.matrix(x), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
   if(do_summary) {
     res <- quantities::set_quantities(purrr::map_dbl(res, mean),
-                                      unit = "µmol/g",
-                                      errors = purrr::map_dbl(res, sd))
+                                      unit = "umol/g",
+                                      errors = purrr::map_dbl(res, stats::sd))
   } else {
     res <- as.list(res)
   }
 
-  x_or$eac <- res
+  x_or$edc <- res
   x_or
 
 }
