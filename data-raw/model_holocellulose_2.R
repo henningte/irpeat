@@ -32,6 +32,12 @@ index <- d$sample_type != "old magazines"
 
 ## spectral preprocessing
 
+mir_target_range <-
+  tibble::tibble(
+    start = min(d$spectra[[1]]$x),
+    end = 3950 # ---todo: in the manuscript, this is currently different ---> adjust? This was necessary to run the new model with our spectra
+  )
+
 # store configurations in a list
 model_holocellulose_2_config <-
   list(
@@ -40,13 +46,13 @@ model_holocellulose_2_config <-
         do_interpolate = TRUE,
         interpolate_start = NULL,
         interpolate_dw = 1,
-        do_clip = FALSE,
-        # clip_range = mir_target_range,
+        do_clip = TRUE,
+        clip_range = mir_target_range,
         do_interpolate_region = FALSE,
         # interpolate_region_range = mir_interpolation_range,
         do_bc = TRUE,
         bc_method = "rubberband",
-        bc_cutoff = 0,
+        bc_cutoff = 10, # ---todo: adjust this in manuscript?
         do_smooth = FALSE,
         do_normalise = TRUE,
         normalise_method = "area",
@@ -95,8 +101,8 @@ d_cal <-
 
 model_holocellulose_2_config$data_scale <-
   list(
-    y_center = attr(d_cal$y, "scaled:center"),
-    y_scale = attr(d_cal$y, "scaled:scale"),
+    y_center = 0, # define manually since no scaling was applied
+    y_scale = 1,
     x_center = attr(x, "scaled:center"),
     x_scale = attr(x, "scaled:scale")
   )
@@ -104,7 +110,6 @@ model_holocellulose_2_config$data_scale <-
 #### model fit ####
 
 # define priors
-### START NEW
 n <- nrow(d_cal$x)
 p <- ncol(d_cal$x)
 p0 <- 8L # prior guess for the number of relevant variables
@@ -117,7 +122,6 @@ priors <-
     brms::prior_string("normal(0, 2.5)", class = "Intercept"),
     brms::prior_string("gamma(0.01, 0.01)", class = "phi")
   )
-### END NEW
 
 ## fit the model
 m <-

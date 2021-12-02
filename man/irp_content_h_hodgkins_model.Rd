@@ -3,14 +3,14 @@
 \docType{data}
 \name{irp_content_h_hodgkins_model}
 \alias{irp_content_h_hodgkins_model}
-\title{Linear model to predict holocellulose content from MIR spectra.}
+\title{Linear model to predict holocellulose content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}.}
 \format{
 An object of class \code{\link[stats:lm]{lm}}.
 }
 \source{
 The data set was derived from \url{https://www.nature.com/articles/s41467-018-06050-2}
 and published by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license \url{https://creativecommons.org/licenses/by/4.0/}.
-\insertCite{Hodgkins.2018;textual}{ir} originally derived the data on Klason Lignin and Holocellulose content from
+\insertCite{Hodgkins.2018;textual}{ir} originally derived the data on holocellulose content from
 \insertCite{LaCruz.2016;textual}{ir} \url{https://www.liebertpub.com/doi/full/10.1089/ees.2014.0402}.
 The linear model is reproduced in slightly modified form (see description) from \insertCite{Hodgkins.2018;textual}{ir}.
 }
@@ -19,14 +19,14 @@ irp_content_h_hodgkins_model
 }
 \description{
 \code{irp_content_h_hodgkins_model} is a linear model to predict
-holocellulose mass fractions [unitless] in samples based on
+holocellulose mass fractions [g/g] in samples based on
 normalised and area corrected peak heights of peaks identified in
 spectra. This model is meant for internal use in
 \code{\link{irp_content_klh_hodgkins}}. The model was originally
 developed by \insertCite{Hodgkins.2018;textual}{ir} and is
 here reproduced from the same data (available via
 \code{\link[ir:ir_sample_data]{ir::ir_sample_data}}), but handling
-mass fraction unitless instead of as percentages.
+mass fraction in g/g instead of as percentages.
 }
 \references{
 \insertAllCited{}
