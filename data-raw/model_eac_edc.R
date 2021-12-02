@@ -8,6 +8,7 @@ library(quantities)
 library(tibble)
 library(ir)
 library(elco)
+library(magrittr)
 
 # get data
 d <- redoxpeat::d

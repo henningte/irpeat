@@ -2,7 +2,7 @@
 #'
 #' \code{irp_eac_1} predicts the electron accepting capacity (EAC) from mid
 #' infrared spectra of the peat samples. This function may also work for
-#' organic matter in general. [--- todo: add reference]
+#' organic matter in general \insertCite{Teickner.submitted}{irpeat}.
 #'
 #' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}. Some tests
 #' are applied to check if the supplied spectra match the spectra used to
@@ -10,7 +10,7 @@
 #' the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
 #' is not checked if this assumption is met.
 #' @param ... Additional arguments passed to
-#' \code{\link[rstanarm:posterior_predict]{posterior_predict}}.
+#' \code{\link[rstanarm]{posterior_predict.stanreg}}.
 #' @param do_summary A logical value indicating if the predicted values should
 #' be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
 #' \itemize{
@@ -19,13 +19,15 @@
 #'   posterior distribution, including the residual variance of the model.
 #'   \item If \code{do_summary = TRUE}, each element is a
 #'   \code{\link[quantities:quantities]{quantities}} object with the
-#'   \code{error} attribute being the standard deviation of the unsummarised
+#'   \code{error} attribute being the standard deviation of the unsummarized
 #'   values.
 #' }
 #' @return \code{x} with a new column "eac" with the predicted EAC values
 #' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
-#' with few samples.
+#' with few samples \insertCite{Teickner.submitted}{irpeat}.
+#' @source \insertCite{Teickner.submitted;textual}{irpeat}.
+#' @seealso \code{\link{model_eac_1}}.
 #' @examples
 #' \dontrun{
 #' # get sample data
@@ -89,7 +91,7 @@ irp_eac_1 <- function(x,
     )
 
   # predict
-  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = as.matrix(x), stringsAsFactors = FALSE), ...))
+  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
   if(do_summary) {

@@ -113,9 +113,10 @@ variable after preprocessing.
 preprocessing workflow for spectra. The workflow comprises interpolation,
 clipping, baseline correction, smoothing (including optionally
 derivatization), normalization, binning, and scaling. All these steps are
-optionally, but occur on a fixed order that cannot be changed.
+optionally, but occur in a fixed order that cannot be changed.
 }
 \examples{
+\dontrun{
 # get sample data
 x <- ir::ir_sample_data
 
@@ -140,4 +141,5 @@ res <-
     scale_center = TRUE,
     scale_scale = TRUE
   )
+  }
 }

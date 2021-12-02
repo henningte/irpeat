@@ -1,6 +1,6 @@
 Package: irpeat
 Title: Simple Functions to Analyze Mid Infrared Spectra of Peat Samples
-Version: 0.0.0.9001
+Version: 0.0.0.9100
 Authors@R: 
     c(person(given = "Henning",
            family = "Teickner",
@@ -28,7 +28,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-  R (>= 4.0.1)
+  R (>= 4.0.0)
 Imports:
     ir (>= 0.0.0.9000),
     dplyr,

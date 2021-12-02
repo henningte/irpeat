@@ -4,7 +4,7 @@
 #' preprocessing workflow for spectra. The workflow comprises interpolation,
 #' clipping, baseline correction, smoothing (including optionally
 #' derivatization), normalization, binning, and scaling. All these steps are
-#' optionally, but occur on a fixed order that cannot be changed.
+#' optionally, but occur in a fixed order that cannot be changed.
 #'
 #' @param x An object of class \code{\link[ir:ir_new_ir]{ir}} (it is assumed
 #' that \code{x} is not yet preprocessed).
@@ -53,6 +53,7 @@
 #' @return A data frame with spectra in rows and a column for each spectral
 #' variable after preprocessing.
 #' @examples
+#' \dontrun{
 #' # get sample data
 #' x <- ir::ir_sample_data
 #'
@@ -77,6 +78,7 @@
 #'     scale_center = TRUE,
 #'     scale_scale = TRUE
 #'   )
+#'   }
 #' @export
 irp_preprocess <- function(
   x,

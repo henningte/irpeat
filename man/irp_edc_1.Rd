@@ -3,6 +3,9 @@
 \name{irp_edc_1}
 \alias{irp_edc_1}
 \title{Predicts the electron donating capacity from mid infrared spectra.}
+\source{
+\insertCite{Teickner.submitted;textual}{irpeat}
+}
 \usage{
 irp_edc_1(x, ..., do_summary = FALSE)
 }
@@ -14,7 +17,7 @@ the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
 is not checked if this assumption is met.}
 
 \item{...}{Additional arguments passed to
-\code{\link[rstanarm:posterior_predict]{posterior_predict}}.}
+\code{\link[rstanarm]{posterior_predict.stanreg}}.}
 
 \item{do_summary}{A logical value indicating if the predicted values should
 be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
@@ -24,7 +27,7 @@ be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
   posterior distribution, including the residual variance of the model.
   \item If \code{do_summary = TRUE}, each element is a
   \code{\link[quantities:quantities]{quantities}} object with the
-  \code{error} attribute being the standard deviation of the unsummarised
+  \code{error} attribute being the standard deviation of the unsummarized
   values.
 }}
 }
@@ -35,11 +38,11 @@ be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
 \description{
 \code{irp_edc_1} predicts the electron accepting capacity (EDC) from mid
 infrared spectra of the peat samples. This function may also work for
-organic matter in general. [--- todo: add reference]
+organic matter in general \insertCite{Teickner.submitted}{irpeat}.
 }
 \note{
 The model still has a relatively large uncertainty because it is fitted
-with few samples.
+with few samples \insertCite{Teickner.submitted}{irpeat}.
 }
 \examples{
 \dontrun{
@@ -52,4 +55,7 @@ x <- irpeat::irp_edc_1(x, do_summary = TRUE)
 }
 \references{
 \insertAllCited{}
+}
+\seealso{
+\code{\link{model_edc_1}}.
 }

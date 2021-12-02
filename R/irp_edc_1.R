@@ -2,13 +2,15 @@
 #'
 #' \code{irp_edc_1} predicts the electron accepting capacity (EDC) from mid
 #' infrared spectra of the peat samples. This function may also work for
-#' organic matter in general. [--- todo: add reference]
+#' organic matter in general \insertCite{Teickner.submitted}{irpeat}.
 #'
 #' @inheritParams irp_eac_1
 #' @return \code{x} with a new column "edc" with the predicted EDC values
 #' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
-#' with few samples.
+#' with few samples \insertCite{Teickner.submitted}{irpeat}.
+#' @source \insertCite{Teickner.submitted;textual}{irpeat}
+#' @seealso \code{\link{model_edc_1}}.
 #' @examples
 #' \dontrun{
 #' # get sample data
@@ -72,7 +74,7 @@ irp_edc_1 <- function(x,
     )
 
   # predict
-  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = as.matrix(x), stringsAsFactors = FALSE), ...))
+  res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
   if(do_summary) {
