@@ -4,18 +4,21 @@
 \name{irpeat-package}
 \alias{irpeat}
 \alias{irpeat-package}
-\title{irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples}
+\title{irpeat: Simple Functions to Analyze Mid Infrared Spectra of Peat Samples}
 \description{
 irpeat provides simple functions to analyse mid infrared
   spectra of peat samples (various humification indices, Klason lignin content,
-  holocellulose content).
+  holocellulose content, electron accepting capacity, electron donating 
+  capacity).
 }
 \author{
-\strong{Maintainer}: Henning Teickner \email{h_teic01@wwu.de}
+\strong{Maintainer}: Henning Teickner \email{henning.teickner@uni-muenster.de} (\href{https://orcid.org/0000-0002-3993-1182}{ORCID})
 
 Other contributors:
 \itemize{
   \item Suzanne B. Hodgkins \email{hodgkins.3@osu.edu} [contributor]
+  \item Chuanyu Gao \email{gaochuanyu@iga.ac.cn} [contributor]
+  \item Klaus-Holger Knorr \email{kh.knorrr@wwu.de} [contributor]
 }
 
 }

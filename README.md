@@ -18,6 +18,10 @@ Provided functions for analysing infrared spectra of peat are:
 1.  Computation of several humification indices.
 2.  Klason lignin mass fraction (following Hodgkins et al. (2018)).
 3.  Holocellulose mass fraction (following Hodgkins et al. (2018)).
+4.  Peat electron accepting capacity (following Teickner, Knorr, and Gao
+    (n.d.)).
+5.  Peat electron donating capacity (following Teickner, Knorr, and Gao
+    (n.d.)).
 
 ### How to install
 
@@ -127,14 +131,18 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$holocellulose_hodgkins
 #> Units: [g/g]
-#> Errors: 0.08787836 0.08742260 0.08664852 0.08723489 0.08673890 ...
-#>  [1] 0.2079986 0.2458115 0.3347145 0.2635220 0.3212075 0.2866602 0.2290746
-#>  [8] 0.2094640 0.2964282 0.2998223
+#> Errors: 0.02034155 0.01827250 0.01411164 0.01735219 0.01465642 ...
+#>         1         2         3         4         5         6         7         8 
+#> 0.2079986 0.2458115 0.3347145 0.2635220 0.3212075 0.2866602 0.2290746 0.2094640 
+#>         9        10 
+#> 0.2964282 0.2998223
 x$klason_lignin_hodgkins
 #> Units: [g/g]
-#> Errors: 0.04944972 0.05030216 0.04924869 0.04960059 0.04939710 ...
-#>  [1] 0.3039663 0.3446851 0.2888067 0.3130406 0.3004306 0.2663081 0.3177061
-#>  [8] 0.3251141 0.3147190 0.2541749
+#> Errors: 0.009226441 0.013044535 0.008079990 0.010003568 0.008940154 ...
+#>         1         2         3         4         5         6         7         8 
+#> 0.3039663 0.3446851 0.2888067 0.3130406 0.3004306 0.2663081 0.3177061 0.3251141 
+#>         9        10 
+#> 0.3147190 0.2541749
 ```
 
 ### Future development
@@ -152,7 +160,7 @@ Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2021). *irpeat: Simple
 > Functions to Analyse Mid Infrared Spectra of Peat Samples*. Accessed
-> 2021-03-04. Online at <https://github.com/henningte/irpeat>.
+> 2021-12-19. Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
@@ -174,14 +182,18 @@ participating in this project you agree to abide by its terms.
 
 ### Sources
 
-The complete data in this package is derived from Hodgkins et al. (2018)
-and was restructured to match the requirements of ir. The original
-article containing the data can be downloaded from
-<https://www.nature.com/articles/s41467-018-06050-2> and is distributed
-under the Creative Commons Attribution 4.0 International License
-(<http://creativecommons.org/licenses/by/4.0/>). The data on Klason
-lignin and holocellulose content was originally derived from De La Cruz,
-Florentino B., Osborne, and Barlaz (2016).
+The data and prediciton models for holocellulose and Klason are derived
+from Hodgkins et al. (2018) and were restructured to match the
+requirements of ir. The original article containing the data can be
+downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and
+is distributed under the Creative Commons Attribution 4.0 International
+License (<http://creativecommons.org/licenses/by/4.0/>). The data on
+Klason lignin and holocellulose content was originally derived from De
+La Cruz, Florentino B., Osborne, and Barlaz (2016).
+
+Data and models for the electrochemical accepting and donating
+capacities (EAC, EDC) of peat were derived from Teickner, Knorr, and Gao
+(n.d.).
 
 This packages was developed in R (R version 4.0.1 (2020-06-06)) (R Core
 Team 2019) using functions from devtools (Wickham, Hester, and Chang
@@ -233,6 +245,15 @@ Compendium.” <https://github.com/benmarwick/rrtools>.
 R Core Team. 2019. “R: A Language and Environment for Statistical
 Computing.” Vienna, Austria: R Foundation for Statistical Computing.
 <https://www.R-project.org/>.
+
+</div>
+
+<div id="ref-Teickner.submitted">
+
+Teickner, Henning, Klaus-Holger Knorr, and Chuanyu Gao. n.d.
+“Electrochemical Properties of Peat of Decomposition Particulate
+Organic Matter on a Global Scale: Relation to Peat Chemistry and
+Degree.” *Submitted to Global Biogeochemical Cycles*.
 
 </div>
 

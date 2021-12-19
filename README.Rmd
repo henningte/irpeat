@@ -28,6 +28,8 @@ Provided functions for analysing infrared spectra of peat are:
 1. Computation of several humification indices.
 2. Klason lignin mass fraction (following @Hodgkins.2018).
 3. Holocellulose mass fraction (following @Hodgkins.2018).
+4. Peat electron accepting capacity (following @Teickner.submitted).
+5. Peat electron donating capacity (following @Teickner.submitted).
 
 ### How to install
 
@@ -113,7 +115,9 @@ We welcome contributions from everyone. Before you get started, please see our [
 
 ### Sources
 
-The complete data in this package is derived from @Hodgkins.2018 and was restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
+The data and prediciton models for holocellulose and Klason are derived from @Hodgkins.2018 and were restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
+
+Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from @Teickner.submitted.
 
 This packages was developed in R (`r R.Version()$version.string`) [@RCoreTeam.2019] using functions from devtools [@Wickham.2019], usethis [@Wickham.2019b], rrtools [@Marwick.2019] and roxygen2 [@Wickham.2019c].
 
