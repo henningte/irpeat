@@ -8,7 +8,9 @@
 #' @return \code{x} with a new column "edc" with the predicted EDC values
 #' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
-#' with few samples \insertCite{Teickner.submitted}{irpeat}.
+#' with few samples. Moreover, the model is known to produce biased predictions
+#' \insertCite{Teickner.submitted}{irpeat}. For further limitations, see
+#' \insertCite{Teickner.submitted;textual}{irpeat}.
 #' @source \insertCite{Teickner.submitted;textual}{irpeat}
 #' @seealso \code{\link{model_edc_1}}.
 #' @examples

@@ -42,7 +42,8 @@ organic matter in general \insertCite{Teickner.submitted}{irpeat}.
 }
 \note{
 The model still has a relatively large uncertainty because it is fitted
-with few samples \insertCite{Teickner.submitted}{irpeat}.
+with few samples \insertCite{Teickner.submitted}{irpeat}. For further
+limitations, see \insertCite{Teickner.submitted;textual}{irpeat}.
 }
 \examples{
 \dontrun{

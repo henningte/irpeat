@@ -25,7 +25,8 @@
 #' @return \code{x} with a new column "eac" with the predicted EAC values
 #' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
-#' with few samples \insertCite{Teickner.submitted}{irpeat}.
+#' with few samples \insertCite{Teickner.submitted}{irpeat}. For further
+#' limitations, see \insertCite{Teickner.submitted;textual}{irpeat}.
 #' @source \insertCite{Teickner.submitted;textual}{irpeat}.
 #' @seealso \code{\link{model_eac_1}}.
 #' @examples
