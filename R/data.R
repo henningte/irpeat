@@ -47,7 +47,7 @@
 #'   \insertAllCited{}
 "irp_content_h_hodgkins_model"
 
-#' Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.submitted;textual}{irpeat}.
+#' Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.
 #'
 #'
 #' \code{model_eac_1} is a linear model to predict
@@ -55,19 +55,19 @@
 #' samples based on mid infrared spectra. Predictions with this model can be
 #' generated with \code{\link{irp_eac_1}}.
 #'
-#' @details See \insertCite{Teickner.submitted;textual}{irpeat} for a detailed description of the model.
+#' @details See \insertCite{Teickner.2022;textual}{irpeat} for a detailed description of the model.
 #'
 #' @note Note that this model still has several limitations described in
-#' \insertCite{Teickner.submitted;textual}{irpeat}.
+#' \insertCite{Teickner.2022;textual}{irpeat}.
 #'
 #' @format An object of class \code{\link[rstanarm:stanreg-objects]{stanreg}}.
-#' @source The model is described in \insertCite{Teickner.submitted;textual}{irpeat}.
+#' @source The model is described in \insertCite{Teickner.2022;textual}{irpeat}.
 #' @seealso \code{\link{irp_eac_1}}, \code{\link{model_configuration}}.
 #' @references
 #'   \insertAllCited{}
 "model_eac_1"
 
-#' Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.submitted;textual}{irpeat}.
+#' Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.
 #'
 #'
 #' \code{model_edc_1} is a linear model to predict
@@ -75,13 +75,13 @@
 #' samples based on mid infrared spectra. Predictions with this model can be
 #' generated with \code{\link{irp_edc_1}}.
 #'
-#' @details See \insertCite{Teickner.submitted;textual}{irpeat} for a detailed description of the model.
+#' @details See \insertCite{Teickner.2022;textual}{irpeat} for a detailed description of the model.
 #'
 #' @note Note that this model is known to make biased predictions and has
-#' several other limitations described in \insertCite{Teickner.submitted;textual}{irpeat}.
+#' several other limitations described in \insertCite{Teickner.2022;textual}{irpeat}.
 #'
 #' @format An object of class \code{\link[rstanarm:stanreg-objects]{stanreg}}.
-#' @source The model is described in \insertCite{Teickner.submitted;textual}{irpeat}.
+#' @source The model is described in \insertCite{Teickner.2022;textual}{irpeat}.
 #' @seealso \code{\link{irp_edc_1}}, \code{\link{model_configuration}}.
 #' @references
 #'   \insertAllCited{}

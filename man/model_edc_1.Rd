@@ -3,12 +3,12 @@
 \docType{data}
 \name{model_edc_1}
 \alias{model_edc_1}
-\title{Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.submitted;textual}{irpeat}.}
+\title{Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.}
 \format{
 An object of class \code{\link[rstanarm:stanreg-objects]{stanreg}}.
 }
 \source{
-The model is described in \insertCite{Teickner.submitted;textual}{irpeat}.
+The model is described in \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \usage{
 model_edc_1
@@ -20,11 +20,11 @@ samples based on mid infrared spectra. Predictions with this model can be
 generated with \code{\link{irp_edc_1}}.
 }
 \details{
-See \insertCite{Teickner.submitted;textual}{irpeat} for a detailed description of the model.
+See \insertCite{Teickner.2022;textual}{irpeat} for a detailed description of the model.
 }
 \note{
 Note that this model is known to make biased predictions and has
-several other limitations described in \insertCite{Teickner.submitted;textual}{irpeat}.
+several other limitations described in \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \references{
 \insertAllCited{}

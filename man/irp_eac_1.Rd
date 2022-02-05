@@ -4,7 +4,7 @@
 \alias{irp_eac_1}
 \title{Predicts the electron accepting capacity from mid infrared spectra.}
 \source{
-\insertCite{Teickner.submitted;textual}{irpeat}.
+\insertCite{Teickner.2022;textual}{irpeat}.
 }
 \usage{
 irp_eac_1(x, ..., do_summary = FALSE)
@@ -38,12 +38,12 @@ be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
 \description{
 \code{irp_eac_1} predicts the electron accepting capacity (EAC) from mid
 infrared spectra of the peat samples. This function may also work for
-organic matter in general \insertCite{Teickner.submitted}{irpeat}.
+organic matter in general \insertCite{Teickner.2022}{irpeat}.
 }
 \note{
 The model still has a relatively large uncertainty because it is fitted
-with few samples \insertCite{Teickner.submitted}{irpeat}. For further
-limitations, see \insertCite{Teickner.submitted;textual}{irpeat}.
+with few samples \insertCite{Teickner.2022}{irpeat}. For further
+limitations, see \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \examples{
 \dontrun{

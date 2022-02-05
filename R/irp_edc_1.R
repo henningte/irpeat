@@ -2,16 +2,16 @@
 #'
 #' \code{irp_edc_1} predicts the electron accepting capacity (EDC) from mid
 #' infrared spectra of the peat samples. This function may also work for
-#' organic matter in general \insertCite{Teickner.submitted}{irpeat}.
+#' organic matter in general \insertCite{Teickner.2022}{irpeat}.
 #'
 #' @inheritParams irp_eac_1
 #' @return \code{x} with a new column "edc" with the predicted EDC values
 #' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
 #' @note The model still has a relatively large uncertainty because it is fitted
 #' with few samples. Moreover, the model is known to produce biased predictions
-#' \insertCite{Teickner.submitted}{irpeat}. For further limitations, see
-#' \insertCite{Teickner.submitted;textual}{irpeat}.
-#' @source \insertCite{Teickner.submitted;textual}{irpeat}
+#' \insertCite{Teickner.2022}{irpeat}. For further limitations, see
+#' \insertCite{Teickner.2022;textual}{irpeat}.
+#' @source \insertCite{Teickner.2022;textual}{irpeat}
 #' @seealso \code{\link{model_edc_1}}.
 #' @examples
 #' \dontrun{
