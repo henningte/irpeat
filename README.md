@@ -128,12 +128,13 @@ All computed quantities come with units and standard errors (thanks to
 the [quantities](https://github.com/r-quantities/quantities) package):
 
 ``` r
-x$holocellulose_hodgkins
-#> Warning: Unknown or uninitialised column: `holocellulose_hodgkins`.
-#> NULL
-x$klason_lignin_hodgkins
-#> Warning: Unknown or uninitialised column: `klason_lignin_hodgkins`.
-#> NULL
+x$klason_lignin_2
+#> Units: [g/g]
+#> Errors: 0.05377627 0.03899653 0.03435881 0.03921017 0.03585235 ...
+#>        V1        V2        V3        V4        V5        V6        V7        V8 
+#> 0.3764712 0.3422261 0.2542157 0.3075799 0.2971719 0.2770147 0.3136211 0.3522801 
+#>        V9       V10 
+#> 0.3404951 0.2915860
 ```
 
 ### Future development
