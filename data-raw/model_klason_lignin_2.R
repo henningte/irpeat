@@ -21,9 +21,9 @@ d <- ir::ir_sample_data
 # define MCMC parameters
 seed <- 1
 chains <- 4
-iter <- 3000
+iter <- 4000
 warmup <- iter %/% 2
-control <- list(adapt_delta = 0.99, max_treedepth = 11)
+control <- list(adapt_delta = 0.99, max_treedepth = 15)
 
 ## data
 
@@ -35,7 +35,7 @@ index <- d$sample_type != "office paper"
 mir_target_range <-
   tibble::tibble(
     start = min(d$spectra[[1]]$x),
-    end = 3950
+    end = max(d$spectra[[1]]$x)
   )
 
 # store configurations in a list
@@ -52,12 +52,12 @@ model_klason_lignin_2_config <-
         # interpolate_region_range = mir_interpolation_range,
         do_bc = TRUE,
         bc_method = "rubberband",
-        bc_cutoff = 10, # ---todo: adjust this in manuscript?
+        bc_cutoff = 0,
         do_smooth = FALSE,
         do_normalise = TRUE,
         normalise_method = "area",
         do_bin = TRUE,
-        bin_width = 50, # ---todo: check
+        bin_width = 20, # ---todo: check
         do_scale = TRUE,
         scale_center = TRUE,
         scale_scale = TRUE
@@ -124,7 +124,7 @@ priors <-
   )
 
 ## fit the model
-m <-
+model_klason_lignin_2 <-
   brms::brm(y ~ .,
             data = d_cal,
             family = Beta(link = "logit", link_phi = "log"),
@@ -137,9 +137,6 @@ m <-
             control = control)
 
 #### export preparation ####
-
-# get the fitted model
-model_klason_lignin_2 <- m
 
 # export
 usethis::use_data(model_klason_lignin_2, overwrite = TRUE)

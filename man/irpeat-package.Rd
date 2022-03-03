@@ -6,9 +6,7 @@
 \alias{irpeat-package}
 \title{irpeat: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples}
 \description{
-irpeat provides simple functions to analyse mid infrared
-  spectra of peat samples (various humification indices, Klason lignin content,
-  holocellulose content).
+irpeat provides simple functions to analyse mid infrared spectra of peat samples (various humification indices, Klason lignin content, holocellulose content).
 }
 \author{
 \strong{Maintainer}: Henning Teickner \email{h_teic01@wwu.de}
