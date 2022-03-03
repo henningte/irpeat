@@ -53,6 +53,7 @@
 #' @return A data frame with spectra in rows and a column for each spectral
 #' variable after preprocessing.
 #' @examples
+#' \dontrun{
 #' # get sample data
 #' x <- ir::ir_sample_data
 #'
@@ -77,6 +78,7 @@
 #'     scale_center = TRUE,
 #'     scale_scale = TRUE
 #'   )
+#'   }
 #' @export
 irp_preprocess <- function(
   x,

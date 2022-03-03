@@ -1,34 +1,45 @@
 Package: irpeat
-Title: Simple Functions to Analyse Mid Infrared Spectra of Peat Samples
-Version: 0.0.0.9002
+Title: Functions to Analyze Mid Infrared Spectra of Peat Samples
+Version: 0.0.0.9100
 Authors@R: 
     c(person(given = "Henning",
            family = "Teickner",
            role = c("aut", "cre"),
-           email = "h_teic01@wwu.de"),
+           email = "henning.teickner@uni-muenster.de",
+           comment = c(ORCID = "0000-0002-3993-1182")),
      person(given = "Suzanne B.",
            family = "Hodgkins",
            role = c("ctb"),
-           email = "hodgkins.3@osu.edu")
+           email = "hodgkins.3@osu.edu"),
+     person(given = "Chuanyu",
+           family = "Gao",
+           role = c("ctb"),
+           email = "gaochuanyu@iga.ac.cn"),
+     person(given = "Klaus-Holger",
+           family = "Knorr",
+           role = c("ctb"), 
+           email = "kh.knorrr@wwu.de")
            )
-Description: irpeat provides simple functions to analyse mid infrared
+Description: irpeat provides functions to analyse mid infrared
   spectra of peat samples (various humification indices, Klason lignin content,
-  holocellulose content).
+  holocellulose content, electron accepting capacity, electron donating 
+  capacity).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-  R (>= 3.5.0)
+  R (>= 4.0.0)
 Imports:
-  ir,
-  dplyr,
-  purrr,
-  rlang,
-  quantities,
-  Rdpack,
-  graphics,
-  utils,
-  stats
+    ir (>= 0.0.0.9000),
+    dplyr,
+    purrr,
+    rlang,
+    quantities,
+    Rdpack,
+    graphics,
+    utils,
+    stats,
+    rstanarm (>= 2.19.3)
 RoxygenNote: 7.1.2
 RdMacros: 
   Rdpack
@@ -39,4 +50,4 @@ Suggests:
     elco,
     brms (>= 2.13.0)
 VignetteBuilder: knitr
-Date: 2021-09-21
+Date: 2022-03-03

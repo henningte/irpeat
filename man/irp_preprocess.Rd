@@ -116,6 +116,7 @@ derivatization), normalization, binning, and scaling. All these steps are
 optionally, but occur on a fixed order that cannot be changed.
 }
 \examples{
+\dontrun{
 # get sample data
 x <- ir::ir_sample_data
 
@@ -140,4 +141,5 @@ res <-
     scale_center = TRUE,
     scale_scale = TRUE
   )
+  }
 }

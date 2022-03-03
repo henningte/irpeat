@@ -5,6 +5,8 @@
 \alias{model_configuration}
 \alias{model_klason_lignin_2_config}
 \alias{model_holocellulose_2_config}
+\alias{model_eac_1_config}
+\alias{model_edc_1_config}
 \title{Configuration files defining preprocessing parameters.}
 \format{
 A list with the following elements:
@@ -68,11 +70,19 @@ A list with the following elements:
 }
 
 An object of class \code{list} of length 2.
+
+An object of class \code{list} of length 2.
+
+An object of class \code{list} of length 2.
 }
 \usage{
 model_klason_lignin_2_config
 
 model_holocellulose_2_config
+
+model_eac_1_config
+
+model_edc_1_config
 }
 \description{
 The different configuration files are used in the models with the respective

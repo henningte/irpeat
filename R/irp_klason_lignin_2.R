@@ -96,7 +96,7 @@ irp_klason_lignin_2 <- function(x,
     )
 
   # predict
-  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = as.matrix(x), stringsAsFactors = FALSE), ...))
+  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
   if(do_summary) {
