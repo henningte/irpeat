@@ -16,8 +16,10 @@ organic matter samples in general.
 Provided functions for analyzing infrared spectra of peat are:
 
 1.  Computation of several humification indices.
-2.  Klason lignin mass fraction (following Hodgkins et al. (2018)).
-3.  Holocellulose mass fraction (following Hodgkins et al. (2018)).
+2.  Klason lignin mass fraction (following Hodgkins et al. (2018) and
+    \[—todo:ref\]).
+3.  Holocellulose mass fraction (following Hodgkins et al. (2018) and
+    \[—todo:ref\]).
 4.  Peat electron accepting capacity (following Teickner, Gao, and Knorr
     (2022)).
 5.  Peat electron donating capacity (following Teickner, Gao, and Knorr
@@ -74,9 +76,9 @@ reference material (e.g. newspaper, wood, grass).
 
 A simple workflow could be, for example, to baseline correct the spectra
 (using functions of the package ir) compute various humification indices
-and Klason lignin and holocellulose mass fractions in the samples. We
-use only the first few spectra from `ir::ir_sample_data` to speed the
-computations a bit up.
+and Klason lignin mass fractions in the samples. We use only the first
+few spectra from `ir::ir_sample_data` to speed the computations a bit
+up.
 
 ``` r
 x <- 
@@ -88,7 +90,7 @@ x <-
 
 `x` is identical to `ir::ir_sample_data[1:10, ]`, but contains
 additional columns for the computed humification indices (h1, h2, h3,
-h4) and the computed Klason lignin content (klason\_lignin\_hodgkins).
+h4) and the computed Klason lignin content (klason\_lignin\_2).
 
 ``` r
 x

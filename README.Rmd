@@ -26,8 +26,8 @@ irpeat is an R package that contains simple functions to analyse infrared spectr
 Provided functions for analyzing infrared spectra of peat are:
 
 1. Computation of several humification indices.
-2. Klason lignin mass fraction (following @Hodgkins.2018).
-3. Holocellulose mass fraction (following @Hodgkins.2018).
+2. Klason lignin mass fraction (following @Hodgkins.2018 and [---todo:ref]).
+3. Holocellulose mass fraction (following @Hodgkins.2018 and [---todo:ref]).
 4. Peat electron accepting capacity (following @Teickner.2022).
 5. Peat electron donating capacity (following @Teickner.2022).
 
@@ -61,7 +61,7 @@ ir::ir_sample_data
 
 `ir::ir_sample_data` contains various ATR-MIR spectra of organic reference material (e.g. newspaper, wood, grass).
 
-A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
+A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
 
 ```{r sample_data_workflow}
 x <- 
@@ -71,7 +71,7 @@ x <-
   irpeat::irp_klason_lignin_2(do_summary = TRUE)                # Klason lignin content
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason_lignin_hodgkins).
+`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason_lignin_2).
 
 ```{r x_inspect}
 x
