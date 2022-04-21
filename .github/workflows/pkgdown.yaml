@@ -25,7 +25,7 @@ jobs:
 
       - name: install remote dependencies
         run: |
-          Rscript -e 'install.packages("remotes"); remotes::install_github(repo = "henningte/ir"); remotes::install_github(repo = "henningte/elco")'
+          Rscript -e 'install.packages("remotes", lib = .libPaths()[[1]]); remotes::install_github(repo = "henningte/ir", lib = .libPaths()[[1]]); remotes::install_github(repo = "henningte/elco", lib = .libPaths()[[1]])'
 
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
