@@ -25,7 +25,7 @@ jobs:
 
       - name: add remote dependencies repos
         run: |
-          writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = ir = "https://github.com/henningte/elco/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
+          writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = "https://github.com/henningte/elco/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v1
