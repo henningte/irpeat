@@ -56,3 +56,6 @@ Date: 2022-04-21
 Roxygen: list(markdown = TRUE)
 Language: en-US
 URL: https://henningte.github.io/irpeat/
+Remotes: 
+    henningte/ir,
+    henningte/elco
