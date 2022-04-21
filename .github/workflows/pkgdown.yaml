@@ -19,7 +19,7 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v2
         with:
           use-public-rspm: true
 
@@ -28,7 +28,7 @@ jobs:
           writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = "https://github.com/henningte/elco/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r-dependencies@v1
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           dependencies: "hard"
           extra-packages: pkgdown
