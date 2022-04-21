@@ -38,12 +38,12 @@ infrared spectra for peat samples using the model
 \link{model_klason_lignin_2}. This function may also work for organic matter
 in general. Note that this is a preliminary model only which has not been
 fully validated for peat samples yet and which has known limitations in
-predicting contents for peat samples \link{--- todo: add reference}.
+predicting contents for peat samples [---todo: add reference].
 }
 \note{
 Note that this is a preliminary model only which has not been fully
 validated for peat samples yet and which has known limitations in predicting
-contents for peat samples \link{--- todo: add reference}.
+contents for peat samples [---todo: add reference].
 }
 \examples{
 library(ir)
