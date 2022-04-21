@@ -5,7 +5,7 @@
 \alias{irp_content_kl_hodgkins_model}
 \title{Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}.}
 \format{
-An object of class \code{\link[stats:lm]{lm}}.
+An object of class \code{\link[stats:lm]{stats::lm()}}.
 }
 \source{
 The data set was derived from \url{https://www.nature.com/articles/s41467-018-06050-2}
@@ -20,12 +20,12 @@ irp_content_kl_hodgkins_model
 \description{
 \code{irp_content_kl_hodgkins_model} is a linear model to predict
 Klason lignin mass fractions [g/g] in samples based on
-normalised and area corrected peak heights of peaks identified in
+normalized and area corrected peak heights of peaks identified in
 spectra. This model is meant for internal use in
-\code{\link{irp_content_klh_hodgkins}}. The model was originally
+\code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}. The model was originally
 developed by \insertCite{Hodgkins.2018;textual}{ir} and is
 here reproduced from the same data (available via
-\code{\link[ir:ir_sample_data]{ir::ir_sample_data}}), but handling
+\link[ir:ir_sample_data]{ir::ir_sample_data}), but handling
 mass fraction in g/g instead of as percentages.
 }
 \references{

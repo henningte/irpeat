@@ -10,18 +10,20 @@ bibliography: inst\\REFERENCES.bib
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/",
+  fig.path = "man/figures/README-",
   eval = TRUE
 )
 ```
 
-# irpeat
+# irpeat <img src='man/figures/logo-hex.png' align="right" height="139" alt="logo" style="float:right; height:200px;" />
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-irpeat is an R package that contains simple functions to analyse infrared spectra of peat samples. Some functions may also work with organic matter samples in general.
+## Overview
+
+'irpeat' is an R package that contains simple functions to analyze infrared spectra of peat samples. Some functions may also work with organic matter samples in general.
 
 Provided functions for analyzing infrared spectra of peat are:
 
@@ -33,16 +35,17 @@ Provided functions for analyzing infrared spectra of peat are:
 
 ### How to install
 
-You can install irpeat from GitHub using R via:
+You can install 'irpeat' from GitHub using R via:
+
 ```{r installation, eval = FALSE}
 remotes::install_github(repo = "henningte/irpeat")
 ```
 
-irpeat relies on the R package [ir](https://github.com/henningte/ir) for handling infrared spectra.
+'irpeat' relies on the R package ['ir'](https://github.com/henningte/ir) for handling infrared spectra.
 
 ### How to use
 
-You can load irpeat in R with:
+You can load 'irpeat' in R with:
 
 ```{r load_irpeat}
 library(irpeat)
@@ -50,10 +53,9 @@ library(irpeat)
 # load additional packages needed for this tutorial
 library(ir)
 library(ggplot2)
-library(magrittr)
 ```
 
-You can test irpeat with sample data from the R package ir:
+You can test 'irpeat' with sample data from the R package 'ir':
 
 ```{r ir_sample_data_load}
 ir::ir_sample_data
@@ -61,7 +63,7 @@ ir::ir_sample_data
 
 `ir::ir_sample_data` contains various ATR-MIR spectra of organic reference material (e.g. newspaper, wood, grass).
 
-A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ir) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
+A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
 
 ```{r sample_data_workflow}
 x <- 
@@ -72,7 +74,7 @@ x <-
                                    "holocellulose_hodgkins"))   # holocellulose content
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (h1, h2, h3, h4) and the computed Klason lignin content (klason_lignin_hodgkins) and holocellulose content (holocellulose_hodgkins).
+`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed Klason lignin content (`klason_lignin_hodgkins`) and holocellulose content (holocellulose_hodgkins).
 
 ```{r x_inspect}
 x
@@ -98,7 +100,7 @@ x$klason_lignin_hodgkins
 
 ### Future development
 
-Henning Teickner plans, as part of his PhD project, to extensively extent irpeat by developing a set of calibration models that can predict various peat physicochemical properties from mid infrared spectra. These models should be finished by November 2022. Currently, a data compendium ([pmird](https://henningte.github.io/pmird/index.html)) is developed to collect the data required for this task.
+Henning Teickner plans, as part of his PhD project, to extensively extent 'irpeat' by developing a set of calibration models that can predict various peat physicochemical properties from mid infrared spectra. These models should be finished by September 2024. Currently, a data compendium ([pmird](https://henningte.github.io/pmird/index.html)) is developed to collect the data required for this task.
 
 ### How to cite
 
@@ -109,7 +111,7 @@ Please cite this R package as:
 
 ### Licenses
 
-**Text and figures :**  [CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
+**Text and figures :**  [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
 
 **Code :** See the [DESCRIPTION](DESCRIPTION) file
 
@@ -121,7 +123,7 @@ We welcome contributions from everyone. Before you get started, please see our [
 
 ### Sources
 
-The data and prediction models for holocellulose and Klason are derived from @Hodgkins.2018 and were restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (http://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
+The data and prediction models for holocellulose and Klason are derived from @Hodgkins.2018 and were restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
 
 Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from @Teickner.2022 and @Teickner.2021c
 

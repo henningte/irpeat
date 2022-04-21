@@ -2,7 +2,7 @@
 % Please edit documentation in R/irp_export_prepare.R
 \name{irp_export_prepare}
 \alias{irp_export_prepare}
-\title{Stores errors and units of error or units columns of objects of class \code{ir} in separate columns.}
+\title{Stores errors and units of error or units columns of objects of class \code{ir} in separate columns}
 \usage{
 irp_export_prepare(x)
 }
@@ -12,11 +12,17 @@ irp_export_prepare(x)
 \value{
 An object of class \code{\link[ir:ir_new_ir]{ir}} with a new column for
 each column that is of class \code{"units"} and each column that is of class
-\code{"errors"}. New columns are named old_colmn_name_errors and old_colmn_name_units,
+\code{"errors"}. New columns are named old_column_name_errors and old_column_name_units,
 respectively.
 }
 \description{
-\code{irp_export_prepare} stores errors (\code{\link[errors:errors]{errors}}) and
-units (\code{\link[units:set_units]{units}}) of error or
+\code{irp_export_prepare} stores errors (\link[errors:errors]{errors::errors}) and
+units (\code{\link[units:units]{units}}) of error or
 units columns in an object of class \code{\link[ir:ir_new_ir]{ir}} in separate columns.
+}
+\examples{
+library(ir)
+
+irp_export_prepare(ir::ir_sample_data[1:5, ])
+
 }

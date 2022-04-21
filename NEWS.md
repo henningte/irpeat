@@ -1,0 +1,12 @@
+# irpeat 0.1.0
+
+* Added a `NEWS.md` file to track changes to the package.
+* Update the documentation (adding missing examples).
+* Add pkgdown site.
+
+#### Bug fixes
+
+* Fix bugs caused by changes in 'ir' 0.2.0 (`ir::ir_check_ir()` no longer is exported, `measurement_id` is no longer a required column in `ir` objects).
+* Fix bug in `irp_content()` if `variable = "klason_lignin_hodgkins"` (no values were computed).
+
+#### Deprecated functions

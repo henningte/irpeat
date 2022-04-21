@@ -2,7 +2,7 @@
 % Please edit documentation in R/irp_preprocess.R
 \name{irp_preprocess}
 \alias{irp_preprocess}
-\title{General purpose preprocessing of spectra for predictions.}
+\title{General purpose preprocessing of spectra for predictions}
 \usage{
 irp_preprocess(
   x,
@@ -38,26 +38,26 @@ irp_preprocess(
 that \code{x} is not yet preprocessed).}
 
 \item{do_interpolate}{A logical value indicating if spectra should be
-interpolated using \code{\link[ir:ir_interpolate]{ir_interpolate}}.}
+interpolated using \code{\link[ir:ir_interpolate]{ir::ir_interpolate()}}.}
 
 \item{interpolate_start}{See \code{ir_interpolate} (parameter \code{start}).}
 
 \item{interpolate_dw}{See \code{ir_interpolate} (parameter \code{dw}).}
 
 \item{do_clip}{A logical value indicating if spectra should be
-clipped using \code{\link[ir:ir_clip]{ir_clip}}.}
+clipped using \code{\link[ir:ir_clip]{ir::ir_clip()}}.}
 
 \item{clip_range}{See \code{ir_clip} (parameter \code{range}).}
 
 \item{do_interpolate_region}{A logical value indicating if spectra should
 be linearly interpolated in selected regions using
-\code{\link[ir:ir_interpolate_region]{ir_interpolate_region}}.}
+\code{\link[ir:ir_interpolate_region]{ir::ir_interpolate_region()}}.}
 
 \item{interpolate_region_range}{See \code{ir_interpolate_region} (parameter
 \code{range}).}
 
 \item{do_bc}{A logical value indicating if spectra should be
-baseline corrected using \code{\link[ir:ir_bc]{ir_bc}}.}
+baseline corrected using \code{\link[ir:ir_bc]{ir::ir_bc()}}.}
 
 \item{bc_method}{See \code{ir_bc} (parameter \code{method}).}
 
@@ -69,7 +69,7 @@ baseline correction. This may be done to remove artifacts due to baseline
 correction.}
 
 \item{do_smooth}{A logical value indicating if spectra should be
-smoothed using \code{\link[ir:ir_smooth]{ir_smooth}}.}
+smoothed using \code{\link[ir:ir_smooth]{ir::ir_smooth()}}.}
 
 \item{smooth_method}{See \code{ir_smooth} (parameter \code{method}).}
 
@@ -84,17 +84,17 @@ smoothed using \code{\link[ir:ir_smooth]{ir_smooth}}.}
 \item{smooth_k}{See \code{ir_smooth} (parameter \code{k}).}
 
 \item{do_normalise}{A logical value indicating if spectra should be
-normalised using \code{\link[ir:ir_normalise]{ir_normalise}}.}
+normalized using \code{\link[ir:ir_normalize]{ir::ir_normalize()}}.}
 
-\item{normalise_method}{See \code{ir_normalise} (parameter \code{method}).}
+\item{normalise_method}{See \code{ir_normalize} (parameter \code{method}).}
 
 \item{do_bin}{A logical value indicating if spectra should be
-binned using \code{\link[ir:ir_bin]{ir_bin}}.}
+binned using \code{\link[ir:ir_bin]{ir::ir_bin()}}.}
 
 \item{bin_width}{See \code{ir_bin} (parameter \code{width}).}
 
 \item{do_scale}{A logical value indicating if spectral variables should be
-scaled using \code{\link[base:scale]{scale}}.}
+scaled using \code{\link[base:scale]{base::scale()}}.}
 
 \item{scale_center}{See \code{scale} (parameter \code{center}). To scale each
 spectral variable independently, provide a vector with length equal to the
@@ -116,9 +116,8 @@ derivatization), normalization, binning, and scaling. All these steps are
 optionally, but occur in a fixed order that cannot be changed.
 }
 \examples{
-\dontrun{
 # get sample data
-x <- ir::ir_sample_data
+x <- ir::ir_sample_data[1, ]
 
 # example preprocessing
 res <-
@@ -141,5 +140,5 @@ res <-
     scale_center = TRUE,
     scale_scale = TRUE
   )
-  }
+
 }

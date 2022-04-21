@@ -2,7 +2,7 @@
 % Please edit documentation in R/irp_edc_1.R
 \name{irp_edc_1}
 \alias{irp_edc_1}
-\title{Predicts the electron donating capacity from mid infrared spectra.}
+\title{Predicts the electron donating capacity from mid infrared spectra}
 \source{
 \insertCite{Teickner.2022;textual}{irpeat}
 }
@@ -17,18 +17,18 @@ the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
 is not checked if this assumption is met.}
 
 \item{...}{Additional arguments passed to
-\code{\link[rstanarm]{posterior_predict.stanreg}}.}
+\code{\link[rstanarm:posterior_predict.stanreg]{rstanarm::posterior_predict.stanreg()}}.}
 
 \item{do_summary}{A logical value indicating if the predicted values should
 be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
 \itemize{
-  \item If \code{do_summary = FALSE}, a list column is returned and each
-  element of the list column is a numeric vector with draws from the
-  posterior distribution, including the residual variance of the model.
-  \item If \code{do_summary = TRUE}, each element is a
-  \code{\link[quantities:quantities]{quantities}} object with the
-  \code{error} attribute being the standard deviation of the unsummarized
-  values.
+\item If \code{do_summary = FALSE}, a list column is returned and each
+element of the list column is a numeric vector with draws from the
+posterior distribution, including the residual variance of the model.
+\item If \code{do_summary = TRUE}, each element is a
+\code{\link[quantities:quantities]{quantities::quantities()}} object with the
+\code{error} attribute being the standard deviation of the unsummarized
+values.
 }}
 }
 \value{
@@ -47,17 +47,15 @@ with few samples. Moreover, the model is known to produce biased predictions
 \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \examples{
-\dontrun{
-# get sample data
-x <- ir::ir_sample_data
+library(ir)
 
 # make predictions
-x <- irpeat::irp_edc_1(x, do_summary = TRUE)
-}
+irpeat::irp_edc_1(ir::ir_sample_data[1, ], do_summary = TRUE)
+
 }
 \references{
 \insertAllCited{}
 }
 \seealso{
-\code{\link{model_edc_1}}.
+\code{\link[=model_edc_1]{model_edc_1()}}.
 }

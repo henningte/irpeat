@@ -1,38 +1,55 @@
-#' Computes contents of Klason lignin and holocellulose of peat from mid infrared spectra.
+#' Computes contents of Klason lignin and holocellulose of peat from mid infrared spectra
 #'
-#' \code{irp_content_klh_hodgkins} computes the mass fraction of Klason lignin and holocellulose
+#' `irp_content_klh_hodgkins` computes the mass fraction of Klason lignin and holocellulose
 #' in peat from mid infrared spectra of the peat samples. This function may also work
 #' for organic matter in general.
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}.
+#' @param x An object of class [`ir`][ir::ir_new_ir].
+#'
 #' @param export Either a valid path to an existing directory where to
 #' store the results of the original script (see section "Source")
-#' \code{irp_content_klh_hodgkins} is based on (if this output should be exported) or
-#' \code{NULL} (if nothing should be exported). Note that \code{export} has to be
-#' specified in order to analyse any issues with the data (e.g. high clay content)
+#' `irp_content_klh_hodgkins` is based on (if this output should be exported) or
+#' `NULL` (if nothing should be exported). Note that `export` has to be
+#' specified in order to analyze any issues with the data (e.g. high clay content)
 #' that may confound the computed values. Refer to the original publication
 #' (\insertCite{Hodgkins.2018}{ir}) to get information on the meaning of
 #' the exported objects.
+#'
 #' @param verbose A logical value indicating if messages should be printed
-#' (\code{verbose = TRUE}) or not (\code{verbose = FALSE}).
+#' (`verbose = TRUE`) or not (`verbose = FALSE`).
+#'
 #' @param make_plots logical value indicating if plots should be printed
-#' (\code{make_plots = TRUE}) or not (\code{make_plots = FALSE}).
-#' @source \code{irp_content_klh_hodgkins} is a wrapper function to a script written by
-#' Suzanne Hodgkins (\url{https://github.com/shodgkins/FTIRbaselines/blob/master/FTIRbaselines.R}).
-#' and distributed under the GPL-3 (\url{https://www.gnu.org/licenses/gpl-3.0.html}) license.
+#' (`make_plots = TRUE`) or not (`make_plots = FALSE`).
+#'
+#' @source `irp_content_klh_hodgkins` is a wrapper function to a script written by
+#' Suzanne Hodgkins (<https://github.com/shodgkins/FTIRbaselines/blob/master/FTIRbaselines.R>).
+#' and distributed under the GPL-3 (<https://www.gnu.org/licenses/gpl-3.0.html>) license.
 #' The original script was modified for this purpose.
-#' @return An object of class \code{\link[ir:ir_new_ir]{ir}} with additional
+#'
+#' @return An object of class [`ir`][ir::ir_new_ir] with additional
 #' columns containing the computed mass fractions of Klason lignin and
-#' holocellulose for the spectra in \code{x}.
+#' holocellulose for the spectra in `x`.
+#'
+#' @examples
+#' library(ir)
+#'
+#' irp_content_klh_hodgkins(
+#'   ir::ir_sample_data[1:5, ],
+#'   export = NULL,
+#'   verbose = TRUE,
+#'   make_plots = FALSE
+#' )
+#'
 #' @references
 #'   \insertAllCited{}
+#'
 #' @export
 irp_content_klh_hodgkins <- function(x,
                             export = NULL,
                             verbose = FALSE,
                             make_plots = FALSE) {
 
-  ir::ir_check_ir(x)
+  stopifnot(inherits(x, "ir"))
   if(!is.null(export)) {
     if(!is.character(export)) {
       rlang::abort(paste0("`export` must be a character value, not ", class(export)[[1]], "."))
@@ -90,7 +107,7 @@ irp_content_klh_hodgkins_predict <- function(x,
 
   # make sure that all values get their right row in x
   x_flat_new_names <- c(colnames(x_flat)[-1], colnames(x_flat_empty)[-1])
-  x_flat_target_names <- c(as.character(x$measurement_id))
+  x_flat_target_names <- c(as.character(seq_len(nrow(x))))
   index <- match(x_flat_target_names, x_flat_new_names)
   x_flat_empty_n <- ncol(x_flat_empty) - 1
   res_fake <- as.data.frame(matrix(nrow = x_flat_empty_n, ncol = ncol(res$norm.Acorr)))
@@ -131,7 +148,7 @@ irp_content_klh_hodgkins_predict <- function(x,
 irp_content_klh_hodgkins_prepare <- function(x) {
 
   x_flat <- ir::ir_interpolate(x = x, start = NULL, dw = 1)
-  x_flat <- ir::ir_flatten(x = x_flat, measurement_id = as.character(x_flat$measurement_id))
+  x_flat <- ir::ir_flatten(x = x_flat, measurement_id = as.character(seq_len(nrow(x_flat))))
   x_flat <- ir::ir_flat_clean(x_flat, return_empty = FALSE)
   x_flat <- as.data.frame(x_flat[order(x_flat$x, decreasing = TRUE), ])
   rownames(x_flat) <- x_flat$x

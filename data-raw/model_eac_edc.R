@@ -170,7 +170,7 @@ el_t0_summary <-
 # normalization
 # d_mir <-
 #   d_mir %>%
-#   ir::ir_normalise(method = "area")
+#   ir::ir_normalize(method = "area")
 
 # humification indices
 # d_mir <-

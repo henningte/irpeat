@@ -1,61 +1,87 @@
-#' General purpose preprocessing of spectra for predictions.
+#' General purpose preprocessing of spectra for predictions
 #'
-#' \code{irp_preprocess} is a function that provides a general-purpose
+#' `irp_preprocess` is a function that provides a general-purpose
 #' preprocessing workflow for spectra. The workflow comprises interpolation,
 #' clipping, baseline correction, smoothing (including optionally
 #' derivatization), normalization, binning, and scaling. All these steps are
 #' optionally, but occur in a fixed order that cannot be changed.
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}} (it is assumed
-#' that \code{x} is not yet preprocessed).
+#' @param x An object of class [`ir`][ir::ir_new_ir] (it is assumed
+#' that `x` is not yet preprocessed).
+#'
 #' @param do_interpolate A logical value indicating if spectra should be
-#' interpolated using \code{\link[ir:ir_interpolate]{ir_interpolate}}.
-#' @param interpolate_start See \code{ir_interpolate} (parameter \code{start}).
-#' @param interpolate_dw See \code{ir_interpolate} (parameter \code{dw}).
+#' interpolated using [ir::ir_interpolate()].
+#'
+#' @param interpolate_start See `ir_interpolate` (parameter `start`).
+#'
+#' @param interpolate_dw See `ir_interpolate` (parameter `dw`).
+#'
 #' @param do_clip A logical value indicating if spectra should be
-#' clipped using \code{\link[ir:ir_clip]{ir_clip}}.
-#' @param clip_range See \code{ir_clip} (parameter \code{range}).
+#' clipped using [ir::ir_clip()].
+#'
+#' @param clip_range See `ir_clip` (parameter `range`).
+#'
 #' @param do_interpolate_region A logical value indicating if spectra should
 #' be linearly interpolated in selected regions using
-#' \code{\link[ir:ir_interpolate_region]{ir_interpolate_region}}.
-#' @param interpolate_region_range See \code{ir_interpolate_region} (parameter
-#' \code{range}).
+#' [ir::ir_interpolate_region()].
+#'
+#' @param interpolate_region_range See `ir_interpolate_region` (parameter
+#' `range`).
+#'
 #' @param do_bc A logical value indicating if spectra should be
-#' baseline corrected using \code{\link[ir:ir_bc]{ir_bc}}.
-#' @param bc_method See \code{ir_bc} (parameter \code{method}).
-#' @param bc_degree See \code{ir_bc} (parameter \code{degree}).
+#' baseline corrected using [ir::ir_bc()].
+#'
+#' @param bc_method See `ir_bc` (parameter `method`).
+#'
+#' @param bc_degree See `ir_bc` (parameter `degree`).
+#'
 #' @param bc_cutoff A numeric value representing the wavenumber
-#' units to remove at the start and end of each spectrum in \code{x} during
+#' units to remove at the start and end of each spectrum in `x` during
 #' baseline correction. This may be done to remove artifacts due to baseline
 #' correction.
+#'
 #' @param do_smooth A logical value indicating if spectra should be
-#' smoothed using \code{\link[ir:ir_smooth]{ir_smooth}}.
-#' @param smooth_method See \code{ir_smooth} (parameter \code{method}).
-#' @param smooth_p See \code{ir_smooth} (parameter \code{p}).
-#' @param smooth_n See \code{ir_smooth} (parameter \code{n}).
-#' @param smooth_ts See \code{ir_smooth} (parameter \code{ts}).
-#' @param smooth_m See \code{ir_smooth} (parameter \code{m}).
-#' @param smooth_k See \code{ir_smooth} (parameter \code{k}).
+#' smoothed using [ir::ir_smooth()].
+#'
+#' @param smooth_method See `ir_smooth` (parameter `method`).
+#'
+#' @param smooth_p See `ir_smooth` (parameter `p`).
+#'
+#' @param smooth_n See `ir_smooth` (parameter `n`).
+#'
+#' @param smooth_ts See `ir_smooth` (parameter `ts`).
+#'
+#' @param smooth_m See `ir_smooth` (parameter `m`).
+#'
+#' @param smooth_k See `ir_smooth` (parameter `k`).
+#'
 #' @param do_normalise A logical value indicating if spectra should be
-#' normalised using \code{\link[ir:ir_normalise]{ir_normalise}}.
-#' @param normalise_method See \code{ir_normalise} (parameter \code{method}).
+#' normalized using [ir::ir_normalize()].
+#'
+#' @param normalise_method See `ir_normalize` (parameter `method`).
+#'
 #' @param do_bin A logical value indicating if spectra should be
-#' binned using \code{\link[ir:ir_bin]{ir_bin}}.
-#' @param bin_width See \code{ir_bin} (parameter \code{width}).
+#' binned using [ir::ir_bin()].
+#'
+#' @param bin_width See `ir_bin` (parameter `width`).
+#'
 #' @param do_scale A logical value indicating if spectral variables should be
-#' scaled using \code{\link[base:scale]{scale}}.
-#' @param scale_center See \code{scale} (parameter \code{center}). To scale each
+#' scaled using [base::scale()].
+#'
+#' @param scale_center See `scale` (parameter `center`). To scale each
 #' spectral variable independently, provide a vector with length equal to the
 #' number of spectral variables returned after preprocessing.
-#' @param scale_scale See \code{scale} (parameter \code{scale}). To scale each
+#'
+#' @param scale_scale See `scale` (parameter `scale`). To scale each
 #' spectral variable independently, provide a vector with length equal to the
 #' number of spectral variables returned after preprocessing.
+#'
 #' @return A data frame with spectra in rows and a column for each spectral
 #' variable after preprocessing.
+#'
 #' @examples
-#' \dontrun{
 #' # get sample data
-#' x <- ir::ir_sample_data
+#' x <- ir::ir_sample_data[1, ]
 #'
 #' # example preprocessing
 #' res <-
@@ -78,7 +104,7 @@
 #'     scale_center = TRUE,
 #'     scale_scale = TRUE
 #'   )
-#'   }
+#'
 #' @export
 irp_preprocess <- function(
   x,
@@ -174,7 +200,7 @@ irp_preprocess <- function(
 
   # normalise
   if(do_normalise) {
-    x <- ir::ir_normalise(x,
+    x <- ir::ir_normalize(x,
                           method = normalise_method)
   }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/irp_hi.R
 \name{irp_hi}
 \alias{irp_hi}
-\title{Humification indices from mid infrared spectra.}
+\title{Compute humification indices from mid infrared spectra}
 \usage{
 irp_hi(x, x1 = NULL, x2 = NULL)
 }
@@ -45,13 +45,13 @@ The following humification indices are computed by
 default (if \code{x1 = NULL} and \code{x2 = NULL}) (values
 represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat} :
 \describe{
-  \item{hi1: 1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
-  groups (phenolic and aliphatic structures)/polysaccharides}
-  \item{hi2: 1510/1090}{Aromatic C=C or C=O of amides/polysaccharides}
-  \item{hi3: 1630/1090}{Aromatic C=C and COO\eqn{^{-1}} (aromatics and aromatic
-  or aliphatic carboxylates)/polysaccharides}
-  \item{hi4: 1720/1090}{carbonylic and carboxylic C=O (carboxylic acids and
-  aromatic esters)/polysaccharides}
+\item{hi1: 1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
+groups (phenolic and aliphatic structures)/polysaccharides}
+\item{hi2: 1510/1090}{Aromatic C=C or C=O of amides/polysaccharides}
+\item{hi3: 1630/1090}{Aromatic C=C and COO\eqn{^{-1}} (aromatics and aromatic
+or aliphatic carboxylates)/polysaccharides}
+\item{hi4: 1720/1090}{carbonylic and carboxylic C=O (carboxylic acids and
+aromatic esters)/polysaccharides}
 }
 }
 \examples{
@@ -59,7 +59,7 @@ represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat} :
 library(ir)
 
 # compute default humification indices
-d <- ir_sample_data
+d <- ir_sample_data[1:5, ]
 d <- irp_hi(d)
 
 # compute custom humification index

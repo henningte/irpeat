@@ -1,51 +1,54 @@
-#' Predicts the electron accepting capacity from mid infrared spectra.
+#' Predicts the electron accepting capacity from mid infrared spectra
 #'
-#' \code{irp_eac_1} predicts the electron accepting capacity (EAC) from mid
+#' `irp_eac_1` predicts the electron accepting capacity (EAC) from mid
 #' infrared spectra of the peat samples. This function may also work for
 #' organic matter in general \insertCite{Teickner.2022}{irpeat}.
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}. Some tests
+#' @param x An object of class [`ir`][ir::ir_new_ir]. Some tests
 #' are applied to check if the supplied spectra match the spectra used to
 #' fit the models (the spectral range is checked). The spectral resolution of
 #' the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
 #' is not checked if this assumption is met.
+#'
 #' @param ... Additional arguments passed to
-#' \code{\link[rstanarm]{posterior_predict.stanreg}}.
+#' [rstanarm::posterior_predict.stanreg()].
+#'
 #' @param do_summary A logical value indicating if the predicted values should
-#' be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
+#' be returned in a summarized version (`TRUE`) or not (`FALSE`).
 #' \itemize{
-#'   \item If \code{do_summary = FALSE}, a list column is returned and each
+#'   \item If `do_summary = FALSE`, a list column is returned and each
 #'   element of the list column is a numeric vector with draws from the
 #'   posterior distribution, including the residual variance of the model.
-#'   \item If \code{do_summary = TRUE}, each element is a
-#'   \code{\link[quantities:quantities]{quantities}} object with the
-#'   \code{error} attribute being the standard deviation of the unsummarized
+#'   \item If `do_summary = TRUE`, each element is a
+#'   [quantities::quantities()] object with the
+#'   `error` attribute being the standard deviation of the unsummarized
 #'   values.
 #' }
-#' @return \code{x} with a new column "eac" with the predicted EAC values
-#' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
+#'
+#' @return `x` with a new column "eac" with the predicted EAC values
+#' \[\eqn{\mu}mol g\eqn{_\text{C}^{-1}}\].
+#'
 #' @note The model still has a relatively large uncertainty because it is fitted
 #' with few samples \insertCite{Teickner.2022}{irpeat}. For further
 #' limitations, see \insertCite{Teickner.2022;textual}{irpeat}.
+#'
 #' @source \insertCite{Teickner.2022;textual}{irpeat}.
-#' @seealso \code{\link{model_eac_1}}.
+#'
+#' @seealso [model_eac_1()].
+#'
 #' @examples
-#' \dontrun{
-#' # get sample data
-#' x <- ir::ir_sample_data
+#' library(ir)
 #'
 #' # make predictions
-#' x <- irpeat::irp_eac_1(x, do_summary = TRUE)
-#' }
+#' irpeat::irp_eac_1(ir::ir_sample_data[1, ], do_summary = TRUE)
+#'
 #' @references
 #'   \insertAllCited{}
+#'
 #' @export
-irp_eac_1 <- function(x,
-                    ...,
-                    do_summary = FALSE)
-{
+irp_eac_1 <- function(x, ..., do_summary = FALSE) {
 
-  ir::ir_check_ir(x)
+  stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
   x_or <- x

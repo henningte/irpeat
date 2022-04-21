@@ -2,9 +2,9 @@
 % Please edit documentation in R/irp_content.R
 \name{irp_content}
 \alias{irp_content}
-\title{Computes contents of components of peat from mid infrared spectra.}
+\title{Computes contents of components of peat from mid infrared spectra}
 \usage{
-irp_content(x, variable)
+irp_content(x, variable, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}.}
@@ -13,17 +13,20 @@ irp_content(x, variable)
 components contents are computed for the spectra in \code{x}. Currently allowed values
 are:
 \describe{
-  \item{"all"}{\code{irp_content} computes all of the values below.}
-  \item{"klason_lignin_hodgkins"}{Klason lignin mass fraction [unitless]
-  as computed by \code{\link{irp_content_klh_hodgkins}}.}
-  \item{"holocellulose_hodgkins"}{Holocellulose mass fraction [unitless]
-  as computed by \code{\link{irp_content_klh_hodgkins}}.}
+\item{"all"}{\code{irp_content} computes all of the values below.}
+\item{"klason_lignin_hodgkins"}{Klason lignin mass fraction [g/g]
+as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
+\item{"holocellulose_hodgkins"}{Holocellulose mass fraction [g/g]
+as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
+\item{"eac_1"}{Electron accepting capacity as computed by \code{\link[=irp_eac_1]{irp_eac_1()}}.}
+\item{"edc_1"}{Electron donating capacity as computed by \code{\link[=irp_edc_1]{irp_edc_1()}}.}
 }}
+
+\item{...}{Further arguments passed to individual prediction functions.}
 }
 \value{
-An object of class \code{\link[ir:ir_new_ir]{ir}} with additional
-columns containing the computed compount contents for the spectra in
-\code{x}.
+An object of class \code{\link[ir:ir_new_ir]{ir}} with additional columns
+containing the predictions for the spectra in \code{x}.
 }
 \description{
 \code{irp_content} computes the contents of various components of peat
@@ -32,9 +35,14 @@ for organic matter in general.
 Note that this function is a wrapper function to several individual functions
 in irpeat. In \code{irp_content} any warnings and messages regarding issues
 with the data are
-suppressed and nothing will be esported to disk. In case of doubt, use the
+suppressed and nothing will be exported to disk. In case of doubt, use the
 corresponding functions with warnings activated.
 }
-\seealso{
-\code{\link{irp_content_klh_hodgkins}}.
+\examples{
+library(ir)
+
+irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_hodgkins")
+irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
+irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
+
 }

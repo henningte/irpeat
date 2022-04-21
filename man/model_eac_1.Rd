@@ -17,7 +17,7 @@ model_eac_1
 \code{model_eac_1} is a linear model to predict
 electron accepting capacities [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}] in peat
 samples based on mid infrared spectra. Predictions with this model can be
-generated with \code{\link{irp_eac_1}}.
+generated with \code{\link[=irp_eac_1]{irp_eac_1()}}.
 }
 \details{
 See \insertCite{Teickner.2022;textual}{irpeat} for a detailed description of the model.
@@ -30,6 +30,6 @@ Note that this model still has several limitations described in
 \insertAllCited{}
 }
 \seealso{
-\code{\link{irp_eac_1}}, \code{\link{model_configuration}}.
+\code{\link[=irp_eac_1]{irp_eac_1()}}, \code{\link[=model_configuration]{model_configuration()}}.
 }
 \keyword{datasets}

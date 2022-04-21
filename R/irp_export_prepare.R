@@ -1,18 +1,25 @@
-#' Stores errors and units of error or units columns of objects of class \code{ir} in separate columns.
+#' Stores errors and units of error or units columns of objects of class `ir` in separate columns
 #'
-#' \code{irp_export_prepare} stores errors (\code{\link[errors:errors]{errors}}) and
-#' units (\code{\link[units:set_units]{units}}) of error or
-#' units columns in an object of class \code{\link[ir:ir_new_ir]{ir}} in separate columns.
+#' `irp_export_prepare` stores errors ([errors::errors]) and
+#' units ([`units`][units::set_units]) of error or
+#' units columns in an object of class [`ir`][ir::ir_new_ir] in separate columns.
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}.
-#' @return An object of class \code{\link[ir:ir_new_ir]{ir}} with a new column for
-#' each column that is of class \code{"units"} and each column that is of class
-#' \code{"errors"}. New columns are named old_colmn_name_errors and old_colmn_name_units,
+#' @param x An object of class [`ir`][ir::ir_new_ir].
+#'
+#' @return An object of class [`ir`][ir::ir_new_ir] with a new column for
+#' each column that is of class `"units"` and each column that is of class
+#' `"errors"`. New columns are named old_column_name_errors and old_column_name_units,
 #' respectively.
+#'
+#' @examples
+#' library(ir)
+#'
+#' irp_export_prepare(ir::ir_sample_data[1:5, ])
+#'
 #' @export
 irp_export_prepare <- function(x) {
 
-  ir::ir_check_ir(x)
+  stopifnot(inherits(x, "ir"))
 
   d <- data.frame(errors = purrr::map_lgl(x, inherits, "errors"),
                   units = purrr::map_lgl(x, inherits, "units"),

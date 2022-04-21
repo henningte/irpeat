@@ -1,6 +1,6 @@
-#' Humification indices from mid infrared spectra.
+#' Compute humification indices from mid infrared spectra
 #'
-#' \code{irp_hi} computes either custom humification indices or a predefined set of
+#' `irp_hi` computes either custom humification indices or a predefined set of
 #' humification indices as reported by \insertCite{Broder.2012;textual}{irpeat}
 #' for mid infrared spectra with the x values representing wavenumber values
 #' (no checks are performed) (see the details section for the humification indices
@@ -14,8 +14,8 @@
 #'
 #' @details
 #' The following humification indices are computed by
-#' default (if \code{x1 = NULL} and \code{x2 = NULL}) (values
-#' represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat} :
+#' default (if `x1 = NULL` and `x2 = NULL`) (values
+#' represent wavenumbers \[cm\eqn{^{-1}}\]) \insertCite{Broder.2012}{irpeat} :
 #' \describe{
 #'   \item{hi1: 1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
 #'   groups (phenolic and aliphatic structures)/polysaccharides}
@@ -26,27 +26,31 @@
 #'   aromatic esters)/polysaccharides}
 #' }
 #'
-#' @param x An object of class \code{\link[ir:ir_new_ir]{ir}}.
+#' @param x An object of class [`ir`][ir::ir_new_ir].
+#'
 #' @param x1 A numeric vector with values representing x axis values in the spectra
-#' of \code{x}. This is \eqn{x1} in the equation displayed above. If
-#' multiple humification indices for the same \code{x2} should be computed, \code{x1}
-#' can contain multiple values. If \code{x1 = NULL},
+#' of `x`. This is \eqn{x1} in the equation displayed above. If
+#' multiple humification indices for the same `x2` should be computed, `x1`
+#' can contain multiple values. If `x1 = NULL`,
 #' the default humification indices will be computed (see details section).
+#'
 #' @param x2 A numeric value representing an x axis value in the spectra
-#' of \code{x}. This is \eqn{x2} in the equation displayed above. If \code{x2 = NULL},
+#' of `x`. This is \eqn{x2} in the equation displayed above. If `x2 = NULL`,
 #' the default humification indices will be computed (see details section).
-#' @return An object of class \code{\link[ir:ir_new_ir]{ir}} with additional
-#' columns for additional humification indices. If \code{x1 = NULL} and \code{x2 = NULL},
+#'
+#' @return An object of class [`ir`][ir::ir_new_ir] with additional
+#' columns for additional humification indices. If `x1 = NULL` and `x2 = NULL`,
 #' these are four new columns (hi1, hi2, hi3 and hi4) that correspond to the humification
-#' indices defined in the details section. If \code{x1} and \code{x2} are not \code{NULL},
-#' the columns have names \code{"hi_x1_x2"} where \code{x1} and \code{x2} are replaced by the
+#' indices defined in the details section. If `x1` and `x2` are not `NULL`,
+#' the columns have names `"hi_x1_x2"` where `x1` and `x2` are replaced by the
 #' respective values.
+#'
 #' @examples
 #' # get sample data
 #' library(ir)
 #'
 #' # compute default humification indices
-#' d <- ir_sample_data
+#' d <- ir_sample_data[1:5, ]
 #' d <- irp_hi(d)
 #'
 #' # compute custom humification index
@@ -59,11 +63,12 @@
 #'
 #' @references
 #'   \insertAllCited{}
+#'
 #' @export
 irp_hi <- function(x, x1 = NULL, x2 = NULL) {
 
   default <- TRUE
-  ir::ir_check_ir(x)
+  stopifnot(inherits(x, "ir"))
   if((is.null(x1) && !is.null(x2)) || (!is.null(x1) && is.null(x2))) {
     rlang::abort("Only one of `x1` and `x2` is `NULL`. Both of `x1` and `x2` must be `NULL` if you want to compute the default humification indices. If you want to compute custom humification indices, both `x1` and `x2` must be numeric vectors.")
   }

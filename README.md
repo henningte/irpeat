@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# irpeat
+# irpeat <img src='man/figures/logo-hex.png' align="right" height="139" alt="logo" style="float:right; height:200px;" />
 
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-irpeat is an R package that contains simple functions to analyse
+‘irpeat’ is an R package that contains simple functions to analyze
 infrared spectra of peat samples. Some functions may also work with
 organic matter samples in general.
 
@@ -25,18 +25,18 @@ Provided functions for analyzing infrared spectra of peat are:
 
 ### How to install
 
-You can install irpeat from GitHub using R via:
+You can install ‘irpeat’ from GitHub using R via:
 
 ``` r
 remotes::install_github(repo = "henningte/irpeat")
 ```
 
-irpeat relies on the R package [ir](https://github.com/henningte/ir) for
-handling infrared spectra.
+‘irpeat’ relies on the R package [‘ir’](https://github.com/henningte/ir)
+for handling infrared spectra.
 
 ### How to use
 
-You can load irpeat in R with:
+You can load ‘irpeat’ in R with:
 
 ``` r
 library(irpeat)
@@ -44,17 +44,16 @@ library(irpeat)
 # load additional packages needed for this tutorial
 library(ir)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.0.2
-library(magrittr)
+#> Warning: package 'ggplot2' was built under R version 4.0.5
 ```
 
-You can test irpeat with sample data from the R package ir:
+You can test ‘irpeat’ with sample data from the R package ‘ir’:
 
 ``` r
 ir::ir_sample_data
 #> # A tibble: 58 x 7
-#>    measurement_id sample_id sample_type sample_comment             klason_lignin
-#>  *          <int> <chr>     <chr>       <chr>                      <units>      
+#>    id_measurement id_sample sample_type sample_comment             klason_lignin
+#>             <int> <chr>     <chr>       <chr>                      <units>      
 #>  1              1 GN 11-389 needles     Abies Firma Momi fir       0.359944     
 #>  2              2 GN 11-400 needles     Cupressocyparis leylandii~ 0.339405     
 #>  3              3 GN 11-407 needles     Juniperus chinensis Chine~ 0.267552     
@@ -66,17 +65,17 @@ ir::ir_sample_data
 #>  9              9 GN 11-428 needles     Thuja occidentalis Easter~ 0.369360     
 #> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~ 0.289050     
 #> # ... with 48 more rows, and 2 more variables: holocellulose <units>,
-#> #   spectra <list>
+#> #   spectra <named list>
 ```
 
 `ir::ir_sample_data` contains various ATR-MIR spectra of organic
 reference material (e.g. newspaper, wood, grass).
 
 A simple workflow could be, for example, to baseline correct the spectra
-(using functions of the package ir) compute various humification indices
-and Klason lignin and holocellulose mass fractions in the samples. We
-use only the first few spectra from `ir::ir_sample_data` to speed the
-computations a bit up.
+(using functions of the package ‘ir’) compute various humification
+indices and Klason lignin and holocellulose mass fractions in the
+samples. We use only the first few spectra from `ir::ir_sample_data` to
+speed the computations a bit up.
 
 ``` r
 x <- 
@@ -88,25 +87,26 @@ x <-
 ```
 
 `x` is identical to `ir::ir_sample_data[1:10, ]`, but contains
-additional columns for the computed humification indices (h1, h2, h3,
-h4) and the computed Klason lignin content (klason\_lignin\_hodgkins)
-and holocellulose content (holocellulose\_hodgkins).
+additional columns for the computed humification indices (`h1`, `h2`,
+`h3`, `h4`) and the computed Klason lignin content
+(`klason_lignin_hodgkins`) and holocellulose content
+(holocellulose\_hodgkins).
 
 ``` r
 x
 #> # A tibble: 10 x 13
-#>    measurement_id sample_id sample_type sample_comment             klason_lignin
-#>             <int> <chr>     <chr>       <chr>                                [1]
-#>  1              1 GN 11-389 needles     Abies Firma Momi fir            0.359944
-#>  2              2 GN 11-400 needles     Cupressocyparis leylandii~      0.339405
-#>  3              3 GN 11-407 needles     Juniperus chinensis Chine~      0.267552
-#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi~      0.350016
-#>  5              5 GN 11-416 needles     Pinus strobus Torulosa          0.331100
-#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde~      0.279360
-#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali~      0.329672
-#>  8              8 GN 11-423 needles     Taxodium distichum Cascad~      0.356950
-#>  9              9 GN 11-428 needles     Thuja occidentalis Easter~      0.369360
-#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~      0.289050
+#>    id_measurement id_sample sample_type sample_comment             klason_lignin
+#>  *          <int> <chr>     <chr>       <chr>                                [1]
+#>  1              1 GN 11-389 needles     Abies Firma Momi fir               0.360
+#>  2              2 GN 11-400 needles     Cupressocyparis leylandii~         0.339
+#>  3              3 GN 11-407 needles     Juniperus chinensis Chine~         0.268
+#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi~         0.350
+#>  5              5 GN 11-416 needles     Pinus strobus Torulosa             0.331
+#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde~         0.279
+#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali~         0.330
+#>  8              8 GN 11-423 needles     Taxodium distichum Cascad~         0.357
+#>  9              9 GN 11-428 needles     Thuja occidentalis Easter~         0.369
+#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~         0.289
 #> # ... with 8 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
 #> #   hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, holocellulose_hodgkins (err) [g/g],
 #> #   klason_lignin_hodgkins (err) [g/g]
@@ -123,7 +123,7 @@ ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) *
                 y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
 ```
 
-![](man/figures/x_plot-1.png)<!-- -->
+![](man/figures/README-x_plot-1.png)<!-- -->
 
 All computed quantities come with units and standard errors (thanks to
 the [quantities](https://github.com/r-quantities/quantities) package):
@@ -144,24 +144,24 @@ x$klason_lignin_hodgkins
 ### Future development
 
 Henning Teickner plans, as part of his PhD project, to extensively
-extent irpeat by developing a set of calibration models that can predict
-various peat physicochemical properties from mid infrared spectra. These
-models should be finished by November 2022. Currently, a data compendium
-([pmird](https://henningte.github.io/pmird/index.html)) is developed to
-collect the data required for this task.
+extent ‘irpeat’ by developing a set of calibration models that can
+predict various peat physicochemical properties from mid infrared
+spectra. These models should be finished by September 2024. Currently, a
+data compendium ([pmird](https://henningte.github.io/pmird/index.html))
+is developed to collect the data required for this task.
 
 ### How to cite
 
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-02-05.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-04-21.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
 
 **Text and figures :**
-[CC-BY-4.0](http://creativecommons.org/licenses/by/4.0/)
+[CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)
 
 **Code :** See the [DESCRIPTION](DESCRIPTION) file
 
@@ -183,7 +183,7 @@ from Hodgkins et al. (2018) and were restructured to match the
 requirements of ir. The original article containing the data can be
 downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and
 is distributed under the Creative Commons Attribution 4.0 International
-License (<http://creativecommons.org/licenses/by/4.0/>). The data on
+License (<https://creativecommons.org/licenses/by/4.0/>). The data on
 Klason lignin and holocellulose content was originally derived from De
 La Cruz, Florentino B., Osborne, and Barlaz (2016).
 

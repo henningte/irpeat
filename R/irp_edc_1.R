@@ -1,35 +1,36 @@
-#' Predicts the electron donating capacity from mid infrared spectra.
+#' Predicts the electron donating capacity from mid infrared spectra
 #'
-#' \code{irp_edc_1} predicts the electron accepting capacity (EDC) from mid
+#' `irp_edc_1` predicts the electron accepting capacity (EDC) from mid
 #' infrared spectra of the peat samples. This function may also work for
 #' organic matter in general \insertCite{Teickner.2022}{irpeat}.
 #'
 #' @inheritParams irp_eac_1
-#' @return \code{x} with a new column "edc" with the predicted EDC values
-#' [\eqn{\mu}mol g\eqn{_\text{C}^{-1}}].
+#'
+#' @return `x` with a new column "edc" with the predicted EDC values
+#' \[\eqn{\mu}mol g\eqn{_\text{C}^{-1}}\].
+#'
 #' @note The model still has a relatively large uncertainty because it is fitted
 #' with few samples. Moreover, the model is known to produce biased predictions
 #' \insertCite{Teickner.2022}{irpeat}. For further limitations, see
 #' \insertCite{Teickner.2022;textual}{irpeat}.
+#'
 #' @source \insertCite{Teickner.2022;textual}{irpeat}
-#' @seealso \code{\link{model_edc_1}}.
+#'
+#' @seealso [model_edc_1()].
+#'
 #' @examples
-#' \dontrun{
-#' # get sample data
-#' x <- ir::ir_sample_data
+#' library(ir)
 #'
 #' # make predictions
-#' x <- irpeat::irp_edc_1(x, do_summary = TRUE)
-#' }
+#' irpeat::irp_edc_1(ir::ir_sample_data[1, ], do_summary = TRUE)
+#'
 #' @references
 #'   \insertAllCited{}
+#'
 #' @export
-irp_edc_1 <- function(x,
-                    ...,
-                    do_summary = FALSE)
-{
+irp_edc_1 <- function(x, ..., do_summary = FALSE) {
 
-  ir::ir_check_ir(x)
+  stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
   x_or <- x

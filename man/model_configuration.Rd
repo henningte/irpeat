@@ -9,62 +9,62 @@
 \format{
 A list with the following elements:
 \describe{
-   \item{\code{irp_preprocess}}{
-     A list with the a subset of the following elements:
-     \describe{
-        \item{\code{do_interpolate}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{interpolate_start}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{interpolate_dw}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_clip}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{clip_range}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_interpolate_region}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{interpolate_region_range}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_bc}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{bc_method}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{bc_degree}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{bc_cutoff}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_smooth}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_method}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_p}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_n}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_m}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_ts}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{smooth_k}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_normalise}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{normalise_method}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_bin}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{bin_width}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{do_scale}}{See \code{\link{irp_preprocess}}.}
-        \item{\code{scale_center}}{See \code{\link{irp_preprocess}}. This is
-        used to preprocess the training data before model computation. The
-        values in \code{data_scale} are used to scale data used for
-        prediction.}
-        \item{\code{scale_scale}}{See \code{\link{irp_preprocess}}. This is
-        used to preprocess the training data before model computation. The
-        values in \code{data_scale} are used to scale data used for
-        prediction.}
-     }
-   }
-   \item{\code{data_scale}}{
-     Values used for scaling data used for prediction. A list with the
-     following elements:
-     \describe{
-        \item{\code{y_center}}{A numeric value representing the value to
-        subtract from the dependent variable of a model during
-        scaling. Corresponds to argument \code{center} in
-        \code{\link[base]{scale}}.}
-        \item{\code{y_scale}}{A numeric value representing the value by
-        which the dependent variable of a model is divided during
-        scaling. Corresponds to argument \code{scale} in
-        \code{\link[base]{scale}}.}
-        \item{\code{x_center}}{The same as \code{y_center}, but for the
-        independent variable(s). Can be a numeric vector with an element for
-        each independent variable.}
-        \item{\code{y_scale}}{The same as \code{y_center}, but for the
-        independent variable(s). Can be a numeric vector with an element for
-        each independent variable.}
-     }
-   }
+\item{\code{irp_preprocess}}{
+A list with the a subset of the following elements:
+\describe{
+\item{\code{do_interpolate}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{interpolate_start}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{interpolate_dw}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_clip}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{clip_range}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_interpolate_region}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{interpolate_region_range}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_bc}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{bc_method}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{bc_degree}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{bc_cutoff}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_smooth}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_method}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_p}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_n}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_m}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_ts}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{smooth_k}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_normalise}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{normalise_method}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_bin}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{bin_width}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{do_scale}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{scale_center}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}. This is
+used to preprocess the training data before model computation. The
+values in \code{data_scale} are used to scale data used for
+prediction.}
+\item{\code{scale_scale}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}. This is
+used to preprocess the training data before model computation. The
+values in \code{data_scale} are used to scale data used for
+prediction.}
+}
+}
+\item{\code{data_scale}}{
+Values used for scaling data used for prediction. A list with the
+following elements:
+\describe{
+\item{\code{y_center}}{A numeric value representing the value to
+subtract from the dependent variable of a model during
+scaling. Corresponds to argument \code{center} in
+\code{\link[base:scale]{base::scale()}}.}
+\item{\code{y_scale}}{A numeric value representing the value by
+which the dependent variable of a model is divided during
+scaling. Corresponds to argument \code{scale} in
+\code{\link[base:scale]{base::scale()}}.}
+\item{\code{x_center}}{The same as \code{y_center}, but for the
+independent variable(s). Can be a numeric vector with an element for
+each independent variable.}
+\item{\code{y_scale}}{The same as \code{y_center}, but for the
+independent variable(s). Can be a numeric vector with an element for
+each independent variable.}
+}
+}
 }
 
 An object of class \code{list} of length 2.
@@ -76,6 +76,6 @@ model_edc_1_config
 }
 \description{
 The different configuration files are used in the models with the respective
-name. See \code{\link{irp_preprocess}}.
+name. See \code{\link[=irp_preprocess]{irp_preprocess()}}.
 }
 \keyword{datasets}
