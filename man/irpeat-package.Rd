@@ -8,6 +8,13 @@
 \description{
 'irpeat' provides functions to analyze mid infrared spectra of peat samples (various humification indices, Klason lignin content, holocellulose content, electron accepting capacity, electron donating capacity).
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://henningte.github.io/irpeat/}
+}
+
+}
 \author{
 \strong{Maintainer}: Henning Teickner \email{henning.teickner@uni-muenster.de} (\href{https://orcid.org/0000-0002-3993-1182}{ORCID})
 

@@ -8,3 +8,7 @@
 ^README.md$
 ^README-x_plot-1.png$
 ^\.Rhistory$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.github$

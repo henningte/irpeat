@@ -131,11 +131,11 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$klason_lignin_2
 #> Units: [g/g]
-#> Errors: 0.05296377 0.03873569 0.03441896 0.03805547 0.03539149 ...
+#> Errors: 0.05273965 0.03871829 0.03467267 0.03909894 0.03555994 ...
 #>        V1        V2        V3        V4        V5        V6        V7        V8 
-#> 0.3763369 0.3411976 0.2538777 0.3080136 0.2965107 0.2779422 0.3134642 0.3516698 
+#> 0.3773476 0.3420038 0.2545032 0.3087511 0.2966754 0.2774559 0.3138994 0.3517587 
 #>        V9       V10 
-#> 0.3397604 0.2906710
+#> 0.3401348 0.2917524
 ```
 
 ### Future development
@@ -152,7 +152,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-04-21.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-04-22.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
