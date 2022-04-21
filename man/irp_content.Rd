@@ -18,6 +18,10 @@ are:
 as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
 \item{"holocellulose_hodgkins"}{Holocellulose mass fraction [g/g]
 as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
+\item{"klason_lignin_2"}{Klason lignin mass fraction [g/g]
+as computed by \code{\link[=irp_klason_lignin_2]{irp_klason_lignin_2()}}.}
+\item{"holocellulose_2"}{Holocellulose mass fraction [g/g]
+as computed by \code{\link[=irp_holocellulose_2]{irp_holocellulose_2()}}.}
 \item{"eac_1"}{Electron accepting capacity as computed by \code{\link[=irp_eac_1]{irp_eac_1()}}.}
 \item{"edc_1"}{Electron donating capacity as computed by \code{\link[=irp_edc_1]{irp_edc_1()}}.}
 }}
@@ -42,7 +46,12 @@ corresponding functions with warnings activated.
 library(ir)
 
 irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_hodgkins")
+
+\dontrun{
+irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_2")
+irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_2")
 irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
 irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
+}
 
 }

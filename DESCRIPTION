@@ -41,7 +41,8 @@ Imports:
     stats,
     rstanarm (>= 2.19.3),
     lifecycle,
-    magrittr
+    magrittr,
+    brms
 RoxygenNote: 7.1.2.9000
 RdMacros: 
   Rdpack

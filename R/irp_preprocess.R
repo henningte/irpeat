@@ -4,7 +4,7 @@
 #' preprocessing workflow for spectra. The workflow comprises interpolation,
 #' clipping, baseline correction, smoothing (including optionally
 #' derivatization), normalization, binning, and scaling. All these steps are
-#' optionally, but occur in a fixed order that cannot be changed.
+#' optionally, but occur on a fixed order that cannot be changed.
 #'
 #' @param x An object of class [`ir`][ir::ir_new_ir] (it is assumed
 #' that `x` is not yet preprocessed).

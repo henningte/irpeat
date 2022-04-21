@@ -1,6 +1,6 @@
 #### Models ####
 
-#' Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}.
+#' Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}
 #'
 #'
 #' `irp_content_kl_hodgkins_model` is a linear model to predict
@@ -24,7 +24,7 @@
 "irp_content_kl_hodgkins_model"
 
 
-#' Linear model to predict holocellulose content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}.
+#' Linear model to predict holocellulose content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}
 #'
 #'
 #' `irp_content_h_hodgkins_model` is a linear model to predict
@@ -47,7 +47,81 @@
 #'   \insertAllCited{}
 "irp_content_h_hodgkins_model"
 
-#' Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.
+#' Linear model to predict holocellulose content from MIR spectra from \[---todo:ref]
+#'
+#'
+#' `model_holocellulose_2` is a linear model to predict
+#' holocellulose mass fractions \[g/g\] in samples based on mid infrared spectra.
+#' Predictions with this model can be generated with
+#' [irp_holocellulose_2()].
+#'
+#' @details The model was trained on the data from \insertCite{Hodgkins.2018;textual}{ir}
+#' (available via [ir::ir_sample_data()]) and is
+#' described in \[---todo:ref]. See [model_holocellulose_2_config()]
+#' for details on how the training spectra were preprocessed prior model
+#' fitting.
+#'
+#' The model is an improved version of `irp_content_h_hodgkins_model`
+#' \[---todo:ref]. It is a Bayesian beta regression model using all binned
+#' spectral variables for prediction.
+#'
+#' @note Note that this is a preliminary model only which has not been fully
+#' validated for peat samples yet and which has known limitations in predicting
+#' contents for peat samples [--- todo: add reference].
+#'
+#' @format An object of class [brms::brmsfit-class()].
+#'
+#' @source The model is described in \[---todo:ref]. The data set was derived
+#' from <https://www.nature.com/articles/s41467-018-06050-2> and published
+#' by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license
+#' <https://creativecommons.org/licenses/by/4.0/>.
+#' \insertCite{Hodgkins.2018;textual}{ir} originally derived the data on
+#' holocellulose content from \insertCite{LaCruz.2016;textual}{ir}
+#' <https://www.liebertpub.com/doi/full/10.1089/ees.2014.0402>.
+#'
+#' @references
+#'   \insertAllCited{}
+#'
+"model_holocellulose_2"
+
+#' Linear model to predict Klason lignin content from MIR spectra from \[---todo:ref]
+#'
+#'
+#' `model_klason_lignin_2` is a linear model to predict
+#' Klason lignin mass fractions \[g/g\] in samples based on mid infrared spectra.
+#' Predictions with this model can be generated with
+#' [irp_klason_lignin_2()].
+#'
+#' @details The model was trained on the data from \insertCite{Hodgkins.2018;textual}{ir}
+#' (available via [ir::ir_sample_data()]) and is
+#' described in \[---todo:ref]. See [model_klason_lignin_2_config()]
+#' for details on how the training spectra were preprocessed prior model
+#' fitting.
+#'
+#' The model is an improved version of `irp_content_kl_hodgkins_model`
+#' \[---todo:ref]. It is a Bayesian beta regression model using all binned
+#' spectral variables for prediction.
+#'
+#' @note Note that this is a preliminary model only which has not been fully
+#' validated for peat samples yet and which has known limitations in predicting
+#' contents for peat samples [--- todo: add reference].
+#'
+#' @format An object of class [brms::brmsfit-class()].
+#'
+#' @source The model is described in \[---todo:ref]. The data set was derived
+#' from <https://www.nature.com/articles/s41467-018-06050-2> and published
+#' by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license
+#' <https://creativecommons.org/licenses/by/4.0/>.
+#' \insertCite{Hodgkins.2018;textual}{ir} originally derived the data on
+#' Klason lignin content from \insertCite{LaCruz.2016;textual}{ir}
+#' <https://www.liebertpub.com/doi/full/10.1089/ees.2014.0402>.
+#'
+#' @references
+#'   \insertAllCited{}
+#'
+"model_klason_lignin_2"
+
+#' Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}
 #'
 #'
 #' `model_eac_1` is a linear model to predict
@@ -67,7 +141,7 @@
 #'   \insertAllCited{}
 "model_eac_1"
 
-#' Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.
+#' Linear model to predict peat electron donating capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}
 #'
 #'
 #' `model_edc_1` is a linear model to predict
@@ -157,7 +231,14 @@
 #' }
 
 #' @rdname model_configuration
+"model_klason_lignin_2_config"
+
+#' @rdname model_configuration
+"model_holocellulose_2_config"
+
+#' @rdname model_configuration
 "model_eac_1_config"
 
 #' @rdname model_configuration
 "model_edc_1_config"
+

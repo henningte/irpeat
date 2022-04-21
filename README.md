@@ -9,6 +9,8 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
+## Overview
+
 ‘irpeat’ is an R package that contains simple functions to analyze
 infrared spectra of peat samples. Some functions may also work with
 organic matter samples in general.
@@ -16,8 +18,10 @@ organic matter samples in general.
 Provided functions for analyzing infrared spectra of peat are:
 
 1.  Computation of several humification indices.
-2.  Klason lignin mass fraction (following Hodgkins et al. (2018)).
-3.  Holocellulose mass fraction (following Hodgkins et al. (2018)).
+2.  Klason lignin mass fraction (following Hodgkins et al. (2018) and
+    \[—todo:ref\]).
+3.  Holocellulose mass fraction (following Hodgkins et al. (2018) and
+    \[—todo:ref\]).
 4.  Peat electron accepting capacity (following Teickner, Gao, and Knorr
     (2022)).
 5.  Peat electron donating capacity (following Teickner, Gao, and Knorr
@@ -82,19 +86,16 @@ x <-
   ir::ir_sample_data[1:10, ] %>%                                # data
   ir::ir_bc(method = "rubberband") %>%                          # baseline correction
   irpeat::irp_hi() %>%                                          # humification indices
-  irpeat::irp_content(variable = c("klason_lignin_hodgkins",    # Klason lignin and
-                                   "holocellulose_hodgkins"))   # holocellulose content
+  irpeat::irp_klason_lignin_2(do_summary = TRUE)                # Klason lignin content
 ```
 
 `x` is identical to `ir::ir_sample_data[1:10, ]`, but contains
 additional columns for the computed humification indices (`h1`, `h2`,
-`h3`, `h4`) and the computed Klason lignin content
-(`klason_lignin_hodgkins`) and holocellulose content
-(holocellulose\_hodgkins).
+`h3`, `h4`) and the computed Klason lignin content (`klason_lignin_2`)
 
 ``` r
 x
-#> # A tibble: 10 x 13
+#> # A tibble: 10 x 12
 #>    id_measurement id_sample sample_type sample_comment             klason_lignin
 #>  *          <int> <chr>     <chr>       <chr>                                [1]
 #>  1              1 GN 11-389 needles     Abies Firma Momi fir               0.360
@@ -107,9 +108,8 @@ x
 #>  8              8 GN 11-423 needles     Taxodium distichum Cascad~         0.357
 #>  9              9 GN 11-428 needles     Thuja occidentalis Easter~         0.369
 #> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~         0.289
-#> # ... with 8 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
-#> #   hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, holocellulose_hodgkins (err) [g/g],
-#> #   klason_lignin_hodgkins (err) [g/g]
+#> # ... with 7 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
+#> #   hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, klason_lignin_2 (err) [g/g]
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -117,7 +117,7 @@ Plot of the humification index (ratio of the intensities at 1420 and
 content:
 
 ``` r
-ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) * 100, y = hi1)) + 
+ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_2) * 100, y = hi1)) + 
   ggplot2::geom_point() +
   ggplot2::labs(x = "Klason lignin content [mass-%]", 
                 y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
@@ -129,16 +129,13 @@ All computed quantities come with units and standard errors (thanks to
 the [quantities](https://github.com/r-quantities/quantities) package):
 
 ``` r
-x$holocellulose_hodgkins
+x$klason_lignin_2
 #> Units: [g/g]
-#> Errors: 0.08787836 0.08742260 0.08664852 0.08723411 0.08673890 ...
-#>  [1] 0.2079986 0.2458115 0.3347145 0.2635991 0.3212075 0.2866602 0.2290862
-#>  [8] 0.2094640 0.2964282 0.2998223
-x$klason_lignin_hodgkins
-#> Units: [g/g]
-#> Errors: 0.04944972 0.05030216 0.04924869 0.04960059 0.04939710 ...
-#>  [1] 0.3039663 0.3446851 0.2888067 0.3130406 0.3004306 0.2663081 0.3177061
-#>  [8] 0.3251141 0.3147190 0.2541749
+#> Errors: 0.05296377 0.03873569 0.03441896 0.03805547 0.03539149 ...
+#>        V1        V2        V3        V4        V5        V6        V7        V8 
+#> 0.3763369 0.3411976 0.2538777 0.3080136 0.2965107 0.2779422 0.3134642 0.3516698 
+#>        V9       V10 
+#> 0.3397604 0.2906710
 ```
 
 ### Future development

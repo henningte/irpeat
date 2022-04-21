@@ -17,9 +17,13 @@
 #' \describe{
 #'   \item{"all"}{`irp_content` computes all of the values below.}
 #'   \item{"klason_lignin_hodgkins"}{Klason lignin mass fraction \[g/g\]
-#'   as computed by [irp_content_klh_hodgkins()].}
+#'     as computed by [irp_content_klh_hodgkins()].}
 #'   \item{"holocellulose_hodgkins"}{Holocellulose mass fraction \[g/g\]
-#'   as computed by [irp_content_klh_hodgkins()].}
+#'     as computed by [irp_content_klh_hodgkins()].}
+#'   \item{"klason_lignin_2"}{Klason lignin mass fraction \[g/g\]
+#'     as computed by [irp_klason_lignin_2()].}
+#'   \item{"holocellulose_2"}{Holocellulose mass fraction \[g/g\]
+#'     as computed by [irp_holocellulose_2()].}
 #'   \item{"eac_1"}{Electron accepting capacity as computed by [irp_eac_1()].}
 #'   \item{"edc_1"}{Electron donating capacity as computed by [irp_edc_1()].}
 #' }
@@ -35,6 +39,8 @@
 #' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_hodgkins")
 #'
 #' \dontrun{
+#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_2")
+#' irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_2")
 #' irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
 #' irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
 #' }
@@ -49,7 +55,7 @@ irp_content <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_hodgkins", "holocellulose_hodgkins", "eac_1", "edc_1")
+  variable_values <- c("klason_lignin_hodgkins", "holocellulose_hodgkins", "holocellulose_2", "klason_lignin_2", "eac_1", "edc_1")
   variable_match <- variable %in% c(variable_values, "all")
   if(!all(variable_match)) {
     if(sum(variable_match) == 1) {
@@ -76,6 +82,12 @@ irp_content <- function(x, variable, ...) {
                                              verbose = FALSE,
                                              make_plots = FALSE)
              }
+           },
+           "klason_lignin_2" = {
+             x <- irp_klason_lignin_2(x = x, ...)
+           },
+           "hlocellulose_2" = {
+             x <- irp_holocellulose_2(x = x, ...)
            },
            "eac_1" = {
              x <- irp_eac_1(x = x, ...)

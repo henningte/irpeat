@@ -3,7 +3,7 @@
 \docType{data}
 \name{model_eac_1}
 \alias{model_eac_1}
-\title{Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}.}
+\title{Linear model to predict peat electron accepting capacities from mid infrared spectra from \insertCite{Teickner.2022;textual}{irpeat}}
 \format{
 An object of class \code{\link[rstanarm:stanreg-objects]{stanreg}}.
 }

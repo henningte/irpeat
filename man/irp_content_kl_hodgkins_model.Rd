@@ -3,7 +3,7 @@
 \docType{data}
 \name{irp_content_kl_hodgkins_model}
 \alias{irp_content_kl_hodgkins_model}
-\title{Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}.}
+\title{Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}}
 \format{
 An object of class \code{\link[stats:lm]{stats::lm()}}.
 }

@@ -28,8 +28,8 @@ knitr::opts_chunk$set(
 Provided functions for analyzing infrared spectra of peat are:
 
 1. Computation of several humification indices.
-2. Klason lignin mass fraction (following @Hodgkins.2018).
-3. Holocellulose mass fraction (following @Hodgkins.2018).
+2. Klason lignin mass fraction (following @Hodgkins.2018 and [---todo:ref]).
+3. Holocellulose mass fraction (following @Hodgkins.2018 and [---todo:ref]).
 4. Peat electron accepting capacity (following @Teickner.2022).
 5. Peat electron donating capacity (following @Teickner.2022).
 
@@ -70,11 +70,10 @@ x <-
   ir::ir_sample_data[1:10, ] %>%                                # data
   ir::ir_bc(method = "rubberband") %>%                          # baseline correction
   irpeat::irp_hi() %>%                                          # humification indices
-  irpeat::irp_content(variable = c("klason_lignin_hodgkins",    # Klason lignin and
-                                   "holocellulose_hodgkins"))   # holocellulose content
+  irpeat::irp_klason_lignin_2(do_summary = TRUE)                # Klason lignin content
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed Klason lignin content (`klason_lignin_hodgkins`) and holocellulose content (holocellulose_hodgkins).
+`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed Klason lignin content (`klason_lignin_2`)
 
 ```{r x_inspect}
 x
@@ -83,7 +82,7 @@ x
 Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
 
 ```{r x_plot}
-ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) * 100, y = hi1)) + 
+ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_2) * 100, y = hi1)) + 
   ggplot2::geom_point() +
   ggplot2::labs(x = "Klason lignin content [mass-%]", 
                 y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
@@ -94,8 +93,7 @@ ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_hodgkins) *
 All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
 
 ```{r x_klh_inspect_quantities}
-x$holocellulose_hodgkins
-x$klason_lignin_hodgkins
+x$klason_lignin_2
 ```
 
 ### Future development

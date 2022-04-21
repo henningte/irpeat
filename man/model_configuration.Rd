@@ -3,6 +3,8 @@
 \docType{data}
 \name{model_configuration}
 \alias{model_configuration}
+\alias{model_klason_lignin_2_config}
+\alias{model_holocellulose_2_config}
 \alias{model_eac_1_config}
 \alias{model_edc_1_config}
 \title{Configuration files defining preprocessing parameters.}
@@ -68,8 +70,16 @@ each independent variable.}
 }
 
 An object of class \code{list} of length 2.
+
+An object of class \code{list} of length 2.
+
+An object of class \code{list} of length 2.
 }
 \usage{
+model_klason_lignin_2_config
+
+model_holocellulose_2_config
+
 model_eac_1_config
 
 model_edc_1_config
