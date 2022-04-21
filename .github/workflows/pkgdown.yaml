@@ -23,6 +23,10 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: install remote dependencies
+        run: |
+          Rscript -e 'install.packages("remotes"); remotes::install_github(repo = "henningte/ir"); remotes::install_github(repo = "henningte/elco")'
+
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: pkgdown
