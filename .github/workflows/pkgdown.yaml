@@ -23,10 +23,15 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: add remote dependencies repos
+        run: |
+          writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = ir = "https://github.com/henningte/elco/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           dependencies: "hard"
-          extra-packages: pkgdown, henningte/ir, henningte/elco
+          extra-packages: pkgdown
           needs: website
 
       - name: Deploy package
