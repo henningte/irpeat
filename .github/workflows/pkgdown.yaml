@@ -25,6 +25,7 @@ jobs:
 
       - name: install remote dependencies
         run: |
+          sudo apt-get install libudunits2-dev
           Rscript -e 'install.packages("remotes", lib = .libPaths()[[1]]); remotes::install_github(repo = "henningte/ir", lib = .libPaths()[[1]]); remotes::install_github(repo = "henningte/elco", lib = .libPaths()[[1]])'
 
       - uses: r-lib/actions/setup-r-dependencies@v1
