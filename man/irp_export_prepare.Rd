@@ -10,19 +10,26 @@ irp_export_prepare(x)
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}.}
 }
 \value{
-An object of class \code{\link[ir:ir_new_ir]{ir}} with a new column for
-each column that is of class \code{"units"} and each column that is of class
-\code{"errors"}. New columns are named old_column_name_errors and old_column_name_units,
-respectively.
+An object of class \code{ir} with a new column for each column that is of class
+\code{units} and each column that is of class \code{errors}. New columns are named
+\code{old_column_name_errors} and \code{old_column_name_units}, respectively.
 }
 \description{
-\code{irp_export_prepare} stores errors (\link[errors:errors]{errors::errors}) and
-units (\code{\link[units:units]{units}}) of error or
-units columns in an object of class \code{\link[ir:ir_new_ir]{ir}} in separate columns.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
+\code{irp_export_prepare} stores errors (\link[errors:errors]{errors::errors}) and units
+(\code{\link[units:units]{units}}) of error or units columns in an object of
+class \code{ir} in separate columns.
 }
 \examples{
 library(ir)
 
-irp_export_prepare(ir::ir_sample_data[1:5, ])
+irp_export_prepare(ir::ir_sample_data[1:5, ]) # now deprecated
+
+# replacement for deprecated function:
+\dontrun{
+ir::ir_export_prepare(ir::ir_sample_data[1:5, ], what = "metadata")
+}
 
 }
+\keyword{internal}
