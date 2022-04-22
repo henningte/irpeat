@@ -1,7 +1,6 @@
-url: ~
+url: https://henningte.github.io/irpeat/
 template:
   bootstrap: 5
-
 navbar:
   structure:
     right: github
@@ -14,3 +13,4 @@ navbar:
       menu:
       - text: News
         href: news/index.html
+

@@ -59,3 +59,6 @@ URL: https://henningte.github.io/irpeat/
 Remotes: 
     henningte/ir,
     henningte/elco
+Additional_repositories:
+    https://github.com/henningte/ir/,
+    https://github.com/henningte/elco/
