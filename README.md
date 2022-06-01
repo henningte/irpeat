@@ -19,9 +19,9 @@ Provided functions for analyzing infrared spectra of peat are:
 
 1.  Computation of several humification indices.
 2.  Klason lignin mass fraction (following Hodgkins et al. (2018) and
-    \[—todo:ref\]).
+    Teickner and Knorr (2022)).
 3.  Holocellulose mass fraction (following Hodgkins et al. (2018) and
-    \[—todo:ref\]).
+    Teickner and Knorr (2022)).
 4.  Peat electron accepting capacity (following Teickner, Gao, and Knorr
     (2022)).
 5.  Peat electron donating capacity (following Teickner, Gao, and Knorr
@@ -48,27 +48,26 @@ library(irpeat)
 # load additional packages needed for this tutorial
 library(ir)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.0.5
 ```
 
 You can test ‘irpeat’ with sample data from the R package ‘ir’:
 
 ``` r
 ir::ir_sample_data
-#> # A tibble: 58 x 7
+#> # A tibble: 58 × 7
 #>    id_measurement id_sample sample_type sample_comment             klason_lignin
 #>             <int> <chr>     <chr>       <chr>                      <units>      
 #>  1              1 GN 11-389 needles     Abies Firma Momi fir       0.359944     
-#>  2              2 GN 11-400 needles     Cupressocyparis leylandii~ 0.339405     
-#>  3              3 GN 11-407 needles     Juniperus chinensis Chine~ 0.267552     
-#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi~ 0.350016     
+#>  2              2 GN 11-400 needles     Cupressocyparis leylandii… 0.339405     
+#>  3              3 GN 11-407 needles     Juniperus chinensis Chine… 0.267552     
+#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi… 0.350016     
 #>  5              5 GN 11-416 needles     Pinus strobus Torulosa     0.331100     
-#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde~ 0.279360     
-#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali~ 0.329672     
-#>  8              8 GN 11-423 needles     Taxodium distichum Cascad~ 0.356950     
-#>  9              9 GN 11-428 needles     Thuja occidentalis Easter~ 0.369360     
-#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~ 0.289050     
-#> # ... with 48 more rows, and 2 more variables: holocellulose <units>,
+#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde… 0.279360     
+#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali… 0.329672     
+#>  8              8 GN 11-423 needles     Taxodium distichum Cascad… 0.356950     
+#>  9              9 GN 11-428 needles     Thuja occidentalis Easter… 0.369360     
+#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin… 0.289050     
+#> # … with 48 more rows, and 2 more variables: holocellulose <units>,
 #> #   spectra <named list>
 ```
 
@@ -95,20 +94,20 @@ additional columns for the computed humification indices (`h1`, `h2`,
 
 ``` r
 x
-#> # A tibble: 10 x 12
+#> # A tibble: 10 × 12
 #>    id_measurement id_sample sample_type sample_comment             klason_lignin
 #>  *          <int> <chr>     <chr>       <chr>                                [1]
 #>  1              1 GN 11-389 needles     Abies Firma Momi fir               0.360
-#>  2              2 GN 11-400 needles     Cupressocyparis leylandii~         0.339
-#>  3              3 GN 11-407 needles     Juniperus chinensis Chine~         0.268
-#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi~         0.350
+#>  2              2 GN 11-400 needles     Cupressocyparis leylandii…         0.339
+#>  3              3 GN 11-407 needles     Juniperus chinensis Chine…         0.268
+#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi…         0.350
 #>  5              5 GN 11-416 needles     Pinus strobus Torulosa             0.331
-#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde~         0.279
-#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali~         0.330
-#>  8              8 GN 11-423 needles     Taxodium distichum Cascad~         0.357
-#>  9              9 GN 11-428 needles     Thuja occidentalis Easter~         0.369
-#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin~         0.289
-#> # ... with 7 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
+#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde…         0.279
+#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali…         0.330
+#>  8              8 GN 11-423 needles     Taxodium distichum Cascad…         0.357
+#>  9              9 GN 11-428 needles     Thuja occidentalis Easter…         0.369
+#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin…         0.289
+#> # … with 7 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
 #> #   hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, klason_lignin_2 (err) [g/g]
 ```
 
@@ -131,11 +130,11 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$klason_lignin_2
 #> Units: [g/g]
-#> Errors: 0.05273965 0.03871829 0.03467267 0.03909894 0.03555994 ...
+#> Errors: 0.05376196 0.03869140 0.03467985 0.03891655 0.03595512 ...
 #>        V1        V2        V3        V4        V5        V6        V7        V8 
-#> 0.3773476 0.3420038 0.2545032 0.3087511 0.2966754 0.2774559 0.3138994 0.3517587 
+#> 0.3762703 0.3428526 0.2539950 0.3083105 0.2964964 0.2771638 0.3134706 0.3521598 
 #>        V9       V10 
-#> 0.3401348 0.2917524
+#> 0.3398341 0.2917780
 ```
 
 ### Future development
@@ -152,7 +151,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-04-22.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-06-01.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
@@ -175,8 +174,9 @@ participating in this project you agree to abide by its terms.
 
 ### Sources
 
-The data and prediction models for holocellulose and Klason are derived
-from Hodgkins et al. (2018) and were restructured to match the
+The data and prediction models for holocellulose and Klason lignin
+(`irp_content_h_hodgkins_model`, `irp_content_kl_hodgkins_model`) are
+derived from Hodgkins et al. (2018) and were restructured to match the
 requirements of ir. The original article containing the data can be
 downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and
 is distributed under the Creative Commons Attribution 4.0 International
@@ -184,64 +184,70 @@ License (<https://creativecommons.org/licenses/by/4.0/>). The data on
 Klason lignin and holocellulose content was originally derived from De
 La Cruz, Florentino B., Osborne, and Barlaz (2016).
 
+Modified prediction models for holocellulose and Klason lignin
+(`model_holocellulose_2`, `model_klason_lignin_2`) are derived from
+Teickner and Knorr (2022).
+
 Data and models for the electrochemical accepting and donating
 capacities (EAC, EDC) of peat were derived from Teickner, Gao, and Knorr
 (2022) and Teickner, Gao, and Knorr (2021)
 
-This packages was developed in R (R version 4.0.1 (2020-06-06)) (R Core
-Team 2019) using functions from devtools (Wickham, Hester, and Chang
-2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019) and
-roxygen2 (Wickham et al. 2019).
+This packages was developed in R (R version 4.2.0 (2022-04-22 ucrt)) (R
+Core Team 2019) using functions from devtools (Wickham, Hester, and
+Chang 2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019)
+and roxygen2 (Wickham et al. 2019).
 
 ### References
 
-<div id="refs" class="references hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
-<div id="ref-Broder.2012">
+<div id="ref-Broder.2012" class="csl-entry">
 
-Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat
-decomposition records in three pristine ombrotrophic bogs in southern
-Patagonia.” *Biogeosciences* 9 (4): 1479–91.
+Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “<span
+class="nocase">Peat decomposition records in three pristine ombrotrophic
+bogs in southern Patagonia</span>.” *Biogeosciences* 9 (4): 1479–91.
 <https://doi.org/10.5194/bg-9-1479-2012>.
 
 </div>
 
-<div id="ref-LaCruz.2016">
+<div id="ref-LaCruz.2016" class="csl-entry">
 
 De La Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016.
-“Determination of Sources of Organic Matter in Solid Waste by Analysis
-of Phenolic Copper Oxide Oxidation Products of Lignin.” *Journal of
-Environmental Engineering* 142 (2): 04015076.
-<https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
+“<span class="nocase">Determination of Sources of Organic Matter in
+Solid Waste by Analysis of Phenolic Copper Oxide Oxidation Products of
+Lignin</span>.” *Journal of Environmental Engineering* 142 (2):
+04015076. <https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
 
 </div>
 
-<div id="ref-Hodgkins.2018">
+<div id="ref-Hodgkins.2018" class="csl-entry">
 
 Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang,
-Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018.
-“Tropical peatland carbon storage linked to global latitudinal trends
-in peat recalcitrance.” *Nature communications* 9 (1): 3640.
+Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018. “<span
+class="nocase">Tropical peatland carbon storage linked to global
+latitudinal trends in peat recalcitrance</span>.” *Nature
+Communications* 9 (1): 3640.
 <https://doi.org/10.1038/s41467-018-06050-2>.
 
 </div>
 
-<div id="ref-Marwick.2019">
+<div id="ref-Marwick.2019" class="csl-entry">
 
-Marwick, Ben. 2019. “rrtools: Creates a Reproducible Research
-Compendium.” <https://github.com/benmarwick/rrtools>.
-
-</div>
-
-<div id="ref-RCoreTeam.2019">
-
-R Core Team. 2019. “R: A Language and Environment for Statistical
-Computing.” Vienna, Austria: R Foundation for Statistical Computing.
-<https://www.R-project.org/>.
+Marwick, Ben. 2019. “<span class="nocase">rrtools: Creates a
+Reproducible Research Compendium</span>.”
+<https://github.com/benmarwick/rrtools>.
 
 </div>
 
-<div id="ref-Teickner.2021c">
+<div id="ref-RCoreTeam.2019" class="csl-entry">
+
+R Core Team. 2019. “<span class="nocase">R: A Language and Environment
+for Statistical Computing</span>.” Vienna, Austria: R Foundation for
+Statistical Computing. <https://www.R-project.org/>.
+
+</div>
+
+<div id="ref-Teickner.2021c" class="csl-entry">
 
 Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021.
 “Reproducible Research Compendium with R Code and Data for:
@@ -251,7 +257,7 @@ Zenodo. <https://doi.org/10.5281/zenodo.5792970>.
 
 </div>
 
-<div id="ref-Teickner.2022">
+<div id="ref-Teickner.2022" class="csl-entry">
 
 ———. 2022. “Electrochemical Properties of Peat Particulate Organic
 Matter on a Global Scale: Relation to Peat Chemistry and Degree of
@@ -260,26 +266,36 @@ Decomposition.” *Global Biogeochemical Cycles*, February.
 
 </div>
 
-<div id="ref-Wickham.2019b">
+<div id="ref-Teickner.2022a" class="csl-entry">
 
-Wickham, Hadley, and Jennifer Bryan. 2019. “usethis: Automate Package
-and Project Setup.” <https://CRAN.R-project.org/package=usethis>.
+Teickner, Henning, and Klaus-Holger Knorr. 2022. “Improving Models to
+Predict Holocellulose and Klason Lignin Contents for Peat Soil Organic
+Matter with Mid Infrared Spectra.” Preprint. Soil and methods.
+<https://doi.org/10.5194/soil-2022-27>.
 
 </div>
 
-<div id="ref-Wickham.2019c">
+<div id="ref-Wickham.2019b" class="csl-entry">
+
+Wickham, Hadley, and Jennifer Bryan. 2019. “<span
+class="nocase">usethis: Automate Package and Project Setup</span>.”
+<https://CRAN.R-project.org/package=usethis>.
+
+</div>
+
+<div id="ref-Wickham.2019c" class="csl-entry">
 
 Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster.
-2019. “roxygen2: In-Line Documentation for R.”
-<https://CRAN.R-project.org/package=roxygen2>.
+2019. “<span class="nocase">roxygen2: In-Line Documentation for
+R</span>.” <https://CRAN.R-project.org/package=roxygen2>.
 
 </div>
 
-<div id="ref-Wickham.2019">
+<div id="ref-Wickham.2019" class="csl-entry">
 
-Wickham, Hadley, Jim Hester, and Winston Chang. 2019. “devtools: Tools
-to Make Developing R Packages Easier.”
-<https://CRAN.R-project.org/package=devtools>.
+Wickham, Hadley, Jim Hester, and Winston Chang. 2019. “<span
+class="nocase">devtools: Tools to Make Developing R Packages
+Easier</span>.” <https://CRAN.R-project.org/package=devtools>.
 
 </div>
 

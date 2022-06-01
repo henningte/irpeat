@@ -28,8 +28,8 @@ knitr::opts_chunk$set(
 Provided functions for analyzing infrared spectra of peat are:
 
 1. Computation of several humification indices.
-2. Klason lignin mass fraction (following @Hodgkins.2018 and [---todo:ref]).
-3. Holocellulose mass fraction (following @Hodgkins.2018 and [---todo:ref]).
+2. Klason lignin mass fraction (following @Hodgkins.2018 and @Teickner.2022a).
+3. Holocellulose mass fraction (following @Hodgkins.2018 and @Teickner.2022a).
 4. Peat electron accepting capacity (following @Teickner.2022).
 5. Peat electron donating capacity (following @Teickner.2022).
 
@@ -121,7 +121,9 @@ We welcome contributions from everyone. Before you get started, please see our [
 
 ### Sources
 
-The data and prediction models for holocellulose and Klason are derived from @Hodgkins.2018 and were restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
+The data and prediction models for holocellulose and Klason lignin (`irp_content_h_hodgkins_model`, `irp_content_kl_hodgkins_model`) are derived from @Hodgkins.2018 and were restructured to match the requirements of ir. The original article containing the data can be downloaded from https://www.nature.com/articles/s41467-018-06050-2 and is distributed under the Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/). The data on Klason lignin and holocellulose content was originally derived from @LaCruz.2016.
+
+Modified prediction models for holocellulose and Klason lignin (`model_holocellulose_2`, `model_klason_lignin_2`) are derived from @Teickner.2022a.
 
 Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from @Teickner.2022 and @Teickner.2021c
 

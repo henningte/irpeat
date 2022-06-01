@@ -47,7 +47,7 @@
 #'   \insertAllCited{}
 "irp_content_h_hodgkins_model"
 
-#' Linear model to predict holocellulose content from MIR spectra from \[---todo:ref\]
+#' Linear model to predict holocellulose content from MIR spectra from \insertCite{Teickner.2022a;textual}{irpeat}
 #'
 #'
 #' `model_holocellulose_2` is a linear model to predict
@@ -57,21 +57,21 @@
 #'
 #' @details The model was trained on the data from \insertCite{Hodgkins.2018;textual}{ir}
 #' (available via [ir::ir_sample_data()]) and is
-#' described in \[---todo:ref\]. See [model_holocellulose_2_config()]
+#' described in \insertCite{Teickner.2022a;textual}{irpeat}. See [model_holocellulose_2_config()]
 #' for details on how the training spectra were preprocessed prior model
 #' fitting.
 #'
 #' The model is an improved version of `irp_content_h_hodgkins_model`
-#' \[---todo:ref\]. It is a Bayesian beta regression model using all binned
+#' \insertCite{Teickner.2022a}{irpeat}. It is a Bayesian beta regression model using all binned
 #' spectral variables for prediction.
 #'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
-#' contents for peat samples \[--- todo: add reference\].
+#' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
 #' @format An object of class [brms::brmsfit-class()].
 #'
-#' @source The model is described in \[---todo:ref\]. The data set was derived
+#' @source The model is described in \insertCite{Teickner.2022a;textual}{irpeat}. The data set was derived
 #' from <https://www.nature.com/articles/s41467-018-06050-2> and published
 #' by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license
 #' <https://creativecommons.org/licenses/by/4.0/>.
@@ -84,7 +84,7 @@
 #'
 "model_holocellulose_2"
 
-#' Linear model to predict Klason lignin content from MIR spectra from \[---todo:ref\]
+#' Linear model to predict Klason lignin content from MIR spectra from \insertCite{Teickner.2022a;textual}{irpeat}
 #'
 #'
 #' `model_klason_lignin_2` is a linear model to predict
@@ -94,21 +94,21 @@
 #'
 #' @details The model was trained on the data from \insertCite{Hodgkins.2018;textual}{ir}
 #' (available via [ir::ir_sample_data()]) and is
-#' described in \[---todo:ref\]. See [model_klason_lignin_2_config()]
+#' described in \insertCite{Teickner.2022a;textual}{irpeat}. See [model_klason_lignin_2_config()]
 #' for details on how the training spectra were preprocessed prior model
 #' fitting.
 #'
 #' The model is an improved version of `irp_content_kl_hodgkins_model`
-#' \[---todo:ref\]. It is a Bayesian beta regression model using all binned
+#' \insertCite{Teickner.2022a}{irpeat}. It is a Bayesian beta regression model using all binned
 #' spectral variables for prediction.
 #'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
-#' contents for peat samples \[---todo: add reference\].
+#' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
 #' @format An object of class [brms::brmsfit-class()].
 #'
-#' @source The model is described in \[---todo:ref\]. The data set was derived
+#' @source The model is described in \insertCite{Teickner.2022a;textual}{irpeat}. The data set was derived
 #' from <https://www.nature.com/articles/s41467-018-06050-2> and published
 #' by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license
 #' <https://creativecommons.org/licenses/by/4.0/>.

@@ -3,12 +3,12 @@
 \docType{data}
 \name{model_holocellulose_2}
 \alias{model_holocellulose_2}
-\title{Linear model to predict holocellulose content from MIR spectra from [---todo:ref]}
+\title{Linear model to predict holocellulose content from MIR spectra from \insertCite{Teickner.2022a;textual}{irpeat}}
 \format{
 An object of class \code{\link[brms:brmsfit-class]{brms::brmsfit-class()}}.
 }
 \source{
-The model is described in [---todo:ref]. The data set was derived
+The model is described in \insertCite{Teickner.2022a;textual}{irpeat}. The data set was derived
 from \url{https://www.nature.com/articles/s41467-018-06050-2} and published
 by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license
 \url{https://creativecommons.org/licenses/by/4.0/}.
@@ -28,18 +28,18 @@ Predictions with this model can be generated with
 \details{
 The model was trained on the data from \insertCite{Hodgkins.2018;textual}{ir}
 (available via \code{\link[ir:ir_sample_data]{ir::ir_sample_data()}}) and is
-described in [---todo:ref]. See \code{\link[=model_holocellulose_2_config]{model_holocellulose_2_config()}}
+described in \insertCite{Teickner.2022a;textual}{irpeat}. See \code{\link[=model_holocellulose_2_config]{model_holocellulose_2_config()}}
 for details on how the training spectra were preprocessed prior model
 fitting.
 
 The model is an improved version of \code{irp_content_h_hodgkins_model}
-[---todo:ref]. It is a Bayesian beta regression model using all binned
+\insertCite{Teickner.2022a}{irpeat}. It is a Bayesian beta regression model using all binned
 spectral variables for prediction.
 }
 \note{
 Note that this is a preliminary model only which has not been fully
 validated for peat samples yet and which has known limitations in predicting
-contents for peat samples [--- todo: add reference].
+contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 }
 \references{
 \insertAllCited{}
