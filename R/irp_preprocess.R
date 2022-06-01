@@ -171,9 +171,16 @@ irp_preprocess <- function(
 
   # baseline correction
   if(do_bc) {
-    x_flat <- ir::ir_flatten(x)
-    bc_clip_range = data.frame(start = x_flat$x[[1]] + bc_cutoff,
-                               end = x_flat$x[[nrow(x_flat)]] - bc_cutoff,
+    x_spectra_x_range <-
+      data.frame(
+        start =
+          min(purrr::map_dbl(x$spectra, function(.x) min(.x$x))),
+        end =
+          max(purrr::map_dbl(x$spectra, function(.x) max(.x$x)))
+      )
+
+    bc_clip_range = data.frame(start = x_spectra_x_range$start + bc_cutoff,
+                               end = x_spectra_x_range$end - bc_cutoff,
                                stringsAsFactors = FALSE)
     x <- ir::ir_bc(x,
                    method = bc_method,

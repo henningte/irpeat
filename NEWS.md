@@ -3,6 +3,7 @@
 * Added a `NEWS.md` file to track changes to the package.
 * Update the documentation (adding missing examples).
 * Add pkgdown site.
+* Performance improvement for `irp_preprocess()`.
 
 #### Bug fixes
 
