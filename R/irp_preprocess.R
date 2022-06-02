@@ -65,6 +65,8 @@
 #'
 #' @param bin_width See `ir_bin` (parameter `width`).
 #'
+#' @param bin_new_x_type See `ir_bin` (parameter `new_x_type`).
+#'
 #' @param do_scale A logical value indicating if spectral variables should be
 #' scaled using [base::scale()].
 #'
@@ -100,6 +102,7 @@
 #'     normalise_method = "area",
 #'     do_bin = TRUE,
 #'     bin_width = 10,
+#'     bin_new_x_type = "start",
 #'     do_scale = TRUE,
 #'     scale_center = TRUE,
 #'     scale_scale = TRUE
@@ -130,6 +133,7 @@ irp_preprocess <- function(
   normalise_method = "area",
   do_bin = TRUE,
   bin_width = 10,
+  bin_new_x_type = "start",
   do_scale = TRUE,
   scale_center = TRUE,
   scale_scale = TRUE
@@ -213,8 +217,7 @@ irp_preprocess <- function(
 
   # binning
   if(do_bin) {
-    x <- ir::ir_bin(x,
-                    width = bin_width)
+    x <- ir::ir_bin(x, width = bin_width, new_x_type = bin_new_x_type)
   }
 
   res <- ir::ir_flatten(x)

@@ -4,6 +4,7 @@
 * Update the documentation (adding missing examples).
 * Add pkgdown site.
 * Performance improvement for `irp_preprocess()`.
+* Updated `irp_preprocess()`, model preprocessing configurations, and prediction functions to consider the new argument `new_x_type` from `ir::ir_bin()`.
 
 #### Bug fixes
 

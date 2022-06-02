@@ -71,6 +71,7 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE) {
       normalise_method = config$irp_preprocess$normalise_method,
       do_bin = config$irp_preprocess$do_bin,
       bin_width = config$irp_preprocess$bin_width,
+      bin_new_x_type = config$irp_preprocess$bin_new_x_type,
       do_scale = config$irp_preprocess$do_scale,
       scale_center = config$data_scale$x_center,
       scale_scale = config$data_scale$x_scale

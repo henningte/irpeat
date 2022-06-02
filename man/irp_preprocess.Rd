@@ -28,6 +28,7 @@ irp_preprocess(
   normalise_method = "area",
   do_bin = TRUE,
   bin_width = 10,
+  bin_new_x_type = "start",
   do_scale = TRUE,
   scale_center = TRUE,
   scale_scale = TRUE
@@ -93,6 +94,8 @@ binned using \code{\link[ir:ir_bin]{ir::ir_bin()}}.}
 
 \item{bin_width}{See \code{ir_bin} (parameter \code{width}).}
 
+\item{bin_new_x_type}{See \code{ir_bin} (parameter \code{new_x_type}).}
+
 \item{do_scale}{A logical value indicating if spectral variables should be
 scaled using \code{\link[base:scale]{base::scale()}}.}
 
@@ -136,6 +139,7 @@ res <-
     normalise_method = "area",
     do_bin = TRUE,
     bin_width = 10,
+    bin_new_x_type = "start",
     do_scale = TRUE,
     scale_center = TRUE,
     scale_scale = TRUE

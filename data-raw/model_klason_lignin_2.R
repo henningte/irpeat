@@ -58,6 +58,7 @@ model_klason_lignin_2_config <-
         normalise_method = "area",
         do_bin = TRUE,
         bin_width = 20, # ---todo: check
+        bin_new_x_type = "start",
         do_scale = TRUE,
         scale_center = TRUE,
         scale_scale = TRUE
@@ -82,6 +83,7 @@ x <-
     normalise_method = model_klason_lignin_2_config$irp_preprocess$normalise_method,
     do_bin = model_klason_lignin_2_config$irp_preprocess$do_bin,
     bin_width = model_klason_lignin_2_config$irp_preprocess$bin_width,
+    bin_new_x_type = model_klason_lignin_2_config$irp_preprocess$bin_new_x_type,
     do_scale = model_klason_lignin_2_config$irp_preprocess$do_scale,
     scale_center = model_klason_lignin_2_config$irp_preprocess$scale_center,
     scale_scale = model_klason_lignin_2_config$irp_preprocess$scale_scale

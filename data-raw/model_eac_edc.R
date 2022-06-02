@@ -30,16 +30,16 @@ el_t0 <-
 el_t0 <-
   el_t0 %>%
   dplyr::mutate(
-    fe2_n = fe2/errors::drop_errors(elco::drop_elco(C)),
-    fe3_n = fe3/errors::drop_errors(elco::drop_elco(C)),
+    fe2_n = fe2/errors::drop_errors(elco::elco_drop_elco(C)),
+    fe3_n = fe3/errors::drop_errors(elco::elco_drop_elco(C)),
     edc_c_uncorrected = edc_c,
     eac_c_uncorrected = eac_c,
     edc_c_fe_tot = edc_c - (fe2_n + fe3_n),
     eac_c_fe_tot = eac_c - (fe2_n + fe3_n),
     edc_c = edc_c - fe2_n,
     eac_c = eac_c - fe3_n,
-    edc_m = edc_c * errors::drop_errors(elco::drop_elco(C)),
-    eac_m = eac_c * errors::drop_errors(elco::drop_elco(C))
+    edc_m = edc_c * errors::drop_errors(elco::elco_drop_elco(C)),
+    eac_m = eac_c * errors::drop_errors(elco::elco_drop_elco(C))
   )
 
 # get an index for samples with too large contribution of iron to the EAC/EDC
@@ -281,6 +281,7 @@ model_eac_1_config <-
         normalise_method = "area",
         do_bin = TRUE,
         bin_width = 10,
+        bin_new_x_type = "start",
         do_scale = TRUE,
         scale_center = TRUE,
         scale_scale = TRUE
@@ -306,6 +307,7 @@ d_cal_x <-
     normalise_method = model_eac_1_config$irp_preprocess$normalise_method,
     do_bin = model_eac_1_config$irp_preprocess$do_bin,
     bin_width = model_eac_1_config$irp_preprocess$bin_width,
+    bin_new_x_type = model_eac_1_config$irp_preprocess$bin_new_x_type,
     do_scale = model_eac_1_config$irp_preprocess$do_scale,
     scale_center = model_eac_1_config$irp_preprocess$scale_center,
     scale_scale = model_eac_1_config$irp_preprocess$scale_scale
@@ -396,6 +398,7 @@ d_cal_x <-
     normalise_method = model_edc_1_config$irp_preprocess$normalise_method,
     do_bin = model_edc_1_config$irp_preprocess$do_bin,
     bin_width = model_edc_1_config$irp_preprocess$bin_width,
+    bin_new_x_type = model_edc_1_config$irp_preprocess$bin_new_x_type,
     do_scale = model_edc_1_config$irp_preprocess$do_scale,
     scale_center = model_edc_1_config$irp_preprocess$scale_center,
     scale_scale = model_edc_1_config$irp_preprocess$scale_scale
