@@ -28,8 +28,8 @@ knitr::opts_chunk$set(
 Provided functions for analyzing infrared spectra of peat are:
 
 1. Computation of several humification indices.
-2. Klason lignin mass fraction (following @Hodgkins.2018 and @Teickner.2022a).
-3. Holocellulose mass fraction (following @Hodgkins.2018 and @Teickner.2022a).
+2. Klason lignin mass fraction (following @Hodgkins.2018 and @Teickner.2022a) (note that these models are not reliable for peat, see @Teickner.2022a).
+3. Holocellulose mass fraction (following @Hodgkins.2018 and @Teickner.2022a) (note that these models are not reliable for peat, see @Teickner.2022a).
 4. Peat electron accepting capacity (following @Teickner.2022).
 5. Peat electron donating capacity (following @Teickner.2022).
 

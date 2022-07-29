@@ -18,15 +18,18 @@ The linear model is reproduced in slightly modified form (see description) from 
 irp_content_kl_hodgkins_model
 }
 \description{
-\code{irp_content_kl_hodgkins_model} is a linear model to predict
-Klason lignin mass fractions [g/g] in samples based on
-normalized and area corrected peak heights of peaks identified in
-spectra. This model is meant for internal use in
-\code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}. The model was originally
-developed by \insertCite{Hodgkins.2018;textual}{ir} and is
-here reproduced from the same data (available via
-\link[ir:ir_sample_data]{ir::ir_sample_data}), but handling
-mass fraction in g/g instead of as percentages.
+\code{irp_content_kl_hodgkins_model} is a linear model to predict Klason lignin
+mass fractions [g/g] in samples based on normalized and area corrected peak
+heights of peaks identified in spectra. This model is meant for internal use
+in \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}. The model was originally developed by
+\insertCite{Hodgkins.2018;textual}{ir} and is here reproduced from the same
+data (available via \link[ir:ir_sample_data]{ir::ir_sample_data}), but handling mass fraction in g/g
+instead of as percentages. Note that the models have been shown to be biased
+for peat samples \insertCite{Teickner.2022a}{irpeat}.
+}
+\note{
+Note that the models have been shown to be biased for peat samples
+\insertCite{Teickner.2022a}{irpeat}.
 }
 \references{
 \insertAllCited{}

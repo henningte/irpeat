@@ -3,22 +3,26 @@
 #' Linear model to predict Klason lignin content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}
 #'
 #'
-#' `irp_content_kl_hodgkins_model` is a linear model to predict
-#' Klason lignin mass fractions \[g/g\] in samples based on
-#' normalized and area corrected peak heights of peaks identified in
-#' spectra. This model is meant for internal use in
-#' [irp_content_klh_hodgkins()]. The model was originally
-#' developed by \insertCite{Hodgkins.2018;textual}{ir} and is
-#' here reproduced from the same data (available via
-#' [ir::ir_sample_data]), but handling
-#' mass fraction in g/g instead of as percentages.
+#' `irp_content_kl_hodgkins_model` is a linear model to predict Klason lignin
+#' mass fractions \[g/g\] in samples based on normalized and area corrected peak
+#' heights of peaks identified in spectra. This model is meant for internal use
+#' in [irp_content_klh_hodgkins()]. The model was originally developed by
+#' \insertCite{Hodgkins.2018;textual}{ir} and is here reproduced from the same
+#' data (available via [ir::ir_sample_data]), but handling mass fraction in g/g
+#' instead of as percentages. Note that the models have been shown to be biased
+#' for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
 #' @format An object of class [stats::lm()].
+#'
+#' @note Note that the models have been shown to be biased for peat samples
+#' \insertCite{Teickner.2022a}{irpeat}.
+#'
 #' @source The data set was derived from <https://www.nature.com/articles/s41467-018-06050-2>
 #' and published by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license <https://creativecommons.org/licenses/by/4.0/>.
 #' \insertCite{Hodgkins.2018;textual}{ir} originally derived the data on Klason lignin content from
 #' \insertCite{LaCruz.2016;textual}{ir} <https://www.liebertpub.com/doi/full/10.1089/ees.2014.0402>.
 #' The linear model is reproduced in slightly modified form (see description) from \insertCite{Hodgkins.2018;textual}{ir}.
+#'
 #' @references
 #'   \insertAllCited{}
 "irp_content_kl_hodgkins_model"
@@ -26,23 +30,26 @@
 
 #' Linear model to predict holocellulose content from MIR spectra from \insertCite{Hodgkins.2018;textual}{ir}
 #'
-#'
-#' `irp_content_h_hodgkins_model` is a linear model to predict
-#' holocellulose mass fractions \[g/g\] in samples based on
-#' normalized and area corrected peak heights of peaks identified in
-#' spectra. This model is meant for internal use in
-#' [irp_content_klh_hodgkins()]. The model was originally
-#' developed by \insertCite{Hodgkins.2018;textual}{ir} and is
-#' here reproduced from the same data (available via
-#' [ir::ir_sample_data]), but handling
-#' mass fraction in g/g instead of as percentages.
+#' `irp_content_h_hodgkins_model` is a linear model to predict holocellulose
+#' mass fractions \[g/g\] in samples based on normalized and area corrected peak
+#' heights of peaks identified in spectra. This model is meant for internal use
+#' in [irp_content_klh_hodgkins()]. The model was originally developed by
+#' \insertCite{Hodgkins.2018;textual}{ir} and is here reproduced from the same
+#' data (available via [ir::ir_sample_data]), but handling mass fraction in g/g
+#' instead of as percentages. Note that the models have been shown to be biased
+#' for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
 #' @format An object of class [stats::lm()].
+#'
+#' @note Note that the models have been shown to be biased for peat samples
+#' \insertCite{Teickner.2022a}{irpeat}.
+#'
 #' @source The data set was derived from <https://www.nature.com/articles/s41467-018-06050-2>
 #' and published by \insertCite{Hodgkins.2018;textual}{ir} under the CC BY 4.0 license <https://creativecommons.org/licenses/by/4.0/>.
 #' \insertCite{Hodgkins.2018;textual}{ir} originally derived the data on holocellulose content from
 #' \insertCite{LaCruz.2016;textual}{ir} <https://www.liebertpub.com/doi/full/10.1089/ees.2014.0402>.
 #' The linear model is reproduced in slightly modified form (see description) from \insertCite{Hodgkins.2018;textual}{ir}.
+#'
 #' @references
 #'   \insertAllCited{}
 "irp_content_h_hodgkins_model"

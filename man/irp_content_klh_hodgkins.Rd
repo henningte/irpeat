@@ -36,9 +36,15 @@ columns containing the computed mass fractions of Klason lignin and
 holocellulose for the spectra in \code{x}.
 }
 \description{
-\code{irp_content_klh_hodgkins} computes the mass fraction of Klason lignin and holocellulose
-in peat from mid infrared spectra of the peat samples. This function may also work
-for organic matter in general.
+\code{irp_content_klh_hodgkins} computes the mass fraction of Klason lignin and
+holocellulose in peat from mid infrared spectra of the peat samples. This
+function may also work for organic matter in general. Note that the models
+have been shown to be biased for peat samples
+\insertCite{Teickner.2022a}{irpeat}.
+}
+\note{
+Note that the models have been shown to be biased for peat samples
+\insertCite{Teickner.2022a}{irpeat}.
 }
 \examples{
 library(ir)

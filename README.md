@@ -19,9 +19,11 @@ Provided functions for analyzing infrared spectra of peat are:
 
 1.  Computation of several humification indices.
 2.  Klason lignin mass fraction (following Hodgkins et al. (2018) and
-    Teickner and Knorr (2022)).
+    Teickner and Knorr (2022)) (note that these models are not reliable
+    for peat, see Teickner and Knorr (2022)).
 3.  Holocellulose mass fraction (following Hodgkins et al. (2018) and
-    Teickner and Knorr (2022)).
+    Teickner and Knorr (2022)) (note that these models are not reliable
+    for peat, see Teickner and Knorr (2022)).
 4.  Peat electron accepting capacity (following Teickner, Gao, and Knorr
     (2022)).
 5.  Peat electron donating capacity (following Teickner, Gao, and Knorr
@@ -130,11 +132,11 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$klason_lignin_2
 #> Units: [g/g]
-#> Errors: 0.05376196 0.03869140 0.03467985 0.03891655 0.03595512 ...
+#> Errors: 0.05332995 0.03879912 0.03466596 0.03945795 0.03532837 ...
 #>        V1        V2        V3        V4        V5        V6        V7        V8 
-#> 0.3762703 0.3428526 0.2539950 0.3083105 0.2964964 0.2771638 0.3134706 0.3521598 
+#> 0.3763523 0.3422666 0.2545192 0.3087898 0.2965548 0.2768367 0.3138414 0.3517650 
 #>        V9       V10 
-#> 0.3398341 0.2917780
+#> 0.3388824 0.2918090
 ```
 
 ### Future development
@@ -151,7 +153,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-06-01.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-07-29.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
