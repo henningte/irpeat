@@ -40,6 +40,14 @@ remotes::install_github(repo = "henningte/irpeat")
 ‘irpeat’ relies on the R package [‘ir’](https://github.com/henningte/ir)
 for handling infrared spectra.
 
+If you want to use the prediction models, you have to install the
+[‘irpeatmodels’](---todo:%20add%20url) package in addition to the
+‘irpeat’ package:
+
+``` r
+remotes::install_url("---todo:add url", type = "source")
+```
+
 ### How to use
 
 You can load ‘irpeat’ in R with:
@@ -132,11 +140,11 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$klason_lignin_2
 #> Units: [g/g]
-#> Errors: 0.05332995 0.03879912 0.03466596 0.03945795 0.03532837 ...
+#> Errors: 0.05305209 0.03890806 0.03432737 0.03900097 0.03664285 ...
 #>        V1        V2        V3        V4        V5        V6        V7        V8 
-#> 0.3763523 0.3422666 0.2545192 0.3087898 0.2965548 0.2768367 0.3138414 0.3517650 
+#> 0.3762468 0.3420424 0.2542360 0.3085094 0.2976808 0.2766546 0.3137988 0.3524349 
 #>        V9       V10 
-#> 0.3388824 0.2918090
+#> 0.3391504 0.2918670
 ```
 
 ### Future development
@@ -153,7 +161,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-07-29.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-28.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses

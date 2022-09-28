@@ -50,9 +50,11 @@
 #'
 #' @export
 irp_content_klh_hodgkins <- function(x,
-                            export = NULL,
-                            verbose = FALSE,
-                            make_plots = FALSE) {
+                                     export = NULL,
+                                     verbose = FALSE,
+                                     make_plots = FALSE) {
+
+  check_irpeatmodels(version = "0.0.0")
 
   stopifnot(inherits(x, "ir"))
   if(!is.null(export)) {
@@ -107,8 +109,8 @@ irp_content_klh_hodgkins_predict <- function(x,
                                              x_flat_empty,
                                              res) {
 
-  utils::data("irp_content_h_hodgkins_model", envir=environment())
-  utils::data("irp_content_kl_hodgkins_model", envir=environment())
+  # utils::data("irp_content_h_hodgkins_model", envir=environment())
+  # utils::data("irp_content_kl_hodgkins_model", envir=environment())
 
   # make sure that all values get their right row in x
   x_flat_new_names <- c(colnames(x_flat)[-1], colnames(x_flat_empty)[-1])
@@ -120,11 +122,18 @@ irp_content_klh_hodgkins_predict <- function(x,
   res$norm.Acorr <- dplyr::bind_rows(res$norm.Acorr, res_fake)[index,]
 
   # holocellulose
-  newdata_h_hodgkins <- data.frame(lm_x = res$norm.Acorr$carb,
-                                   stringsAsFactors = FALSE)
-  prediction_h_hodgkins <- as.data.frame(stats::predict(irp_content_h_hodgkins_model,
-                                                        newdata = newdata_h_hodgkins,
-                                                        se.fit = TRUE))
+  newdata_h_hodgkins <-
+    data.frame(
+      lm_x = res$norm.Acorr$carb,
+      stringsAsFactors = FALSE
+    )
+  prediction_h_hodgkins <-
+    as.data.frame(
+      stats::predict(
+        irpeatmodels::model_holocellulose_content_1,
+        newdata = newdata_h_hodgkins,
+        se.fit = TRUE)
+    )
   prediction_h_hodgkins$se_pi <- sqrt(prediction_h_hodgkins$se.fit^2 + prediction_h_hodgkins$residual.scale^2)
   x$holocellulose_hodgkins <-
     quantities::set_quantities(
@@ -134,11 +143,18 @@ irp_content_klh_hodgkins_predict <- function(x,
     )
 
   # Klason lignin
-  newdata_kl_hodgkins <- data.frame(lm_x = res$norm.Acorr$arom15 + res$norm.Acorr$arom16,
-                                    stringsAsFactors = FALSE)
-  prediction_kl_hodgkins <- as.data.frame(stats::predict(irp_content_kl_hodgkins_model,
-                                                         newdata = newdata_kl_hodgkins,
-                                                         se.fit = TRUE))
+  newdata_kl_hodgkins <-
+    data.frame(
+      lm_x = res$norm.Acorr$arom15 + res$norm.Acorr$arom16,
+                                    stringsAsFactors = FALSE
+      )
+  prediction_kl_hodgkins <-
+    as.data.frame(
+      stats::predict(irpeatmodels::model_klason_lignin_content_1,
+                     newdata = newdata_kl_hodgkins,
+                     se.fit = TRUE
+      )
+    )
   prediction_kl_hodgkins$se_pi <- sqrt(prediction_kl_hodgkins$se.fit^2 + prediction_kl_hodgkins$residual.scale^2)
   x$klason_lignin_hodgkins <-
     quantities::set_quantities(

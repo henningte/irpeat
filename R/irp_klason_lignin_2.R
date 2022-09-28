@@ -2,10 +2,11 @@
 #'
 #' `irp_klason_lignin_2` predicts the Klason lignin content from mid
 #' infrared spectra for peat samples using the model
-#' [model_klason_lignin_2]. This function may also work for organic matter
-#' in general. Note that this is a preliminary model only which has not been
-#' fully validated for peat samples yet and which has known limitations in
-#' predicting contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
+#' [irpeatmodels::model_klason_lignin_content_2]. This function may also work
+#' for organic matter in general. Note that this is a preliminary model only
+#' which has not been fully validated for peat samples yet and which has known
+#' limitations in predicting contents for peat samples
+#' \insertCite{Teickner.2022a}{irpeat}.
 #'
 #' @inheritParams irp_eac_1
 #'
@@ -27,18 +28,18 @@
 #' @export
 irp_klason_lignin_2 <- function(x, ..., do_summary = FALSE) {
 
+  check_irpeatmodels(version = "0.0.0")
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
   stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
   x_or <- x
 
   # get data
-  model_klason_lignin_2 <- NULL
-  model_klason_lignin_2_config <- NULL
-  utils::data("model_klason_lignin_2", envir = environment())
-  utils::data("model_klason_lignin_2_config", envir = environment())
-  m <- model_klason_lignin_2
-  config <- model_klason_lignin_2_config
+  m <- irpeatmodels::model_klason_lignin_content_2
+  config <- irpeatmodels::model_klason_lignin_content_2_config
 
   # check spectra
   x_flat <- ir::ir_flatten(x)

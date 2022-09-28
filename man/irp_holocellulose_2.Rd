@@ -35,10 +35,11 @@ holocellulose contents [g/g].
 \description{
 \code{irp_holocellulose_2} predicts the holocellulose content from mid
 infrared spectra for peat samples using the model
-\link{model_holocellulose_2}. This function may also work for organic matter
-in general. Note that this is a preliminary model only which has not been
-fully validated for peat samples yet and which has known limitations in
-predicting contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
+\link[irpeatmodels:model_holocellulose_content_2]{irpeatmodels::model_holocellulose_content_2}. This function may also work
+for organic matter in general. Note that this is a preliminary model only
+which has not been fully validated for peat samples yet and which has known
+limitations in predicting contents for peat samples
+\insertCite{Teickner.2022a}{irpeat}.
 }
 \note{
 Note that this is a preliminary model only which has not been fully

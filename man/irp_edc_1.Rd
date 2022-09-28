@@ -57,5 +57,5 @@ irpeat::irp_edc_1(ir::ir_sample_data[1, ], do_summary = TRUE)
 \insertAllCited{}
 }
 \seealso{
-\code{\link[=model_edc_1]{model_edc_1()}}.
+\link[irpeatmodels:model_edc_1]{irpeatmodels::model_edc_1}.
 }

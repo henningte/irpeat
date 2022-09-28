@@ -43,6 +43,13 @@ remotes::install_github(repo = "henningte/irpeat")
 
 'irpeat' relies on the R package ['ir'](https://github.com/henningte/ir) for handling infrared spectra.
 
+If you want to use the prediction models, you have to install the ['irpeatmodels'](---todo: add url) package in addition to the 'irpeat' package:
+
+```{r installation-irpeatmodels, eval=FALSE}
+remotes::install_url("---todo:add url", type = "source")
+```
+
+
 ### How to use
 
 You can load 'irpeat' in R with:

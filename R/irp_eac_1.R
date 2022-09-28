@@ -34,7 +34,7 @@
 #'
 #' @source \insertCite{Teickner.2022;textual}{irpeat}.
 #'
-#' @seealso [model_eac_1()].
+#' @seealso [irpeatmodels::model_eac_1].
 #'
 #' @examples
 #' library(ir)
@@ -48,18 +48,18 @@
 #' @export
 irp_eac_1 <- function(x, ..., do_summary = FALSE) {
 
+  check_irpeatmodels(version = "0.0.0")
+  if(! requireNamespace("rstanarm", quietly = TRUE)) {
+    rlang::abort("You have to install the 'rstanarm' package to use this function.")
+  }
   stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
   x_or <- x
 
   # get data
-  model_eac_1 <- NULL
-  model_eac_1_config <- NULL
-  utils::data("model_eac_1", envir = environment())
-  utils::data("model_eac_1_config", envir = environment())
-  m <- model_eac_1
-  config <- model_eac_1_config
+  m <- irpeatmodels::model_eac_1
+  config <- irpeatmodels::model_eac_1_config
 
   # check spectra
   x_flat <- ir::ir_flatten(x)

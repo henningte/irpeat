@@ -35,10 +35,11 @@ Klason lignin contents [g/g].
 \description{
 \code{irp_klason_lignin_2} predicts the Klason lignin content from mid
 infrared spectra for peat samples using the model
-\link{model_klason_lignin_2}. This function may also work for organic matter
-in general. Note that this is a preliminary model only which has not been
-fully validated for peat samples yet and which has known limitations in
-predicting contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
+\link[irpeatmodels:model_klason_lignin_content_2]{irpeatmodels::model_klason_lignin_content_2}. This function may also work
+for organic matter in general. Note that this is a preliminary model only
+which has not been fully validated for peat samples yet and which has known
+limitations in predicting contents for peat samples
+\insertCite{Teickner.2022a}{irpeat}.
 }
 \note{
 Note that this is a preliminary model only which has not been fully

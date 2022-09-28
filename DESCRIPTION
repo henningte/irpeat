@@ -39,10 +39,8 @@ Imports:
     graphics,
     utils,
     stats,
-    rstanarm (>= 2.19.3),
     lifecycle,
-    magrittr,
-    brms
+    magrittr
 RoxygenNote: 7.2.0
 RdMacros: 
   Rdpack
@@ -50,7 +48,10 @@ Suggests:
     knitr,
     rmarkdown,
     elco,
-    spelling
+    spelling,
+    irpeatmodels,
+    brms,
+    rstanarm (>= 2.19.3)
 VignetteBuilder: knitr
 Date: 2022-04-21
 Roxygen: list(markdown = TRUE)
