@@ -1,4 +1,7 @@
 #' Checks whether the 'irpeatmodels' package is loaded
+#'
+#' @keywords internal
+#' @noRd
 check_irpeatmodels <- function(version = "0.1.0") {
   if(! requireNamespace("irpeatmodels", versionCheck = list(op = ">=", version = version), quietly = TRUE)) {
     rlang::abort(paste0("You have to install the 'irpeatmodels' package (>=", version,") to use this function."))
@@ -26,6 +29,8 @@ check_irpeatmodels <- function(version = "0.1.0") {
 #' @param x_unit A character value giving the unit which will be assigned to
 #' values in `x`.
 #'
+#' @keywords internal
+#' @noRd
 irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   stopifnot(is.data.frame(x))

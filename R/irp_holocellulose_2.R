@@ -73,7 +73,8 @@ irp_holocellulose_2 <- function(x, ..., do_summary = FALSE, summary_function_mea
       bin_new_x_type = config$irp_preprocess$bin_new_x_type,
       do_scale = config$irp_preprocess$do_scale,
       scale_center = config$data_scale$x_center,
-      scale_scale = config$data_scale$x_scale
+      scale_scale = config$data_scale$x_scale,
+      do_return_as_ir = FALSE
     )
 
   # predict

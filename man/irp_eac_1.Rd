@@ -7,7 +7,13 @@
 \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \usage{
-irp_eac_1(x, ..., do_summary = FALSE)
+irp_eac_1(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}. Some tests
@@ -30,6 +36,12 @@ posterior distribution, including the residual variance of the model.
 \code{error} attribute being the standard deviation of the unsummarized
 values.
 }}
+
+\item{summary_function_mean}{A function used to summarize the predicted
+values (average).}
+
+\item{summary_function_sd}{A function used to summarize the predicted
+values (spread).}
 }
 \value{
 \code{x} with a new column "eac" with the predicted EAC values

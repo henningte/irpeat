@@ -32,7 +32,8 @@ irp_preprocess(
   bin_new_x_type = "start",
   do_scale = TRUE,
   scale_center = TRUE,
-  scale_scale = TRUE
+  scale_scale = TRUE,
+  do_return_as_ir = FALSE
 )
 }
 \arguments{
@@ -109,6 +110,10 @@ number of spectral variables returned after preprocessing.}
 \item{scale_scale}{See \code{scale} (parameter \code{scale}). To scale each
 spectral variable independently, provide a vector with length equal to the
 number of spectral variables returned after preprocessing.}
+
+\item{do_return_as_ir}{Logical value indicating whether the preprocessed
+spectra should be returned as \href{ir::ir_new_ir}{\code{ir}} object (\code{TRUE}) or as data frame
+with the same structure as \href{ir::ir_new_ir_flat}{\code{ir_flat}}  object (\code{FALSE}).}
 }
 \value{
 A data frame with spectra in rows and a column for each spectral
@@ -146,7 +151,8 @@ res <-
     bin_new_x_type = "start",
     do_scale = TRUE,
     scale_center = TRUE,
-    scale_scale = TRUE
+    scale_scale = TRUE,
+    do_return_as_ir = FALSE
   )
 
 }

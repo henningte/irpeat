@@ -80,6 +80,10 @@
 #' spectral variable independently, provide a vector with length equal to the
 #' number of spectral variables returned after preprocessing.
 #'
+#' @param do_return_as_ir Logical value indicating whether the preprocessed
+#' spectra should be returned as [`ir`](ir::ir_new_ir) object (`TRUE`) or as data frame
+#' with the same structure as [`ir_flat`](ir::ir_new_ir_flat)  object (`FALSE`).
+#'
 #' @return A data frame with spectra in rows and a column for each spectral
 #' variable after preprocessing.
 #'
@@ -108,7 +112,8 @@
 #'     bin_new_x_type = "start",
 #'     do_scale = TRUE,
 #'     scale_center = TRUE,
-#'     scale_scale = TRUE
+#'     scale_scale = TRUE,
+#'     do_return_as_ir = FALSE
 #'   )
 #'
 #' @export
@@ -140,7 +145,8 @@ irp_preprocess <- function(
   bin_new_x_type = "start",
   do_scale = TRUE,
   scale_center = TRUE,
-  scale_scale = TRUE
+  scale_scale = TRUE,
+  do_return_as_ir = FALSE
 ) {
 
   # checks
@@ -237,25 +243,23 @@ irp_preprocess <- function(
     x <- ir::ir_bin(x, width = bin_width, new_x_type = bin_new_x_type)
   }
 
-  res <- ir::ir_flatten(x)
-  res_colnames <- paste0("V", res[, 1, drop= TRUE])
-  res <- t(res[, -1, drop = FALSE])
-
   # scale
   if(do_scale) {
-    res <- scale(res, center = scale_center, scale = scale_scale)
+    res <- ir::ir_scale(x, center = scale_center, scale = scale_scale)
+    attributes_res <- attributes(res)
   }
 
-  if(do_scale) {
-    scale_center = attr(res, "scaled:center")
-    scale_scale = attr(res, "scaled:scale")
+  if(! do_return_as_ir) {
+    res <- ir::ir_flatten(x)
+    res_colnames <- paste0("V", res[, 1, drop= TRUE])
+    res <- as.data.frame(t(res[, -1, drop = FALSE]))
+    if(do_scale) {
+      attr(res, "scaled:center") <- attributes_res["scaled:center"]
+      attr(res, "scaled:scale") <- attributes_res["scaled:scale"]
+    }
+    colnames(res) <- res_colnames
   }
-  res <- as.data.frame(res)
-  if(do_scale) {
-    attr(res, "scaled:center") <- scale_center
-    attr(res, "scaled:scale") <- scale_scale
-  }
-  colnames(res) <- res_colnames
+
   res
 
 }

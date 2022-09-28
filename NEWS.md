@@ -1,7 +1,7 @@
 # irpeat (development version)
 
 * Performance improvement for `irp_preprocess()`.
-* Updated `irp_preprocess()`, model preprocessing configurations, and prediction functions to consider the new arguments (1) `new_x_type` from `ir::ir_bin()`, and (2) `bd_do_impute` from `ir::ir_bc()`.
+* Updated `irp_preprocess()`, model preprocessing configurations, and prediction functions to consider the new arguments (1) `new_x_type` from `ir::ir_bin()`, (2) `bc_do_impute` from `ir::ir_bc()`, (3) `do_return_as_ir` (allows to return the preprocessed spectra as `ir` object).
 * Update the documentation: Adding explicit warnings to `irp_content_klh_hodgkins()`, `irp_content_kl_hodgkins_model`, and `irp_content_h_hodgkins_model` that the related models are not reliable for peat.
 * Correct a typo which made it impossible to compute `holocellulose_2` with `irp_content()`.
 * Major restructuration: The models originally included with the 'irpeat' package are now stored in a separate data package ['irpeatmodels'](---todo: add url) to reduce the size of the 'irpeat' package. The 'irpeatmodels' package can be installed from Zenodo.
