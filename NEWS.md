@@ -6,6 +6,7 @@
 * Correct a typo which made it impossible to compute `holocellulose_2` with `irp_content()`.
 * Major restructuration: The models originally included with the 'irpeat' package are now stored in a separate data package ['irpeatmodels'](---todo: add url) to reduce the size of the 'irpeat' package. The 'irpeatmodels' package can be installed from Zenodo.
 * New models: `irp_carbon_content_1()`
+* Add a new class `irp_prediction_domain`: This class stores the prediction domain for a model. Methods available are: Conversion from `ir` and `ir_flat` objects, plotting, check whether spectra in an `ir` object are within a prediction domain.
 
 # irpeat 0.1.0
 
