@@ -11,7 +11,8 @@ irp_carbon_content_1(
   x,
   do_summary = FALSE,
   summary_function_mean = mean,
-  summary_function_sd = stats::sd
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
 )
 }
 \arguments{
@@ -38,10 +39,25 @@ values (average).}
 
 \item{summary_function_sd}{A function used to summarize the predicted
 values (spread).}
+
+\item{check_prediction_domain}{A character value indicating if and how it
+should be checked whether the spectra in \code{x} are within the prediction domain
+of the model. One of:
+\describe{
+\item{\code{"train"}}{It is checked whether the spectra in \code{x} are within the
+prediction domain formed by the training data for the model.}
+\item{\code{"test"}}{It is checked whether the spectra in \code{x} are within the
+prediction domain formed by the testing data for the model.}
+\item{\code{"none"}}{It is not checked whether the spectra in \code{x} are within the
+prediction domain for the model.}
+}}
 }
 \value{
-\code{x} with a new column "C_1" with the predicted carbon contents
-[g/g].
+\code{x} with a new column \code{carbon_content_1} with the predicted carbon
+contents [g/g] and a new column \code{carbon_content_1_in_pd} with value \code{TRUE}
+if the respective spectrum is within the prediction domain for the model and
+\code{FALSE} if not. If \code{check_prediction_domain = "none"}, all values in
+\code{carbon_content_1_in_pd} are \code{NA}.
 }
 \description{
 Predicts the carbon content from mid infrared spectra
@@ -50,6 +66,10 @@ Predicts the carbon content from mid infrared spectra
 library(ir)
 
 # make predictions
-irpeat::irp_carbon_content_1(ir::ir_sample_data[1, ], do_summary = TRUE)
+irpeat::irp_carbon_content_1(
+  ir::ir_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
 
 }

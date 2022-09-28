@@ -2,8 +2,23 @@
 #'
 #' @inheritParams irp_eac_1
 #'
-#' @return `x` with a new column "C_1" with the predicted carbon contents
-#' \[g/g\].
+#' @param check_prediction_domain A character value indicating if and how it
+#' should be checked whether the spectra in `x` are within the prediction domain
+#' of the model. One of:
+#' \describe{
+#'   \item{`"train"`}{It is checked whether the spectra in `x` are within the
+#'   prediction domain formed by the training data for the model.}
+#'   \item{`"test"`}{It is checked whether the spectra in `x` are within the
+#'   prediction domain formed by the testing data for the model.}
+#'   \item{`"none"`}{It is not checked whether the spectra in `x` are within the
+#'   prediction domain for the model.}
+#' }
+#'
+#' @return `x` with a new column `carbon_content_1` with the predicted carbon
+#' contents \[g/g\] and a new column `carbon_content_1_in_pd` with value `TRUE`
+#' if the respective spectrum is within the prediction domain for the model and
+#' `FALSE` if not. If `check_prediction_domain = "none"`, all values in
+#' `carbon_content_1_in_pd` are `NA`.
 #'
 #' @source ---todo
 #'
@@ -11,10 +26,14 @@
 #' library(ir)
 #'
 #' # make predictions
-#' irpeat::irp_carbon_content_1(ir::ir_sample_data[1, ], do_summary = TRUE)
+#' irpeat::irp_carbon_content_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
 #'
 #' @export
-irp_carbon_content_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
+irp_carbon_content_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("pls", quietly = TRUE)) {
@@ -29,8 +48,7 @@ irp_carbon_content_1 <- function(x, do_summary = FALSE, summary_function_mean = 
   m <- irpeatmodels::model_carbon_content_1_draws
   m_pls <- irpeatmodels::model_carbon_content_1_pls
   config <- irpeatmodels::model_carbon_content_1_config
-
-  # ---todo: prediction_domain <- irpeatmodels::model_carbon_content_1_prediction_domain
+  prediction_domain <- irpeatmodels::model_carbon_content_1_prediction_domain
 
   # check spectra
   x_flat <- ir::ir_flatten(x)
@@ -71,7 +89,20 @@ irp_carbon_content_1 <- function(x, do_summary = FALSE, summary_function_mean = 
     )
 
   # check prediction domain
-  # ---todo
+  prediction_domain <-
+    switch(
+      check_prediction_domain,
+      "train" = prediction_domain$train,
+      "test" = prediction_domain$test,
+      "none" = NULL
+    )
+
+  if(check_prediction_domain != "none") {
+    x_or$carbon_content_1_in_pd <-
+      x %>%
+      irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
+      dplyr::pull(is_in_prediction_domain)
+  }
 
   # get plsr scores
   res <-
@@ -99,7 +130,7 @@ irp_carbon_content_1 <- function(x, do_summary = FALSE, summary_function_mean = 
       summary_function_sd = stats::sd
     )
 
-  x_or$C_content_1 <- res
+  x_or$carbon_content_1 <- res
   x_or
 
 }
