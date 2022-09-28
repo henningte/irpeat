@@ -86,7 +86,7 @@ irp_content <- function(x, variable, ...) {
            "klason_lignin_2" = {
              x <- irp_klason_lignin_2(x = x, ...)
            },
-           "hlocellulose_2" = {
+           "holocellulose_2" = {
              x <- irp_holocellulose_2(x = x, ...)
            },
            "eac_1" = {
@@ -94,7 +94,8 @@ irp_content <- function(x, variable, ...) {
            },
            "edc_1" = {
              x <- irp_edc_1(x = x, ...)
-           }
+           },
+           stop("Unknown value for `variable`.")
           )
   }
 
