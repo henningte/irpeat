@@ -50,3 +50,73 @@ irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_me
 
 }
 
+#' Predicts PLSR scores for new data (data format as in irpetpaper)
+#'
+#' @keywords internal
+#' @noRd
+irp_make_predictions_plsr <- function(x, m_pls, config) {
+
+  # format data
+  x <-
+    tibble::tibble(
+      x =
+        x %>%
+        ir::ir_flatten() %>%
+        dplyr::select(-1) %>%
+        t()  %>%
+        tibble::as_tibble() %>%
+        setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
+        as.matrix()
+    )
+
+  # get plsr scores
+  res <-
+    x %>%
+    dplyr::mutate(
+      x = {
+        # get original scores to compute standard deviation of first compound (see below)
+        res_or <-
+          stats::predict(
+            m_pls,
+            ncomp = seq_len(config$pls$ncomp),
+            type = "scores"
+          ) %>%
+          tibble::as_tibble()
+
+        stats::predict(
+          m_pls,
+          ncomp = seq_len(config$pls$ncomp),
+          type = "scores",
+          newdata = x
+        ) %>%
+          tibble::as_tibble() %>%
+          setNames(nm = stringr::str_remove_all(colnames(.), pattern = " ")) %>%
+          purrr::map_dfc( function(.x) {
+            #---note: scale the extracted components by dividing them by the standard deviation of the component with the largest variance. This is done to keep priors for slope coefficients roughly on the same scale (see Piironen.2020).
+            .x/sd(res_or[, 1, drop = TRUE])
+          }) %>%
+          as.matrix()
+      }
+    )
+}
+
+#' Computes predictions using draws for model coefficients for a Beta regression model with constant dispersion parameter
+#'
+#' @keywords internal
+#' @noRd
+irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
+
+  # linear predictor
+  mu <- draws$Intercept + as.matrix(draws %>% dplyr::select(dplyr::starts_with("b["))) %*% t(x$x)
+  mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
+
+  # predictions
+  yhat <-
+    purrr::map_dfc(mu, function(.x) {
+      stats::rbeta(n = length(.x), shape1 = .x * draws$phi, shape2 = (1 - .x) * draws$phi)
+    })
+
+  # scale
+  yhat * config$data_scale$y_scale + config$data_scale$y_center
+
+}
