@@ -63,6 +63,7 @@ irp_holocellulose_2 <- function(x, ..., do_summary = FALSE) {
       do_bc = config$irp_preprocess$do_bc,
       bc_method = config$irp_preprocess$bc_method,
       bc_cutoff = config$irp_preprocess$bc_cutoff,
+      bc_do_impute = config$irp_preprocess$bc_do_impute,
       do_smooth = config$irp_preprocess$do_smooth,
       do_normalise = config$irp_preprocess$do_normalise,
       normalise_method = config$irp_preprocess$normalise_method,

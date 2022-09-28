@@ -193,6 +193,7 @@
 #'         \item{`bc_method`}{See [irp_preprocess()].}
 #'         \item{`bc_degree`}{See [irp_preprocess()].}
 #'         \item{`bc_cutoff`}{See [irp_preprocess()].}
+#'         \item{`bc_do_impute`}{See [irp_preprocess()].}
 #'         \item{`do_smooth`}{See [irp_preprocess()].}
 #'         \item{`smooth_method`}{See [irp_preprocess()].}
 #'         \item{`smooth_p`}{See [irp_preprocess()].}

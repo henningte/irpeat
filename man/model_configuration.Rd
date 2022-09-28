@@ -25,6 +25,7 @@ A list with the a subset of the following elements:
 \item{\code{bc_method}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
 \item{\code{bc_degree}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
 \item{\code{bc_cutoff}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
+\item{\code{bc_do_impute}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
 \item{\code{do_smooth}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
 \item{\code{smooth_method}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}
 \item{\code{smooth_p}}{See \code{\link[=irp_preprocess]{irp_preprocess()}}.}

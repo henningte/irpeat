@@ -17,6 +17,7 @@ irp_preprocess(
   bc_method = "rubberband",
   bc_degree = 2,
   bc_cutoff = 0,
+  bc_do_impute = FALSE,
   do_smooth = TRUE,
   smooth_method = "sg",
   smooth_p = 3,
@@ -68,6 +69,8 @@ baseline corrected using \code{\link[ir:ir_bc]{ir::ir_bc()}}.}
 units to remove at the start and end of each spectrum in \code{x} during
 baseline correction. This may be done to remove artifacts due to baseline
 correction.}
+
+\item{bc_do_impute}{See \code{ir_bc} (parameter \code{do_impute}).}
 
 \item{do_smooth}{A logical value indicating if spectra should be
 smoothed using \code{\link[ir:ir_smooth]{ir::ir_smooth()}}.}
@@ -134,6 +137,7 @@ res <-
     do_interpolate_region = FALSE,
     bc_method = "rubberband",
     bc_cutoff = 10,
+    bc_do_impute = FALSE,
     do_smooth = FALSE,
     do_normalise = TRUE,
     normalise_method = "area",

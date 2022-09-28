@@ -40,6 +40,8 @@
 #' baseline correction. This may be done to remove artifacts due to baseline
 #' correction.
 #'
+#' @param bc_do_impute See `ir_bc` (parameter `do_impute`).
+#'
 #' @param do_smooth A logical value indicating if spectra should be
 #' smoothed using [ir::ir_smooth()].
 #'
@@ -97,6 +99,7 @@
 #'     do_interpolate_region = FALSE,
 #'     bc_method = "rubberband",
 #'     bc_cutoff = 10,
+#'     bc_do_impute = FALSE,
 #'     do_smooth = FALSE,
 #'     do_normalise = TRUE,
 #'     normalise_method = "area",
@@ -122,6 +125,7 @@ irp_preprocess <- function(
   bc_method = "rubberband",
   bc_degree = 2,
   bc_cutoff = 0,
+  bc_do_impute = FALSE,
   do_smooth = TRUE,
   smooth_method = "sg",
   smooth_p = 3,
@@ -144,6 +148,7 @@ irp_preprocess <- function(
   stopifnot(is.logical(do_clip)               && length(do_clip) == 1)
   stopifnot(is.logical(do_interpolate_region) && length(do_interpolate_region) == 1)
   stopifnot(is.logical(do_bc)                 && length(do_bc) == 1)
+  stopifnot(is.logical(bc_do_impute)          && length(bc_do_impute) == 1)
   stopifnot(is.logical(do_smooth)             && length(do_smooth) == 1)
   stopifnot(is.logical(do_normalise)          && length(do_normalise) == 1)
   stopifnot(is.logical(do_bin)                && length(do_bin) == 1)
@@ -183,36 +188,48 @@ irp_preprocess <- function(
           max(purrr::map_dbl(x$spectra, function(.x) max(.x$x)))
       )
 
-    bc_clip_range = data.frame(start = x_spectra_x_range$start + bc_cutoff,
-                               end = x_spectra_x_range$end - bc_cutoff,
-                               stringsAsFactors = FALSE)
-    x <- ir::ir_bc(x,
-                   method = bc_method,
-                   degree = bc_degree,
-                   return_bl = FALSE)
-    x <- ir::ir_clip(x,
-                     range = bc_clip_range)
-    x <- ir::ir_bc(x,
-                   method = bc_method,
-                   degree = bc_degree,
-                   return_bl = FALSE)
+    bc_clip_range <-
+      data.frame(
+        start = x_spectra_x_range$start + bc_cutoff,
+        end = x_spectra_x_range$end - bc_cutoff,
+        stringsAsFactors = FALSE
+      )
+    x <- ir::ir_bc(
+      x,
+      method = bc_method,
+      degree = bc_degree,
+      bc_do_impute = bc_do_impute,
+      return_bl = FALSE
+    )
+    x <- ir::ir_clip(
+      x,
+      range = bc_clip_range
+    )
+    x <- ir::ir_bc(
+      x,
+      method = bc_method,
+      degree = bc_degree,
+      bc_do_impute = bc_do_impute,
+      return_bl = FALSE
+    )
   }
 
   # smoothing
   if(do_smooth) {
-    x <- ir::ir_smooth(x,
-                       method = smooth_method,
-                       p = smooth_p,
-                       n = smooth_n,
-                       ts = smooth_ts,
-                       m = smooth_m,
-                       k = smooth_k)
+    x <- ir::ir_smooth(
+      x,
+      method = smooth_method,
+      p = smooth_p,
+      n = smooth_n,
+      ts = smooth_ts,
+      m = smooth_m,
+      k = smooth_k
+    )
   }
 
   # normalise
   if(do_normalise) {
-    x <- ir::ir_normalize(x,
-                          method = normalise_method)
+    x <- ir::ir_normalize(x, method = normalise_method)
   }
 
   # binning
