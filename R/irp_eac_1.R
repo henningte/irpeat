@@ -25,6 +25,12 @@
 #'   values.
 #' }
 #'
+#' @param summary_function_mean A function used to summarize the predicted
+#' values (average).
+#'
+#' @param summary_function_sd A function used to summarize the predicted
+#' values (spread).
+#'
 #' @return `x` with a new column "eac" with the predicted EAC values
 #' \[\eqn{\mu}mol g\eqn{_\text{C}^{-1}}\].
 #'
@@ -46,7 +52,7 @@
 #'   \insertAllCited{}
 #'
 #' @export
-irp_eac_1 <- function(x, ..., do_summary = FALSE) {
+irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("rstanarm", quietly = TRUE)) {
@@ -100,13 +106,15 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE) {
   res <- as.data.frame(rstanarm::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
-  if(do_summary) {
-    res <- quantities::set_quantities(purrr::map_dbl(res, mean),
-                                      unit = "umol/g",
-                                      errors = purrr::map_dbl(res, stats::sd))
-  } else {
-    res <- as.list(res)
-  }
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "umol/g",
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd
+    )
 
   x_or$eac <- res
   x_or

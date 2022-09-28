@@ -26,7 +26,7 @@
 #'   \insertAllCited{}
 #'
 #' @export
-irp_holocellulose_2 <- function(x, ..., do_summary = FALSE) {
+irp_holocellulose_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -80,13 +80,15 @@ irp_holocellulose_2 <- function(x, ..., do_summary = FALSE) {
   res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
-  if(do_summary) {
-    res <- quantities::set_quantities(purrr::map_dbl(res, mean),
-                                      unit = "g/g",
-                                      errors = purrr::map_dbl(res, stats::sd))
-  } else {
-    res <- as.list(res)
-  }
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "g/g",
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd
+    )
 
   x_or$holocellulose_2 <- res
   x_or
