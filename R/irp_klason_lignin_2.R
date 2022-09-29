@@ -10,6 +10,12 @@
 #'
 #' @inheritParams irp_eac_1
 #'
+#' @param x An object of class [`ir`][ir::ir_new_ir] with FTIR-ATR mid
+#' infrared spectra. Some tests are applied to check if the supplied spectra
+#' match the spectra used to fit the models (the spectral range is checked). The
+#' spectral resolution of the original spectral data should not be smaller than
+#' 4 cm\eqn{^{-1}} and it is not checked if this assumption is met.
+#'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
 #' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.

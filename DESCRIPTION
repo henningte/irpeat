@@ -63,3 +63,16 @@ Remotes:
 Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/henningte/elco/
+Collate: 
+    'irp_content.R'
+    'irp_content_klh_hodgkins.R'
+    'irp_export_prepare.R'
+    'irp_hi.R'
+    'irp_holocellulose_2.R'
+    'irp_klason_lignin_2.R'
+    'utils.R'
+    'irp_predict_transmission_mir.R'
+    'irp_preprocess.R'
+    'irpeat-package.R'
+    'prediction_domain.R'
+    'utils-pipe.R'

@@ -13,14 +13,14 @@ irp_klason_lignin_2(
 )
 }
 \arguments{
-\item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}. Some tests
-are applied to check if the supplied spectra match the spectra used to
-fit the models (the spectral range is checked). The spectral resolution of
-the original spectral data should not be smaller than 4 cm\eqn{^{-1}} and it
-is not checked if this assumption is met.}
+\item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}} with FTIR-ATR mid
+infrared spectra. Some tests are applied to check if the supplied spectra
+match the spectra used to fit the models (the spectral range is checked). The
+spectral resolution of the original spectral data should not be smaller than
+4 cm\eqn{^{-1}} and it is not checked if this assumption is met.}
 
 \item{...}{Additional arguments passed to
-\code{\link[rstanarm:posterior_predict.stanreg]{rstanarm::posterior_predict.stanreg()}}.}
+\code{\link[rstanarm:posterior_predict.stanreg]{rstanarm::posterior_predict.stanreg()}} (\code{irp_eac_1()},\code{irp_eac_2()}).}
 
 \item{do_summary}{A logical value indicating if the predicted values should
 be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).

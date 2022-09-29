@@ -8,7 +8,7 @@
 #' limitations in predicting contents for peat samples
 #' \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @inheritParams irp_eac_1
+#' @inheritParams irp_klason_lignin_2
 #'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
