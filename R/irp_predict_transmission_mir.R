@@ -679,7 +679,7 @@ irp_dgf0_1 <-
     .f_dimreduce =
       irp_make_predictions_plsr,
     .f_predict =
-      irp_mcmc_predictions_beta_logit
+      irp_mcmc_predictions_normal_identity
   )
 
 

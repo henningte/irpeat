@@ -300,3 +300,25 @@ irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
   yhat * config$data_scale$y_scale + config$data_scale$y_center
 
 }
+
+
+#' Computes predictions using draws for model coefficients for a Normal regression model with constant standard deviation
+#'
+#' @keywords internal
+#' @noRd
+irp_mcmc_predictions_normal_identity <- function(x, draws, config) {
+
+  # linear predictor
+  mu <- draws$Intercept + as.matrix(draws %>% dplyr::select(dplyr::starts_with("b["))) %*% t(x$x)
+  mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
+
+  # predictions
+  yhat <-
+    purrr::map_dfc(mu, function(.x) {
+      stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma)
+    })
+
+  # scale
+  yhat * config$data_scale$y_scale + config$data_scale$y_center
+
+}
