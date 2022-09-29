@@ -1,15 +1,9 @@
-#' Computes contents of components of peat from mid infrared spectra
+#' Batch-prediction of sample properties
 #'
-#' `irp_content` computes the contents of various components of peat
-#' from mid infrared spectra of peat samples. Some functions may also work
-#' for organic matter in general.
-#' Note that this function is a wrapper function to several individual functions
-#' in irpeat. In `irp_content` any warnings and messages regarding issues
-#' with the data are
-#' suppressed and nothing will be exported to disk. In case of doubt, use the
-#' corresponding functions with warnings activated.
+#' Wrapper function to batch-predict sample properties.
 #'
-#' @param x An object of class [`ir`][ir::ir_new_ir].
+#' @param x An object of class [`ir`][ir::ir_new_ir]. See the individual
+#' prediction models for further data requirements.
 #'
 #' @param variable A character vector with one or more values that define for which
 #' components contents are computed for the spectra in `x`. Currently allowed values
@@ -30,23 +24,32 @@
 #'
 #' @param ... Further arguments passed to individual prediction functions.
 #'
+#' @note
+#' \describe{
+#'   \item{`value = "klason_lignin_content_1"` and
+#'   `value = "holocellulose_content_1"`}{
+#'     No warnings are shown and no values are exported to disk.
+#'   }
+#' }
+#'
+#'
 #' @return An object of class [`ir`][ir::ir_new_ir] with additional columns
 #' containing the predictions for the spectra in `x`.
 #'
 #' @examples
 #' library(ir)
 #'
-#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_1")
+#' irp_predict(ir::ir_sample_data[1, ], variable = "klason_lignin_content_1")
 #'
 #' \dontrun{
-#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_2")
-#' irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_content_2")
-#' irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
-#' irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
+#' irp_predict(ir::ir_sample_data[1, ], variable = "klason_lignin_content_2")
+#' irp_predict(ir::ir_sample_data[1, ], variable = "holocellulose_content_2")
+#' irp_predict(ir::ir_sample_data[1, ], variable = "eac_1")
+#' irp_predict(ir::ir_sample_data[1, ], variable = "edc_1")
 #' }
 #'
 #' @export
-irp_content <- function(x, variable, ...) {
+irp_predict <- function(x, variable, ...) {
 
   stopifnot(inherits(x, "ir"))
   if(!is.character(variable)) {
@@ -96,7 +99,7 @@ irp_content <- function(x, variable, ...) {
              x <- irp_edc_1(x = x, ...)
            },
            stop("Unknown value for `variable`.")
-          )
+    )
   }
 
   # delete not demanded variables
@@ -109,5 +112,17 @@ irp_content <- function(x, variable, ...) {
   }
 
   x
+
+}
+
+
+
+#' @rdname irp_predict
+#' @export
+irp_content <- function(x, variable, ...) {
+
+  lifecycle::deprecate_warn("0.2.0", "irp_content()", "irpeat::irp_predict()")
+
+  irp_predict(x, variable, ...)
 
 }

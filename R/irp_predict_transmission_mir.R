@@ -73,6 +73,8 @@
 #'   }
 #' }
 #'
+#' @seealso `irp_predict()`
+#'
 #' @references
 #'   \insertAllCited{}
 #'

@@ -377,3 +377,6 @@ irpeat::irp_C_to_N_1(
 \references{
 \insertAllCited{}
 }
+\seealso{
+\code{irp_predict()}
+}
