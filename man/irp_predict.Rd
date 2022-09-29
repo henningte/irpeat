@@ -17,17 +17,80 @@ prediction models for further data requirements.}
 components contents are computed for the spectra in \code{x}. Currently allowed values
 are:
 \describe{
-\item{"all"}{\code{irp_content} computes all of the values below.}
-\item{"klason_lignin_content_1"}{Klason lignin mass fraction [g/g]
-as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
-\item{"holocellulose_content_1"}{Holocellulose mass fraction [g/g]
-as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
-\item{"klason_lignin_content_2"}{Klason lignin mass fraction [g/g]
-as computed by \code{\link[=irp_klason_lignin_content_2]{irp_klason_lignin_content_2()}}.}
-\item{"holocellulose_content_2"}{Holocellulose mass fraction [g/g]
-as computed by \code{\link[=irp_holocellulose_content_2]{irp_holocellulose_content_2()}}.}
-\item{"eac_1"}{Electron accepting capacity as computed by \code{\link[=irp_eac_1]{irp_eac_1()}}.}
-\item{"edc_1"}{Electron donating capacity as computed by \code{\link[=irp_edc_1]{irp_edc_1()}}.}
+\item{"all"}{
+\code{irp_content} computes all of the values below.
+}
+\item{"klason_lignin_content_1"}{
+Klason lignin mass fraction [g/g] as computed by
+\code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.
+}
+\item{"holocellulose_content_1"}{
+Holocellulose mass fraction [g/g] as computed by
+\code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.
+}
+\item{"klason_lignin_content_2"}{
+Klason lignin mass fraction [g/g] as computed by
+\code{\link[=irp_klason_lignin_content_2]{irp_klason_lignin_content_2()}}.
+}
+\item{"holocellulose_content_2"}{
+Holocellulose mass fraction [g/g] as computed by
+\code{\link[=irp_holocellulose_content_2]{irp_holocellulose_content_2()}}.
+}
+\item{"eac_1"}{
+Electron accepting capacity as computed by \code{\link[=irp_eac_1]{irp_eac_1()}}.
+}
+\item{"edc_1"}{
+Electron donating capacity as computed by \code{\link[=irp_edc_1]{irp_edc_1()}}.
+}
+\item{"carbon_content_1"}{
+Carbon content as computed by \code{\link[=irp_carbon_content_1]{irp_carbon_content_1()}}.
+}
+\item{"nitrogen_content_1"}{
+Nitrogen content as computed by \code{\link[=irp_nitrogen_content_1]{irp_nitrogen_content_1()}}.
+}
+\item{"hydrogen_content_1"}{
+Hydrogen content as computed by \code{\link[=irp_hydrogen_content_1]{irp_hydrogen_content_1()}}.
+}
+\item{"oxygen_content_1"}{
+Oxygen content as computed by \code{\link[=irp_oxygen_content_1]{irp_oxygen_content_1()}}.
+}
+\item{"phosphorous_content_1"}{
+Phosphorous content as computed by \code{\link[=irp_phosphorous_content_1]{irp_phosphorous_content_1()}}.
+}
+\item{"potassium_content_1"}{
+Potassium content as computed by \code{\link[=irp_potassium_content_1]{irp_potassium_content_1()}}.
+}
+\item{"sulfur_content_1"}{
+Sulfur content as computed by \code{\link[=irp_sulfur_content_1]{irp_sulfur_content_1()}}.
+}
+\item{"titanium_content_1"}{
+Titanium content as computed by \code{\link[=irp_titanium_content_1]{irp_titanium_content_1()}}.
+}
+\item{"d13C_1"}{
+\eqn{\delta^{13}}C values as computed by \code{\link[=irp_d13C_1]{irp_d13C_1()}}.
+}
+\item{"d15N_1"}{
+\eqn{\delta^{15}}N values as computed by \code{\link[=irp_d15N_1]{irp_d15N_1()}}.
+}
+\item{"nosc_1"}{
+The nominal oxidation state of carbon as computed by \code{\link[=irp_nosc_1]{irp_nosc_1()}}.
+}
+\item{"dgf0_1"}{
+The standard Gibbs free energy of formation content as computed by
+\code{\link[=irp_dgf0_1]{irp_dgf0_1()}}.
+}
+\item{"bulk_density_1"}{
+Bulk density as computed by \code{\link[=irp_bulk_density_1]{irp_bulk_density_1()}}.
+}
+\item{"O_to_C_1"}{
+O/C ratio as computed by \code{\link[=irp_O_to_C_1]{irp_O_to_C_1()}}.
+}
+\item{"H_to_C_1"}{
+H/C ratio as computed by \code{\link[=irp_H_to_C_1]{irp_H_to_C_1()}}.
+}
+\item{"C_to_N_1"}{
+C/N ratio as computed by \code{\link[=irp_C_to_N_1]{irp_C_to_N_1()}}.
+}
 }}
 
 \item{...}{Further arguments passed to individual prediction functions.}
@@ -50,13 +113,18 @@ No warnings are shown and no values are exported to disk.
 \examples{
 library(ir)
 
-irp_predict(ir::ir_sample_data[1, ], variable = "klason_lignin_content_1")
+irp_predict(
+  ir::ir_sample_data[1, ],
+  variable = "carbon_content_1",
+  do_summary = TRUE
+)
 
 \dontrun{
-irp_predict(ir::ir_sample_data[1, ], variable = "klason_lignin_content_2")
-irp_predict(ir::ir_sample_data[1, ], variable = "holocellulose_content_2")
-irp_predict(ir::ir_sample_data[1, ], variable = "eac_1")
-irp_predict(ir::ir_sample_data[1, ], variable = "edc_1")
+irp_predict(
+  ir::ir_sample_data[1, ],
+  variable = c("eac_1", "carbon_content_1", "nitrogen_content_1", "dgf0_1"),
+  do_summary = TRUE
+)
 }
 
 }
