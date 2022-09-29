@@ -1,6 +1,6 @@
 #' Predicts the Klason lignin content from mid infrared spectra
 #'
-#' `irp_klason_lignin_2` predicts the Klason lignin content from mid
+#' `irp_klason_lignin_content_2` predicts the Klason lignin content from mid
 #' infrared spectra for peat samples using the model
 #' [irpeatmodels::model_klason_lignin_content_2]. This function may also work
 #' for organic matter in general. Note that this is a preliminary model only
@@ -20,19 +20,19 @@
 #' validated for peat samples yet and which has known limitations in predicting
 #' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @return `x` with a new column "klason_lignin_2" with the predicted
+#' @return `x` with a new column "klason_lignin_content_2" with the predicted
 #' Klason lignin contents \[g/g\].
 #'
 #' @examples
 #' library(ir)
 #'
-#' irp_klason_lignin_2(ir::ir_sample_data[1, ], do_summary = TRUE)
+#' irp_klason_lignin_content_2(ir::ir_sample_data[1, ], do_summary = TRUE)
 #'
 #' @references
 #'   \insertAllCited{}
 #'
 #' @export
-irp_klason_lignin_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
+irp_klason_lignin_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -97,7 +97,7 @@ irp_klason_lignin_2 <- function(x, ..., do_summary = FALSE, summary_function_mea
       summary_function_sd = stats::sd
     )
 
-  x_or$klason_lignin_2 <- res
+  x_or$klason_lignin_content_2 <- res
   x_or
 
 }

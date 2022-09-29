@@ -14,14 +14,14 @@ components contents are computed for the spectra in \code{x}. Currently allowed 
 are:
 \describe{
 \item{"all"}{\code{irp_content} computes all of the values below.}
-\item{"klason_lignin_hodgkins"}{Klason lignin mass fraction [g/g]
+\item{"klason_lignin_content_1"}{Klason lignin mass fraction [g/g]
 as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
-\item{"holocellulose_hodgkins"}{Holocellulose mass fraction [g/g]
+\item{"holocellulose_content_1"}{Holocellulose mass fraction [g/g]
 as computed by \code{\link[=irp_content_klh_hodgkins]{irp_content_klh_hodgkins()}}.}
-\item{"klason_lignin_2"}{Klason lignin mass fraction [g/g]
-as computed by \code{\link[=irp_klason_lignin_2]{irp_klason_lignin_2()}}.}
-\item{"holocellulose_2"}{Holocellulose mass fraction [g/g]
-as computed by \code{\link[=irp_holocellulose_2]{irp_holocellulose_2()}}.}
+\item{"klason_lignin_content_2"}{Klason lignin mass fraction [g/g]
+as computed by \code{\link[=irp_klason_lignin_content_2]{irp_klason_lignin_content_2()}}.}
+\item{"holocellulose_content_2"}{Holocellulose mass fraction [g/g]
+as computed by \code{\link[=irp_holocellulose_content_2]{irp_holocellulose_content_2()}}.}
 \item{"eac_1"}{Electron accepting capacity as computed by \code{\link[=irp_eac_1]{irp_eac_1()}}.}
 \item{"edc_1"}{Electron donating capacity as computed by \code{\link[=irp_edc_1]{irp_edc_1()}}.}
 }}
@@ -45,11 +45,11 @@ corresponding functions with warnings activated.
 \examples{
 library(ir)
 
-irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_hodgkins")
+irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_1")
 
 \dontrun{
-irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_2")
-irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_2")
+irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_2")
+irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_content_2")
 irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
 irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
 }

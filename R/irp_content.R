@@ -16,14 +16,14 @@
 #' are:
 #' \describe{
 #'   \item{"all"}{`irp_content` computes all of the values below.}
-#'   \item{"klason_lignin_hodgkins"}{Klason lignin mass fraction \[g/g\]
+#'   \item{"klason_lignin_content_1"}{Klason lignin mass fraction \[g/g\]
 #'     as computed by [irp_content_klh_hodgkins()].}
-#'   \item{"holocellulose_hodgkins"}{Holocellulose mass fraction \[g/g\]
+#'   \item{"holocellulose_content_1"}{Holocellulose mass fraction \[g/g\]
 #'     as computed by [irp_content_klh_hodgkins()].}
-#'   \item{"klason_lignin_2"}{Klason lignin mass fraction \[g/g\]
-#'     as computed by [irp_klason_lignin_2()].}
-#'   \item{"holocellulose_2"}{Holocellulose mass fraction \[g/g\]
-#'     as computed by [irp_holocellulose_2()].}
+#'   \item{"klason_lignin_content_2"}{Klason lignin mass fraction \[g/g\]
+#'     as computed by [irp_klason_lignin_content_2()].}
+#'   \item{"holocellulose_content_2"}{Holocellulose mass fraction \[g/g\]
+#'     as computed by [irp_holocellulose_content_2()].}
 #'   \item{"eac_1"}{Electron accepting capacity as computed by [irp_eac_1()].}
 #'   \item{"edc_1"}{Electron donating capacity as computed by [irp_edc_1()].}
 #' }
@@ -36,11 +36,11 @@
 #' @examples
 #' library(ir)
 #'
-#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_hodgkins")
+#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_1")
 #'
 #' \dontrun{
-#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_2")
-#' irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_2")
+#' irp_content(ir::ir_sample_data[1, ], variable = "klason_lignin_content_2")
+#' irp_content(ir::ir_sample_data[1, ], variable = "holocellulose_content_2")
 #' irp_content(ir::ir_sample_data[1, ], variable = "eac_1")
 #' irp_content(ir::ir_sample_data[1, ], variable = "edc_1")
 #' }
@@ -55,7 +55,7 @@ irp_content <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_hodgkins", "holocellulose_hodgkins", "holocellulose_2", "klason_lignin_2", "eac_1", "edc_1")
+  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1")
   variable_match <- variable %in% c(variable_values, "all")
   if(!all(variable_match)) {
     if(sum(variable_match) == 1) {
@@ -69,12 +69,12 @@ irp_content <- function(x, variable, ...) {
   }
 
   klh_hodgkins_done <- FALSE
-  klh_hodgkins_variable_values <- c("klason_lignin_hodgkins", "holocellulose_hodgkins")
+  klh_hodgkins_variable_values <- c("klason_lignin_content_1", "holocellulose_content_1")
 
   for(i in seq_along(variable)) {
     switch(variable[[i]],
-           "klason_lignin_hodgkins" = ,
-           "holocellulose_hodgkins" = {
+           "klason_lignin_content_1" = ,
+           "holocellulose_content_1" = {
              if(!klh_hodgkins_done) {
                klh_hodgkins_done <- TRUE
                x <- irp_content_klh_hodgkins(x = x,
@@ -83,11 +83,11 @@ irp_content <- function(x, variable, ...) {
                                              make_plots = FALSE)
              }
            },
-           "klason_lignin_2" = {
-             x <- irp_klason_lignin_2(x = x, ...)
+           "klason_lignin_content_2" = {
+             x <- irp_klason_lignin_content_2(x = x, ...)
            },
-           "holocellulose_2" = {
-             x <- irp_holocellulose_2(x = x, ...)
+           "holocellulose_content_2" = {
+             x <- irp_holocellulose_content_2(x = x, ...)
            },
            "eac_1" = {
              x <- irp_eac_1(x = x, ...)

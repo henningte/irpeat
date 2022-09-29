@@ -135,7 +135,7 @@ irp_content_klh_hodgkins_predict <- function(x,
         se.fit = TRUE)
     )
   prediction_h_hodgkins$se_pi <- sqrt(prediction_h_hodgkins$se.fit^2 + prediction_h_hodgkins$residual.scale^2)
-  x$holocellulose_hodgkins <-
+  x$holocellulose_content_1 <-
     quantities::set_quantities(
       prediction_h_hodgkins$fit,
       unit = "g/g",
@@ -156,7 +156,7 @@ irp_content_klh_hodgkins_predict <- function(x,
       )
     )
   prediction_kl_hodgkins$se_pi <- sqrt(prediction_kl_hodgkins$se.fit^2 + prediction_kl_hodgkins$residual.scale^2)
-  x$klason_lignin_hodgkins <-
+  x$klason_lignin_content <-
     quantities::set_quantities(
       prediction_kl_hodgkins$fit, unit = "g/g",
       errors = prediction_kl_hodgkins$se_pi

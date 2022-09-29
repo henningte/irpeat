@@ -1,6 +1,6 @@
 #' Predicts the holocellulose content from mid infrared spectra
 #'
-#' `irp_holocellulose_2` predicts the holocellulose content from mid
+#' `irp_holocellulose_content_2` predicts the holocellulose content from mid
 #' infrared spectra for peat samples using the model
 #' [irpeatmodels::model_holocellulose_content_2]. This function may also work
 #' for organic matter in general. Note that this is a preliminary model only
@@ -8,25 +8,25 @@
 #' limitations in predicting contents for peat samples
 #' \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @inheritParams irp_klason_lignin_2
+#' @inheritParams irp_klason_lignin_content_2
 #'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
 #' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @return `x` with a new column "holocellulose_2" with the predicted
+#' @return `x` with a new column "holocellulose_content_2" with the predicted
 #' holocellulose contents \[g/g\].
 #'
 #' @examples
 #' library(ir)
 #'
-#' irp_holocellulose_2(ir::ir_sample_data[1, ], do_summary = TRUE)
+#' irp_holocellulose_content_2(ir::ir_sample_data[1, ], do_summary = TRUE)
 #'
 #' @references
 #'   \insertAllCited{}
 #'
 #' @export
-irp_holocellulose_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
+irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -91,7 +91,7 @@ irp_holocellulose_2 <- function(x, ..., do_summary = FALSE, summary_function_mea
       summary_function_sd = stats::sd
     )
 
-  x_or$holocellulose_2 <- res
+  x_or$holocellulose_content_2 <- res
   x_or
 
 }
