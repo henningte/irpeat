@@ -20,6 +20,9 @@
 \alias{irp_O_to_C_1}
 \alias{irp_H_to_C_1}
 \alias{irp_C_to_N_1}
+\alias{irp_volume_fraction_solids_1}
+\alias{irp_non_macroporosity_1}
+\alias{irp_macroporosity_1}
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
@@ -169,6 +172,33 @@ irp_H_to_C_1(
 
 irp_C_to_N_1(
   x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
+
+irp_volume_fraction_solids_1(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
+
+irp_non_macroporosity_1(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
+
+irp_macroporosity_1(
+  x,
+  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
@@ -368,6 +398,27 @@ irpeat::irp_H_to_C_1(
 
 # C/N
 irpeat::irp_C_to_N_1(
+  ir::ir_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# volume fraction of solids
+irpeat::irp_volume_fraction_solids_1(
+  ir::ir_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# non-macroporosity
+irpeat::irp_non_macroporosity_1(
+  ir::ir_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# macroporosity
+irpeat::irp_macroporosity_1(
   ir::ir_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"

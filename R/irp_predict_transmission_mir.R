@@ -826,4 +826,166 @@ irp_C_to_N_1 <-
       irp_mcmc_predictions_beta_logit
   )
 
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # volume fraction of solids, macroporosity, non-macroporosity
+#' irpeat::irp_porosity_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @noRd
+#' @keywords internal
+irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
+  # check additional packages
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+
+  # import data
+  m_draws_porosity_1 <- irpeatmodels::model_porosity_1_draws
+  config_porosity_1 <-  irpeatmodels::model_porosity_1_config
+
+  # predict bulk density
+  x <-
+    irp_bulk_density_1(x, ..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    dplyr::rename("non_macroporosity_1_in_pd" = "bulk_density_1_in_pd") %>%
+    dplyr::mutate(
+      macroporoity_1_in_pd = non_macroporosity_1_in_pd,
+      volume_fraction_solids_1_in_pd = non_macroporosity_1_in_pd
+    )
+
+  ## predict porosity
+
+  # get predictor matrix
+  X <-
+    as.data.frame(x$bulk_density_1) %>%
+    as.matrix()
+  logX <- log(X)
+  X <- X - model_porosity_1_config$data_scale$x_center["b_bulkdensity"]
+  logX <- logX - model_porosity_1_config$data_scale$x_center["b_logbulkdensity"]
+
+  Intercept_non_macroporosity <-
+    m_draws_porosity_1$b_munonmacroporosity_Intercept +
+    apply(m_draws_porosity_1 %>% dplyr::select(dplyr::contains("b_munonmacroporosity") & !dplyr::contains("Intercept")), 1, sum)
+
+  Intercept_macroporosity <-
+    m_draws_porosity_1$b_mumacroporosity_Intercept +
+    apply(m_draws_porosity_1 %>% dplyr::select(dplyr::contains("b_mumacroporosity") & !dplyr::contains("Intercept")), 1, sum)
+
+
+  # linear predictor
+  mu <- list(
+    non_macroporosity =
+      Intercept_non_macroporosity +
+      sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_bulk_density)), FUN = "*") +
+      sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_logbulk_density)), FUN = "*"),
+    macroporosity =
+      Intercept_macroporosity +
+      sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_bulk_density)), FUN = "*") +
+      sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_logbulk_density)), FUN = "*")
+  )
+  mu <- simplify2array(mu)
+  mu_inv <- brms:::inv_link_categorical(mu)
+
+  # predictions
+  res <-
+    purrr::map(seq_len(dim(mu_inv)[[2]]), function(i) {
+      brms::rdirichlet(n = dim(mu_inv)[[1]], alpha = mu_inv[, i, ] * m_draws_porosity_1$phi) %>%
+        as.data.frame() %>%
+        setNames(nm = c("volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1"))
+    }) %>%
+    purrr::transpose() %>%
+    purrr::map2_dfc(names(.), function(.x, .y) {
+      tibble::tibble(
+        y = unname(irp_summarize_predictions(as.data.frame(.x), x_unit = "L/L", do_summary = do_summary, summary_function_mean = summary_function_mean, summary_function_sd = summary_function_sd))
+      ) %>%
+        setNames(nm = .y)
+    })
+
+  cbind(x, res)
+
+}
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # volume fraction of solids
+#' irpeat::irp_volume_fraction_solids_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  res <-
+    irp_porosity_1(
+      x = x,
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+    dplyr::select(-.data$nonmacroporoity_1_in_pd, -.data$macroporoity_1_in_pd, -.data$nonmacroporoity_1, -.data$macroporoity_1)
+
+}
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # non-macroporosity
+#' irpeat::irp_non_macroporosity_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  res <-
+    irp_porosity_1(
+      x = x,
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+    dplyr::select(-.data$volume_fraction_solids_1_in_pd, -.data$macroporoity_1_in_pd, -.data$volume_fraction_solids_1, -.data$macroporoity_1)
+
+}
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # macroporosity
+#' irpeat::irp_macroporosity_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  res <-
+    irp_porosity_1(
+      x = x,
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+    dplyr::select(-.data$nonmacroporoity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$nonmacroporoity_1, -.data$volume_fraction_solids_1)
+
+}

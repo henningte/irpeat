@@ -156,7 +156,7 @@ irp_content_klh_hodgkins_predict <- function(x,
       )
     )
   prediction_kl_hodgkins$se_pi <- sqrt(prediction_kl_hodgkins$se.fit^2 + prediction_kl_hodgkins$residual.scale^2)
-  x$klason_lignin_content <-
+  x$klason_lignin_content_1 <-
     quantities::set_quantities(
       prediction_kl_hodgkins$fit, unit = "g/g",
       errors = prediction_kl_hodgkins$se_pi

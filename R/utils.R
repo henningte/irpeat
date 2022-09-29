@@ -225,7 +225,7 @@ irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_me
         mode = "standard"
       )
   } else {
-    purrr::map(x, units::set_units(x_unit, mode = "standard"))
+    purrr::map(x, units::set_units, value = x_unit, mode = "standard")
   }
 
 }

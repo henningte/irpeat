@@ -91,6 +91,16 @@ H/C ratio as computed by \code{\link[=irp_H_to_C_1]{irp_H_to_C_1()}}.
 \item{"C_to_N_1"}{
 C/N ratio as computed by \code{\link[=irp_C_to_N_1]{irp_C_to_N_1()}}.
 }
+\item{"volume_fraction_solids_1"}{
+Volume fraction of solids as computed by
+\code{\link[=irp_volume_fraction_solids_1]{irp_volume_fraction_solids_1()}}.
+}
+\item{"non_macroporosity_1"}{
+Non-macroporosity as computed by \code{\link[=irp_non_macroporosity_1]{irp_non_macroporosity_1()}}.
+}
+\item{"macroporosity_1"}{
+Macroporosity as computed by \code{\link[=irp_macroporosity_1]{irp_macroporosity_1()}}.
+}
 }}
 
 \item{...}{Further arguments passed to individual prediction functions.}
