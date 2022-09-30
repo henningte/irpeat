@@ -67,6 +67,7 @@ Collate:
     'data.R'
     'irp_content_klh_hodgkins.R'
     'irp_export_prepare.R'
+    'irp_get_prediction_domain_for.R'
     'irp_hi.R'
     'irp_holocellulose_2.R'
     'irp_klason_lignin_2.R'
