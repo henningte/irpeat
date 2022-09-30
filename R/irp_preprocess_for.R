@@ -30,13 +30,13 @@ irp_preprocess_for <- function(x, variable) {
          "holocellulose_content_1" =
            x,
          "klason_lignin_content_2" =
-           irp_klason_lignin_content_2(x = x, ...),
+           irp_klason_lignin_content_2(x = x),
          "holocellulose_content_2" =
-           irp_holocellulose_content_2(x = x, ...),
+           irp_holocellulose_content_2(x = x),
          "eac_1" =
-           irp_eac_1(x = x, ...),
+           irp_eac_1(x = x),
          "edc_1" =
-           irp_edc_1(x = x, ...),
+           irp_edc_1(x = x),
          "carbon_content_1" =,
          "nitrogen_content_1" =,
          "hydrogen_content_1" =,

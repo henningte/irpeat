@@ -936,7 +936,7 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
     summary_function_sd = stats::sd,
     check_prediction_domain = check_prediction_domain
   ) %>%
-    dplyr::select(-.data$nonmacroporosity_1_in_pd, -.data$macroporosity_1_in_pd, -.data$nonmacroporosity_1, -.data$macroporosity_1)
+    dplyr::select(-.data$non_macroporosity_1_in_pd, -.data$macroporosity_1_in_pd, -.data$non_macroporosity_1, -.data$macroporosity_1)
 
 }
 
@@ -987,7 +987,7 @@ irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mea
     summary_function_sd = stats::sd,
     check_prediction_domain = check_prediction_domain
   ) %>%
-    dplyr::select(-.data$nonmacroporosity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$nonmacroporosity_1, -.data$volume_fraction_solids_1)
+    dplyr::select(-.data$non_macroporosity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$non_macroporosity_1, -.data$volume_fraction_solids_1)
 
 }
 
