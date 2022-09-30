@@ -74,6 +74,12 @@ irp_as_irp_prediction_domain.ir <- function(x) {
   irp_as_irp_prediction_domain(ir::ir_flatten(x))
 }
 
+#' @rdname irp_prediction_domain-conversion
+#' @export
+irp_as_irp_prediction_domain.data.frame <- function(x) {
+  new_irp_prediction_domain(x)
+}
+
 #' Plotting method for `irp_prediction_domain` objects
 #'
 #' @param x An object of class `irp_prediction_domain`.

@@ -5,6 +5,7 @@
 \alias{irp_as_irp_prediction_domain}
 \alias{irp_as_irp_prediction_domain.ir_flat}
 \alias{irp_as_irp_prediction_domain.ir}
+\alias{irp_as_irp_prediction_domain.data.frame}
 \title{Converts an object to class \code{irp_prediction_domain}}
 \usage{
 irp_as_irp_prediction_domain(x, ...)
@@ -12,6 +13,8 @@ irp_as_irp_prediction_domain(x, ...)
 \method{irp_as_irp_prediction_domain}{ir_flat}(x)
 
 \method{irp_as_irp_prediction_domain}{ir}(x)
+
+\method{irp_as_irp_prediction_domain}{data.frame}(x)
 }
 \arguments{
 \item{x}{An object.}
