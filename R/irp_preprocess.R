@@ -245,9 +245,11 @@ irp_preprocess <- function(
 
   # scale
   if(do_scale) {
-    res <- ir::ir_scale(x, center = scale_center, scale = scale_scale)
-    attributes_res <- attributes(res)
+    x <- ir::ir_scale(x, center = scale_center, scale = scale_scale)
+    attributes_res <- attributes(x)
   }
+
+  res <- x
 
   if(! do_return_as_ir) {
     res <- ir::ir_flatten(x)

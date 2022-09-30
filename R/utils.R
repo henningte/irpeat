@@ -96,34 +96,8 @@ irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, tar
       rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
     }
 
-    # preprocess the spectra
-    x <-
-      irp_preprocess(
-        x,
-        do_interpolate = config$irp_preprocess$do_interpolate,
-        interpolate_start = config$irp_preprocess$interpolate_start,
-        interpolate_dw = config$irp_preprocess$interpolate_dw,
-        do_clip = config$irp_preprocess$do_clip,
-        clip_range = config$irp_preprocess$clip_range,
-        do_interpolate_region = config$irp_preprocess$do_interpolate_region,
-        interpolate_region_range = config$irp_preprocess$interpolate_region_range,
-        do_bc = config$irp_preprocess$do_bc,
-        bc_method = config$irp_preprocess$bc_method,
-        # bc_cutoff = config$irp_preprocess$bc_cutoff,
-        bc_cutoff = 0,
-        # bc_do_impute = config$irp_preprocess$bc_do_impute,
-        bc_do_impute = TRUE,
-        do_smooth = config$irp_preprocess$do_smooth,
-        do_normalise = config$irp_preprocess$do_normalise,
-        normalise_method = config$irp_preprocess$normalise_method,
-        do_bin = config$irp_preprocess$do_bin,
-        bin_width = config$irp_preprocess$bin_width,
-        bin_new_x_type = config$irp_preprocess$bin_new_x_type,
-        do_scale = config$irp_preprocess$do_scale,
-        scale_center = config$data_scale$x_center,
-        scale_scale = config$data_scale$x_scale,
-        do_return_as_ir = TRUE
-      )
+    # preprocessing
+    x <- irp_preprocess_for(x = x, variable = target_variable_name)
 
     # check prediction domain
     prediction_domain <-
@@ -322,5 +296,63 @@ irp_mcmc_predictions_normal_identity <- function(x, draws, config) {
 
   # scale
   yhat * config$data_scale$y_scale + config$data_scale$y_center
+
+}
+
+
+#### preprocessing helper functions ####
+
+#' Helper function to preprocess spectra for prediciton with the models from project eb1079
+#'
+#' @keywords internal
+#' @noRd
+irp_preprocess_eb1079 <- function(x, config) {
+
+  ## custom preprocessing special to the models for eb1079
+
+  # First: get a baseline which can be subtracted from all spectra even with negative CO2 peaks. I have to do a SG smoothing and regional interpolation here to avoid negative CO2 peaks elsewhere to corrupt the baseline. I also have to interpolate linearly the CO2 peak around 670 cm$^{-1}$ since this peak corrupts the baseline and does not get smoothed out completely by the SG smoothing.
+  x_bl <-
+    x %>%
+    ir::ir_interpolate(start = NULL, dw = 1) %>%
+    ir::ir_smooth(method = "sg", n = 91) %>% #---note: new
+    ir::ir_clip(range = config$irp_preprocess$clip_range) %>%
+    ir::ir_interpolate_region(range = tibble::tibble(start = c(650, 2230), end = c(695, 2410))) %>%
+    ir::ir_bc(method = "rubberband", return_bl = TRUE, do_impute = TRUE)
+
+  # clipping and baseline correction
+  x <-
+    x %>%
+    ir::ir_interpolate(start = NULL, dw = 1) %>%
+    ir::ir_clip(range = config$irp_preprocess$clip_range) %>%
+    ir::ir_subtract(x_bl) %>%
+    ir::ir_bc(method = "rubberband", do_impute = TRUE)
+
+  # preprocess the spectra
+  irp_preprocess(
+    x,
+    do_interpolate = config$irp_preprocess$do_interpolate,
+    interpolate_start = config$irp_preprocess$interpolate_start,
+    interpolate_dw = config$irp_preprocess$interpolate_dw,
+    do_clip = config$irp_preprocess$do_clip,
+    clip_range = config$irp_preprocess$clip_range,
+    do_interpolate_region = config$irp_preprocess$do_interpolate_region,
+    interpolate_region_range = config$irp_preprocess$interpolate_region_range,
+    do_bc = config$irp_preprocess$do_bc,
+    bc_method = config$irp_preprocess$bc_method,
+    # bc_cutoff = config$irp_preprocess$bc_cutoff,
+    bc_cutoff = 0,
+    # bc_do_impute = config$irp_preprocess$bc_do_impute,
+    bc_do_impute = TRUE,
+    do_smooth = config$irp_preprocess$do_smooth,
+    do_normalise = config$irp_preprocess$do_normalise,
+    normalise_method = config$irp_preprocess$normalise_method,
+    do_bin = config$irp_preprocess$do_bin,
+    bin_width = config$irp_preprocess$bin_width,
+    bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+    do_scale = config$irp_preprocess$do_scale,
+    scale_center = config$data_scale$x_center,
+    scale_scale = config$data_scale$x_scale,
+    do_return_as_ir = TRUE
+  )
 
 }
