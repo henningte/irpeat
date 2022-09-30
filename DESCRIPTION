@@ -64,6 +64,7 @@ Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/henningte/elco/
 Collate: 
+    'data.R'
     'irp_content_klh_hodgkins.R'
     'irp_export_prepare.R'
     'irp_hi.R'

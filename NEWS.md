@@ -5,13 +5,14 @@
 * Update the documentation: Adding explicit warnings to `irp_content_klh_hodgkins()`, `irp_content_kl_hodgkins_model`, and `irp_content_h_hodgkins_model` that the related models are not reliable for peat.
 * Correct a typo which made it impossible to compute `holocellulose_2` with `irp_content()` (now: `irp_predict()`, see below).
 * Major restructuration: The models originally included with the 'irpeat' package are now stored in a separate data package ['irpeatmodels'](---todo: add url) to reduce the size of the 'irpeat' package. The 'irpeatmodels' package can be installed from Zenodo.
-* New models: `irp_carbon_content_1()`, `irp_nitrogen_content_1()`, `irp_oxygen_content_1()`, `irp_hydrogen_content_1()`, `irp_phosphorous_content_1()`, `irp_potassium_content_1()`, `irp_sulfur_content_1()`, `irp_titanium_content_1()`, `irp_d13C_1()`, `irp_d15N_1()`, `irp_nosc_1()`, `irp_dgf0_1()`, `irp_bulk_density_1()`, `irp_O_to_C_1()`, `irp_H_to_C_1()`, `irp_C_to_N_1()`, `irp_volume_fraction_solids_1()`, `irp_non_macroporosity_1()`, `irp_macroporosity_1()`.
+* New models: `irp_carbon_content_1()`, `irp_nitrogen_content_1()`, `irp_oxygen_content_1()`, `irp_hydrogen_content_1()`, `irp_phosphorous_content_1()`, `irp_potassium_content_1()`, `irp_sulfur_content_1()`, `irp_titanium_content_1()`, `irp_d13C_1()`, `irp_d15N_1()`, `irp_nosc_1()`, `irp_dgf0_1()`, `irp_bulk_density_1()`, `irp_O_to_C_1()`, `irp_H_to_C_1()`, `irp_C_to_N_1()`, `irp_volume_fraction_solids_1()`, `irp_non_macroporosity_1()`, `irp_macroporosity_1()`, `irp_saturated_hydraulic_conductivity_1()`.
 * Add a new class `irp_prediction_domain`: This class stores the prediction domain for a model. Methods available are: Conversion from `ir` and `ir_flat` objects, plotting, check whether spectra in an `ir` object are within a prediction domain.
 * Rename:
     1. `irp_content()` to `irp_predict()`.
     2. `irp_holocellulose_2()` to `irp_holocellulose_content_2()`.
     3. `irp_klason_lignin_2()` to `irp_klason_lignin_content_2()`.
     4. Output from `irp_hkl_hodgkins()`: `holocellulose_hodgkins` --> `holocellulose_content_1`, `klason_lignin_hodgkins` --> `klason_lignin_content_1`.
+* Add sample data (transmission mid infrared spectra for peat samples from the 'redoxpeat' R package): `irpeat_sample_data`.
 
 # irpeat 0.1.0
 
