@@ -23,15 +23,17 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-'irpeat' is an R package that contains simple functions to analyze infrared spectra of peat samples. Some functions may also work with organic matter samples in general.
+'irpeat' is an R package which contains functions to analyze infrared spectra of peat samples. These functions are functions to compute humification indices and functions to predict peat properties. Some functions may also work with organic matter samples in general.
 
-Provided functions for analyzing infrared spectra of peat are:
+The following peat properties can currently be predicted: 
 
-1. Computation of several humification indices.
-2. Klason lignin mass fraction (following @Hodgkins.2018 and @Teickner.2022a) (note that these models are not reliable for peat, see @Teickner.2022a).
-3. Holocellulose mass fraction (following @Hodgkins.2018 and @Teickner.2022a) (note that these models are not reliable for peat, see @Teickner.2022a).
-4. Peat electron accepting capacity (following @Teickner.2022).
-5. Peat electron donating capacity (following @Teickner.2022).
++ Elemental contents (C, H, N, O, S, P, K, Ti)
++ isotope values ($\delta^{13}$C and $\delta^{15}$N)
++ physical properties (bulk density, volume fraction of solids, non-macroporosity, macroporosity, saturated hydraulic conductivity)
++ standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$) 
++ electrochemical properties (electron accepting capacity, electron donating capacity)
+
+The package also contains functions to predict holocellulose and Klason lignin contents [@Hodgkins.2018; @Teickner.2022a], but these models have been shown to be biased [@Teickner.2022a].
 
 ### How to install
 
@@ -59,6 +61,7 @@ library(irpeat)
 
 # load additional packages needed for this tutorial
 library(ir)
+library(irpeatmodels)
 library(ggplot2)
 ```
 
@@ -68,19 +71,27 @@ You can test 'irpeat' with sample data from the R package 'ir':
 ir::ir_sample_data
 ```
 
-`ir::ir_sample_data` contains various ATR-MIR spectra of organic reference material (e.g. newspaper, wood, grass).
+`irpeat_sample_data` contains transmission mid infrared spectra of peat different samples (See @Teickner.2022 and @Teickner.2021c for details).
 
 A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
 
 ```{r sample_data_workflow}
 x <- 
-  ir::ir_sample_data[1:10, ] %>%                                # data
-  ir::ir_bc(method = "rubberband") %>%                          # baseline correction
-  irpeat::irp_hi() %>%                                          # humification indices
-  irpeat::irp_klason_lignin_2(do_summary = TRUE)                # Klason lignin content
+  irpeat_sample_data %>%                                  # data
+  dplyr::mutate(
+    hi_1630_1090 =
+      irpeat_sample_data %>%
+      ir::ir_bc(method = "rubberband") %>%                # baseline correction
+      ir::ir_interpolate(start = NULL, dw = 1) %>%        # interpolation
+      irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
+      dplyr::pull(hi_1630_1090)
+  ) %>%
+  irpeat::irp_carbon_content_1(do_summary = TRUE) %>%     # C content
+  # irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
+  irpeat::irp_macroporosity_1(do_summary = TRUE)          # macroporosity
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed Klason lignin content (`klason_lignin_2`)
+`x` is identical to `ir::ir_sample_data`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed carbon content (`carbon_content_1`)
 
 ```{r x_inspect}
 x
@@ -89,18 +100,22 @@ x
 Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
 
 ```{r x_plot}
-ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_2) * 100, y = hi1)) + 
-  ggplot2::geom_point() +
-  ggplot2::labs(x = "Klason lignin content [mass-%]", 
-                y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
-
+ggplot(
+  x, 
+  aes(x = quantities::drop_quantities(carbon_content_1) * 100, y = hi_1630_1090)
+) + 
+  geom_point() +
+  labs(
+    x = "Carbon content [mass-%]", 
+    y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
+  )
 ```
 
 
 All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
 
 ```{r x_klh_inspect_quantities}
-x$klason_lignin_2
+x$carbon_content_1[1:5]
 ```
 
 ### Future development

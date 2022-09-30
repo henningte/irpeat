@@ -845,14 +845,18 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
 
+  x_or <- x
+
   # import data
   m_draws_porosity_1 <- irpeatmodels::model_porosity_1_draws
   config_porosity_1 <-  irpeatmodels::model_porosity_1_config
 
   # predict bulk density
   x <-
-    irp_bulk_density_1(x, ..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
-    dplyr::rename("non_macroporosity_1_in_pd" = "bulk_density_1_in_pd") %>%
+    x %>%
+    dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
+    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    dplyr::rename(non_macroporosity_1_in_pd = "bulk_density_1_in_pd") %>%
     dplyr::mutate(
       macroporoity_1_in_pd = non_macroporosity_1_in_pd,
       volume_fraction_solids_1_in_pd = non_macroporosity_1_in_pd
@@ -865,8 +869,8 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
     as.data.frame(x$bulk_density_1) %>%
     as.matrix()
   logX <- log(X)
-  X <- X - model_porosity_1_config$data_scale$x_center["b_bulkdensity"]
-  logX <- logX - model_porosity_1_config$data_scale$x_center["b_logbulkdensity"]
+  X <- X - config_porosity_1$data_scale$x_center["b_bulkdensity"]
+  logX <- logX - config_porosity_1$data_scale$x_center["b_logbulkdensity"]
 
   Intercept_non_macroporosity <-
     m_draws_porosity_1$b_munonmacroporosity_Intercept +
@@ -906,7 +910,7 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
         setNames(nm = .y)
     })
 
-  cbind(x, res)
+  cbind(x_or, res, x %>% dplyr::select(.data$non_macroporosity_1_in_pd, .data$macroporoity_1_in_pd, .data$volume_fraction_solids_1_in_pd))
 
 }
 
@@ -924,16 +928,15 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 #' @export
 irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
-  res <-
-    irp_porosity_1(
-      x = x,
-      ...,
-      do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
-      check_prediction_domain = check_prediction_domain
-    ) %>%
-    dplyr::select(-.data$nonmacroporoity_1_in_pd, -.data$macroporoity_1_in_pd, -.data$nonmacroporoity_1, -.data$macroporoity_1)
+  irp_porosity_1(
+    x = x,
+    ...,
+    do_summary = do_summary,
+    summary_function_mean = mean,
+    summary_function_sd = stats::sd,
+    check_prediction_domain = check_prediction_domain
+  ) %>%
+    dplyr::select(-.data$nonmacroporosity_1_in_pd, -.data$macroporosity_1_in_pd, -.data$nonmacroporosity_1, -.data$macroporosity_1)
 
 }
 
@@ -950,16 +953,15 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
 #' @export
 irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
-  res <-
-    irp_porosity_1(
-      x = x,
-      ...,
-      do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
-      check_prediction_domain = check_prediction_domain
-    ) %>%
-    dplyr::select(-.data$volume_fraction_solids_1_in_pd, -.data$macroporoity_1_in_pd, -.data$volume_fraction_solids_1, -.data$macroporoity_1)
+  irp_porosity_1(
+    x = x,
+    ...,
+    do_summary = do_summary,
+    summary_function_mean = mean,
+    summary_function_sd = stats::sd,
+    check_prediction_domain = check_prediction_domain
+  ) %>%
+    dplyr::select(-.data$volume_fraction_solids_1_in_pd, -.data$macroporosity_1_in_pd, -.data$volume_fraction_solids_1, -.data$macroporosity_1)
 
 }
 
@@ -977,15 +979,110 @@ irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function
 #' @export
 irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
+  irp_porosity_1(
+    x = x,
+    ...,
+    do_summary = do_summary,
+    summary_function_mean = mean,
+    summary_function_sd = stats::sd,
+    check_prediction_domain = check_prediction_domain
+  ) %>%
+    dplyr::select(-.data$nonmacroporosity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$nonmacroporosity_1, -.data$volume_fraction_solids_1)
+
+}
+
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # volume fraction of solids, macroporosity, non-macroporosity
+#' irpeat::irp_saturated_hydraulic_conductivity_1(
+#'   ir::ir_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  # check additional packages
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+
+  x_or <- x
+  x_has_bulk_density <- any(colnames(x) == "bulk_density_1")
+
+  # import data
+  m_draws_ks_1 <- irpeatmodels::model_saturated_hydraulic_conductivity_1_draws
+  config_ks_1 <-  irpeatmodels::model_saturated_hydraulic_conductivity_1_config
+
+  # predict bulk density
+  x <-
+    x %>%
+    dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
+    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    dplyr::rename(saturated_hydraulic_conductivity_1_in_pd = "bulk_density_1_in_pd")
+
+  ## predict porosity
+
+  # get predictor matrix
+  X <-
+    as.data.frame(x$bulk_density_1) %>%
+    as.matrix()
+  logX <- log(X)
+  X <- X - config_ks_1$data_scale$x_center["b_bulkdensity"]
+  logX <- logX - config_ks_1$data_scale$x_center["b_logbulkdensity"]
+
+  Intercept_mu <-
+    m_draws_ks_1$b_Intercept +
+    apply(m_draws_ks_1 %>% dplyr::select(!dplyr::starts_with("b_phi_") & !dplyr::contains("Intercept")), 1, sum)
+
+  Intercept_phi <-
+    m_draws_ks_1$b_phi_Intercept +
+    apply(m_draws_ks_1 %>% dplyr::select(dplyr::starts_with("b_phi_") & !dplyr::contains("Intercept")), 1, sum)
+
+
+  # linear predictor
+  mu <-
+    Intercept_mu +
+    sweep(X, 1, (m_draws_ks_1 %>% dplyr::pull(.data$b_bulk_density)), FUN = "*") +
+    sweep(logX, 1, (m_draws_ks_1 %>% dplyr::pull(.data$b_logbulk_density)), FUN = "*")
+
+  phi <-
+    Intercept_phi +
+    sweep(X, 1, (m_draws_ks_1 %>% dplyr::pull(.data$b_phi_bulk_density)), FUN = "*") +
+    sweep(logX, 1, (m_draws_ks_1 %>% dplyr::pull(.data$b_phi_logbulk_density)), FUN = "*")
+
+  mu <- config_ks_1$likelihood$linkinv(mu)
+  phi <- exp(phi) #---note: in the model, phi has a log link
+
+  # predictions
   res <-
-    irp_porosity_1(
-      x = x,
-      ...,
+    purrr::map_dfc(seq_len(ncol(mu)), function(i) {
+
+      res <- stats::rbeta(n = nrow(mu), shape1 = mu[, i] * phi[, i], shape2 = (1 - mu[, i]) * phi[, i])
+
+      # scale
+      res * config_ks_1$data_scale$y_scale + config_ks_1$data_scale$y_center
+
+    })
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "cm/h",
       do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
-      check_prediction_domain = check_prediction_domain
-    ) %>%
-    dplyr::select(-.data$nonmacroporoity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$nonmacroporoity_1, -.data$volume_fraction_solids_1)
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd
+    )
+
+  res <-
+    tibble::tibble(y = res) %>%
+    setNames(nm = "saturated_hydraulic_conductivity_1")
+
+  cbind(x_or, res, x %>% dplyr::select(.data$saturated_hydraulic_conductivity_1_in_pd))
 
 }

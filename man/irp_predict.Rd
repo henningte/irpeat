@@ -101,6 +101,10 @@ Non-macroporosity as computed by \code{\link[=irp_non_macroporosity_1]{irp_non_m
 \item{"macroporosity_1"}{
 Macroporosity as computed by \code{\link[=irp_macroporosity_1]{irp_macroporosity_1()}}.
 }
+\item{"saturated_hydraulic_conductivity_1"}{
+Saturated hydraulic conductivity as computed by
+\code{\link[=saturated_hydraulic_conductivity_1]{saturated_hydraulic_conductivity_1()}}.
+}
 }}
 
 \item{...}{Further arguments passed to individual prediction functions.}

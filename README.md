@@ -11,23 +11,28 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 
 ## Overview
 
-‘irpeat’ is an R package that contains simple functions to analyze
-infrared spectra of peat samples. Some functions may also work with
-organic matter samples in general.
+‘irpeat’ is an R package which contains functions to analyze infrared
+spectra of peat samples. These functions are functions to compute
+humification indices and functions to predict peat properties. Some
+functions may also work with organic matter samples in general.
 
-Provided functions for analyzing infrared spectra of peat are:
+The following peat properties can currently be predicted:
 
-1.  Computation of several humification indices.
-2.  Klason lignin mass fraction (following Hodgkins et al. (2018) and
-    Teickner and Knorr (2022)) (note that these models are not reliable
-    for peat, see Teickner and Knorr (2022)).
-3.  Holocellulose mass fraction (following Hodgkins et al. (2018) and
-    Teickner and Knorr (2022)) (note that these models are not reliable
-    for peat, see Teickner and Knorr (2022)).
-4.  Peat electron accepting capacity (following Teickner, Gao, and Knorr
-    (2022)).
-5.  Peat electron donating capacity (following Teickner, Gao, and Knorr
-    (2022)).
+-   Elemental contents (C, H, N, O, S, P, K, Ti)
+-   isotope values
+    (![\delta^{13}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B13%7D "\delta^{13}")C
+    and
+    ![\delta^{15}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B15%7D "\delta^{15}")N)
+-   physical properties (bulk density, volume fraction of solids,
+    non-macroporosity, macroporosity saturaed hydraulic conductivity)
+-   standard Gibbs free energy of formation
+    (![\Delta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta "\Delta")G![\_\text{f}^0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;_%5Ctext%7Bf%7D%5E0 "_\text{f}^0"))
+-   electrochemical properties (electron accepting capacity, electron
+    donating capacity)
+
+The package also contains functions to predict holocellulose and Klason
+lignin contents \[Hodgkins et al. (2018); Teickner.2022a\], but these
+models have been shown to be biased (Teickner and Knorr 2022).
 
 ### How to install
 
@@ -81,8 +86,9 @@ ir::ir_sample_data
 #> #   spectra <named list>
 ```
 
-`ir::ir_sample_data` contains various ATR-MIR spectra of organic
-reference material (e.g. newspaper, wood, grass).
+`irpeat_sample_data` contains transmission mid infrared spectra of peat
+different samples (See Teickner, Gao, and Knorr (2022) and Teickner,
+Gao, and Knorr (2021) for details).
 
 A simple workflow could be, for example, to baseline correct the spectra
 (using functions of the package ‘ir’) compute various humification
@@ -92,33 +98,40 @@ speed the computations a bit up.
 
 ``` r
 x <- 
-  ir::ir_sample_data[1:10, ] %>%                                # data
-  ir::ir_bc(method = "rubberband") %>%                          # baseline correction
-  irpeat::irp_hi() %>%                                          # humification indices
-  irpeat::irp_klason_lignin_2(do_summary = TRUE)                # Klason lignin content
+  irpeat_sample_data %>%                                  # data
+  dplyr::mutate(
+    hi_1630_1090 =
+      irpeat_sample_data %>%
+      ir::ir_bc(method = "rubberband") %>%                # baseline correction
+      ir::ir_interpolate(start = NULL, dw = 1) %>%        # interpolation
+      irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
+      dplyr::pull(hi_1630_1090)
+  ) %>%
+  irpeat::irp_carbon_content_1(do_summary = TRUE) %>%     # C content
+  irpeat::irp_bulk_density_1(do_summary = TRUE)           # bulk density
 ```
 
-`x` is identical to `ir::ir_sample_data[1:10, ]`, but contains
-additional columns for the computed humification indices (`h1`, `h2`,
-`h3`, `h4`) and the computed Klason lignin content (`klason_lignin_2`)
+`x` is identical to `ir::ir_sample_data`, but contains additional
+columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`)
+and the computed carbon content (`carbon_content_1`)
 
 ``` r
 x
-#> # A tibble: 10 × 12
-#>    id_measurement id_sample sample_type sample_comment             klason_lignin
-#>  *          <int> <chr>     <chr>       <chr>                                [1]
-#>  1              1 GN 11-389 needles     Abies Firma Momi fir               0.360
-#>  2              2 GN 11-400 needles     Cupressocyparis leylandii…         0.339
-#>  3              3 GN 11-407 needles     Juniperus chinensis Chine…         0.268
-#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi…         0.350
-#>  5              5 GN 11-416 needles     Pinus strobus Torulosa             0.331
-#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde…         0.279
-#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali…         0.330
-#>  8              8 GN 11-423 needles     Taxodium distichum Cascad…         0.357
-#>  9              9 GN 11-428 needles     Thuja occidentalis Easter…         0.369
-#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin…         0.289
-#> # … with 7 more variables: holocellulose [1], spectra <list>, hi1 <dbl>,
-#> #   hi2 <dbl>, hi3 <dbl>, hi4 <dbl>, klason_lignin_2 (err) [g/g]
+#> # A tibble: 59 × 9
+#>    id_90 sample_id measurement_id hi_1630_1090 carbon_content_1 carbon_content_…
+#>  * <int>     <int>          <int> <numeric>         (err) [g/g] <logical>       
+#>  1     1         1             23 0.6190412             0.43(2) FALSE           
+#>  2     2         2             32 0.4393524             0.39(2) FALSE           
+#>  3     3         3             38 0.5568726             0.43(2) FALSE           
+#>  4     5         5             52 0.6164633             0.42(2) FALSE           
+#>  5     6         6             54 0.9495150             0.46(2) FALSE           
+#>  6     7         7             55 0.8387912             0.45(2) FALSE           
+#>  7     8         8             56 0.7038940             0.42(2) FALSE           
+#>  8     9         9             57 0.8111736             0.46(2) FALSE           
+#>  9    10        10             24 0.5434465             0.38(2) FALSE           
+#> 10    11        11             25 0.6056091             0.38(2) FALSE           
+#> # … with 49 more rows, and 3 more variables: bulk_density_1 (err) [g/cm^3],
+#> #   bulk_density_1_in_pd <logical>, spectra <named list>
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -126,10 +139,15 @@ Plot of the humification index (ratio of the intensities at 1420 and
 content:
 
 ``` r
-ggplot2::ggplot(x, aes(x = quantities::drop_quantities(klason_lignin_2) * 100, y = hi1)) + 
+ggplot2::ggplot(
+  x, 
+  aes(x = quantities::drop_quantities(carbon_content_1) * 100, y = hi_1630_1090)
+) + 
   ggplot2::geom_point() +
-  ggplot2::labs(x = "Klason lignin content [mass-%]", 
-                y = expression("Ratio of the intensities at"~1420~and~1090~cm^{-1}))
+  ggplot2::labs(
+    x = "Carbon content [mass-%]", 
+    y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
+  )
 ```
 
 ![](man/figures/README-x_plot-1.png)<!-- -->
@@ -138,13 +156,11 @@ All computed quantities come with units and standard errors (thanks to
 the [quantities](https://github.com/r-quantities/quantities) package):
 
 ``` r
-x$klason_lignin_2
+x$carbon_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.05305209 0.03890806 0.03432737 0.03900097 0.03664285 ...
-#>        V1        V2        V3        V4        V5        V6        V7        V8 
-#> 0.3762468 0.3420424 0.2542360 0.3085094 0.2976808 0.2766546 0.3137988 0.3524349 
-#>        V9       V10 
-#> 0.3391504 0.2918670
+#> Errors: 0.01611127 0.01714743 0.01647694 0.01669999 0.01584673
+#>        V1        V2        V3        V4        V5 
+#> 0.4317706 0.3906542 0.4286142 0.4227900 0.4623638
 ```
 
 ### Future development
@@ -161,7 +177,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-28.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-29.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses

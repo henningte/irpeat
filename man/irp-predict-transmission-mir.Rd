@@ -23,6 +23,7 @@
 \alias{irp_volume_fraction_solids_1}
 \alias{irp_non_macroporosity_1}
 \alias{irp_macroporosity_1}
+\alias{irp_saturated_hydraulic_conductivity_1}
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
@@ -197,6 +198,15 @@ irp_non_macroporosity_1(
 )
 
 irp_macroporosity_1(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
+
+irp_saturated_hydraulic_conductivity_1(
   x,
   ...,
   do_summary = FALSE,
@@ -419,6 +429,13 @@ irpeat::irp_non_macroporosity_1(
 
 # macroporosity
 irpeat::irp_macroporosity_1(
+  ir::ir_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# volume fraction of solids, macroporosity, non-macroporosity
+irpeat::irp_saturated_hydraulic_conductivity_1(
   ir::ir_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"

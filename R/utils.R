@@ -290,10 +290,12 @@ irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
   mu <- draws$Intercept + as.matrix(draws %>% dplyr::select(dplyr::starts_with("b["))) %*% t(x$x)
   mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
 
+  phi <-  draws$phi/config$parameter_scale$phi_scale
+
   # predictions
   yhat <-
     purrr::map_dfc(mu, function(.x) {
-      stats::rbeta(n = length(.x), shape1 = .x * draws$phi, shape2 = (1 - .x) * draws$phi)
+      stats::rbeta(n = length(.x), shape1 = .x * phi, shape2 = (1 - .x) * phi)
     })
 
   # scale
@@ -315,7 +317,7 @@ irp_mcmc_predictions_normal_identity <- function(x, draws, config) {
   # predictions
   yhat <-
     purrr::map_dfc(mu, function(.x) {
-      stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma)
+      stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma/config$parameter_scale$sigma_scale)
     })
 
   # scale

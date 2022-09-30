@@ -93,6 +93,10 @@
 #'   \item{"macroporosity_1"}{
 #'     Macroporosity as computed by [irp_macroporosity_1()].
 #'   }
+#'   \item{"saturated_hydraulic_conductivity_1"}{
+#'     Saturated hydraulic conductivity as computed by
+#'     [saturated_hydraulic_conductivity_1()].
+#'   }
 #' }
 #'
 #' @param ... Further arguments passed to individual prediction functions.
@@ -136,87 +140,71 @@ irp_predict <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorous_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1")
+  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorous_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1")
   if("all" %in% variable) {
     variable <- variable_values
   }
-  variable_values_nonrequested <- variable_values[! variable_values %in% variable]
+  variable_values_present <- variable_values[variable_values %in% colnames(x)]
+  variable_values_nonrequested <- variable_values[! variable_values %in% variable & ! variable_values %in% variable_values_present]
+
 
   for(i in seq_along(variable)) {
     x <-
       switch(variable[[i]],
              "klason_lignin_content_1" = ,
-             "holocellulose_content_1" = {
+             "holocellulose_content_1" =
                irp_content_klh_hodgkins(
                  x = x,
                  export = NULL,
                  verbose = FALSE,
                  make_plots = FALSE
-               )
-             },
-             "klason_lignin_content_2" = {
-               irp_klason_lignin_content_2(x = x, ...)
-             },
-             "holocellulose_content_2" = {
-               irp_holocellulose_content_2(x = x, ...)
-             },
-             "eac_1" = {
-               irp_eac_1(x = x, ...)
-             },
-             "edc_1" = {
-               irp_edc_1(x = x, ...)
-             },
-             "carbon_content_1" = {
-               irp_carbon_content_1(x = x, ...)
-             },
-             "nitrogen_content_1" = {
-               irp_nitrogen_content_1(x = x, ...)
-             },
-             "hydrogen_content_1" = {
-               irp_hydrogen_content_1(x = x, ...)
-             },
-             "oxygen_content_1" = {
-               irp_oxygen_content_1(x = x, ...)
-             },
-             "phosphorous_content_1" = {
-               irp_phosphorous_content_1(x = x, ...)
-             },
-             "potassium_content_1" = {
-               irp_potassium_content_1(x = x, ...)
-             },
-             "sulfur_content_1" = {
-               irp_sulfur_content_1(x = x, ...)
-             },
-             "titanium_content_1" = {
-               irp_titanium_content_1(x = x, ...)
-             },
-             "d13C_1" = {
-               irp_d13C_1(x = x, ...)
-             },
-             "d15N_1" = {
-               irp_d15N_1(x = x, ...)
-             },
-             "nosc_1" = {
-               irp_nosc_1(x = x, ...)
-             },
-             "dgf0_1" = {
-               irp_dgf0_1(x = x, ...)
-             },
-             "bulk_density_1" = {
-               irp_bulk_density_1(x = x, ...)
-             },
-             "H_to_C_1" = {
-               irp_H_to_C_1(x = x, ...)
-             },
-             "O_to_C_1" = {
-               irp_O_to_C_1(x = x, ...)
-             },
-             "C_to_N_1" = {
-               irp_C_to_N_1(x = x, ...)
-             },
+               ),
+             "klason_lignin_content_2" =
+               irp_klason_lignin_content_2(x = x, ...),
+             "holocellulose_content_2" =
+               irp_holocellulose_content_2(x = x, ...),
+             "eac_1" =
+               irp_eac_1(x = x, ...),
+             "edc_1" =
+               irp_edc_1(x = x, ...),
+             "carbon_content_1" =
+               irp_carbon_content_1(x = x, ...),
+             "nitrogen_content_1" =
+               irp_nitrogen_content_1(x = x, ...),
+             "hydrogen_content_1" =
+               irp_hydrogen_content_1(x = x, ...),
+             "oxygen_content_1" =
+               irp_oxygen_content_1(x = x, ...),
+             "phosphorous_content_1" =
+               irp_phosphorous_content_1(x = x, ...),
+             "potassium_content_1" =
+               irp_potassium_content_1(x = x, ...),
+             "sulfur_content_1" =
+               irp_sulfur_content_1(x = x, ...),
+             "titanium_content_1" =
+               irp_titanium_content_1(x = x, ...),
+             "d13C_1" =
+               irp_d13C_1(x = x, ...),
+             "d15N_1" =
+               irp_d15N_1(x = x, ...),
+             "nosc_1" =
+               irp_nosc_1(x = x, ...),
+             "dgf0_1" =
+               irp_dgf0_1(x = x, ...),
+             "bulk_density_1" =
+               irp_bulk_density_1(x = x, ...),
+             "H_to_C_1" =
+               irp_H_to_C_1(x = x, ...),
+             "O_to_C_1" =
+               irp_O_to_C_1(x = x, ...),
+             "C_to_N_1" =
+               irp_C_to_N_1(x = x, ...),
              "volume_fraction_solids_1" =,
              "non_macroporosity_1" =,
-             "macroporosity_1" = irp_porosity_1(x = x, ...),
+             "macroporosity_1" =
+               irp_porosity_1(x = x, ...),
+             "saturated_hydraulic_conductivity_1" =
+               irp_saturated_hydraulic_conductivity_1(x = x, ...),
              stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }
