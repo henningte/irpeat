@@ -209,16 +209,16 @@ irp_predict <- function(x, variable, ...) {
                irp_C_to_N_1(x = x, ...),
              "volume_fraction_solids_1" =,
              "non_macroporosity_1" =,
-             "macroporosity_1" =
-               irp_porosity_1(x = x, ...),
-             "saturated_hydraulic_conductivity_1" = {
+             "macroporosity_1" = {
                if(! has_porosity_1) {
                  has_porosity_1 <<- TRUE
-                 irp_saturated_hydraulic_conductivity_1(x = x, ...)
+                 irp_porosity_1(x = x, ...)
                } else {
                  x
                }
              },
+             "saturated_hydraulic_conductivity_1" =
+               irp_saturated_hydraulic_conductivity_1(x = x, ...),
              stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }
