@@ -47,7 +47,7 @@
 #'     Oxygen content as computed by [irp_oxygen_content_1()].
 #'   }
 #'   \item{"phosphorous_content_1"}{
-#'     Phosphorous content as computed by [irp_phosphorous_content_1()].
+#'     Phosphorus content as computed by [irp_phosphorous_content_1()].
 #'   }
 #'   \item{"potassium_content_1"}{
 #'     Potassium content as computed by [irp_potassium_content_1()].
@@ -147,18 +147,26 @@ irp_predict <- function(x, variable, ...) {
   variable_values_present <- variable_values[variable_values %in% colnames(x)]
   variable_values_nonrequested <- variable_values[! variable_values %in% variable & ! variable_values %in% variable_values_present]
 
+  # settings to avoid duplicate computation
+  has_holocellulose_content_1 <- FALSE
+  has_porosity_1 <- FALSE
 
   for(i in seq_along(variable)) {
     x <-
       switch(variable[[i]],
              "klason_lignin_content_1" = ,
              "holocellulose_content_1" =
-               irp_content_klh_hodgkins(
-                 x = x,
-                 export = NULL,
-                 verbose = FALSE,
-                 make_plots = FALSE
-               ),
+               if(! has_holocellulose_content_1) {
+                 has_holocellulose_content_1 <<- TRUE
+                 irp_content_klh_hodgkins(
+                   x = x,
+                   export = NULL,
+                   verbose = FALSE,
+                   make_plots = FALSE
+                 )
+               } else {
+                 x
+               },
              "klason_lignin_content_2" =
                irp_klason_lignin_content_2(x = x, ...),
              "holocellulose_content_2" =
@@ -203,8 +211,14 @@ irp_predict <- function(x, variable, ...) {
              "non_macroporosity_1" =,
              "macroporosity_1" =
                irp_porosity_1(x = x, ...),
-             "saturated_hydraulic_conductivity_1" =
-               irp_saturated_hydraulic_conductivity_1(x = x, ...),
+             "saturated_hydraulic_conductivity_1" = {
+               if(! has_porosity_1) {
+                 has_porosity_1 <<- TRUE
+                 irp_saturated_hydraulic_conductivity_1(x = x, ...)
+               } else {
+                 x
+               }
+             },
              stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }

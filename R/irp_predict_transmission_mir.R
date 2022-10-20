@@ -858,7 +858,7 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
     irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
     dplyr::rename(non_macroporosity_1_in_pd = "bulk_density_1_in_pd") %>%
     dplyr::mutate(
-      macroporoity_1_in_pd = non_macroporosity_1_in_pd,
+      macroporosity_1_in_pd = non_macroporosity_1_in_pd,
       volume_fraction_solids_1_in_pd = non_macroporosity_1_in_pd
     )
 
@@ -910,7 +910,7 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
         setNames(nm = .y)
     })
 
-  cbind(x_or, res, x %>% dplyr::select(.data$non_macroporosity_1_in_pd, .data$macroporoity_1_in_pd, .data$volume_fraction_solids_1_in_pd))
+  cbind(x_or, res, x %>% dplyr::select(.data$non_macroporosity_1_in_pd, .data$macroporosity_1_in_pd, .data$volume_fraction_solids_1_in_pd))
 
 }
 

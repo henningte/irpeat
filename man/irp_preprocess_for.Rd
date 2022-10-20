@@ -52,7 +52,7 @@ Hydrogen content as computed by \code{\link[=irp_hydrogen_content_1]{irp_hydroge
 Oxygen content as computed by \code{\link[=irp_oxygen_content_1]{irp_oxygen_content_1()}}.
 }
 \item{"phosphorous_content_1"}{
-Phosphorous content as computed by \code{\link[=irp_phosphorous_content_1]{irp_phosphorous_content_1()}}.
+Phosphorus content as computed by \code{\link[=irp_phosphorous_content_1]{irp_phosphorous_content_1()}}.
 }
 \item{"potassium_content_1"}{
 Potassium content as computed by \code{\link[=irp_potassium_content_1]{irp_potassium_content_1()}}.
