@@ -8,7 +8,7 @@
 \alias{irp_nitrogen_content_1}
 \alias{irp_hydrogen_content_1}
 \alias{irp_oxygen_content_1}
-\alias{irp_phosphorous_content_1}
+\alias{irp_phosphorus_content_1}
 \alias{irp_potassium_content_1}
 \alias{irp_sulfur_content_1}
 \alias{irp_titanium_content_1}
@@ -83,7 +83,7 @@ irp_oxygen_content_1(
   check_prediction_domain = "train"
 )
 
-irp_phosphorous_content_1(
+irp_phosphorus_content_1(
   x,
   do_summary = FALSE,
   summary_function_mean = mean,
@@ -329,8 +329,8 @@ irpeat::irp_oxygen_content_1(
   check_prediction_domain = "train"
 )
 
-# phosphorous content
-irpeat::irp_phosphorous_content_1(
+# phosphorus content
+irpeat::irp_phosphorus_content_1(
   ir::ir_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"

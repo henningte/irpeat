@@ -41,7 +41,7 @@ irp_preprocess_for <- function(x, variable) {
          "nitrogen_content_1" =,
          "hydrogen_content_1" =,
          "oxygen_content_1" =,
-         "phosphorous_content_1" =,
+         "phosphorus_content_1" =,
          "potassium_content_1" =,
          "sulfur_content_1" =,
          "titanium_content_1" =,

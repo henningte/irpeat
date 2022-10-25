@@ -398,26 +398,26 @@ irp_oxygen_content_1 <-
 #' @rdname irp-predict-transmission-mir
 #'
 #' @examples
-#' # phosphorous content
-#' irpeat::irp_phosphorous_content_1(
+#' # phosphorus content
+#' irpeat::irp_phosphorus_content_1(
 #'   ir::ir_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
 #'
 #' @export
-irp_phosphorous_content_1 <-
+irp_phosphorus_content_1 <-
   irp_function_factory_eb1079(
     m =
-      irpeatmodels::model_phosphorous_content_1_draws,
+      irpeatmodels::model_phosphorus_content_1_draws,
     m_pls =
-      irpeatmodels::model_phosphorous_content_1_pls,
+      irpeatmodels::model_phosphorus_content_1_pls,
     config =
-      irpeatmodels::model_phosphorous_content_1_config,
+      irpeatmodels::model_phosphorus_content_1_config,
     prediction_domain =
-      irpeatmodels::model_phosphorous_content_1_prediction_domain,
+      irpeatmodels::model_phosphorus_content_1_prediction_domain,
     target_variable_name =
-      "phosphorous_content_1",
+      "phosphorus_content_1",
     x_unit =
       "g/g",
     irpeatmodels_required_version =

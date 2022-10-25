@@ -46,8 +46,8 @@
 #'   \item{"oxygen_content_1"}{
 #'     Oxygen content as computed by [irp_oxygen_content_1()].
 #'   }
-#'   \item{"phosphorous_content_1"}{
-#'     Phosphorus content as computed by [irp_phosphorous_content_1()].
+#'   \item{"phosphorus_content_1"}{
+#'     Phosphorus content as computed by [irp_phosphorus_content_1()].
 #'   }
 #'   \item{"potassium_content_1"}{
 #'     Potassium content as computed by [irp_potassium_content_1()].
@@ -140,7 +140,7 @@ irp_predict <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorous_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1")
+  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorus_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1")
   if("all" %in% variable) {
     variable <- variable_values
   }
@@ -183,8 +183,8 @@ irp_predict <- function(x, variable, ...) {
                irp_hydrogen_content_1(x = x, ...),
              "oxygen_content_1" =
                irp_oxygen_content_1(x = x, ...),
-             "phosphorous_content_1" =
-               irp_phosphorous_content_1(x = x, ...),
+             "phosphorus_content_1" =
+               irp_phosphorus_content_1(x = x, ...),
              "potassium_content_1" =
                irp_potassium_content_1(x = x, ...),
              "sulfur_content_1" =
