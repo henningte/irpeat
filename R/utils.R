@@ -25,6 +25,22 @@ check_irpeatmodels_and_pls <- function(irpeatmodels_required_version) {
 }
 
 
+#' `check_irpeatmodels` combined with a check for the 'dimreduce' package
+#'
+#' @inheritParams irp_function_factory_eb1079
+#'
+#' @keywords internal
+#' @noRd
+check_irpeatmodels_and_dimreduce <- function(irpeatmodels_required_version) {
+
+  check_irpeatmodels(version = irpeatmodels_required_version)
+  if(! requireNamespace("dimreduce", quietly = TRUE)) {
+    rlang::abort("You have to install the 'dimreduce' package to use this function. The 'dimreduce' package is available from 'https://github.com/jpiironen/dimreduce'.")
+  }
+
+
+}
+
 
 #' Function factory to generate prediction functions for models from project eb1079
 #'
@@ -262,6 +278,55 @@ irp_make_predictions_plsr <- function(x, m_pls, config) {
       }
     )
 }
+
+
+#' Predicts ISPCA scores for new data (data format as in irpetpaper)
+#'
+#' @keywords internal
+#' @noRd
+irp_make_predictions_ispca <- function(x, m_pls, config) {
+
+  #---todo (code copied from irp_make_predictions_plsr)
+
+  # format data
+  x <-
+    tibble::tibble(
+      x =
+        x %>%
+        ir::ir_flatten() %>%
+        dplyr::select(-1) %>%
+        t()  %>%
+        tibble::as_tibble(.name_repair = "minimal") %>%
+        setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
+        as.matrix()
+    )
+
+  # get ispca scores
+  res <-
+    x %>%
+    dplyr::mutate(
+      x = {
+        # get original scores to compute standard deviation of first compound (see below)
+        # get original scores to compute standard deviation of first compound (see below)
+        res_or <-
+          m_pls$z %>%
+          tibble::as_tibble(.name_repair = "minimal")
+
+        stats::predict(
+          m_pls,
+          xnew = x
+        ) %>%
+          tibble::as_tibble() %>%
+          purrr::map_dfc( function(.x) {
+            #---note: scale the extracted components by dividing them by the standard deviation of the component with the largest variance. This is done to keep priors for slope coefficients roughly on the same scale (see Piironen.2020).
+            .x/sd(res_or[, 1, drop = TRUE])
+          }) %>%
+          dplyr::select(seq_len(config$pls$ncomp)) %>%
+          as.matrix()
+      }
+    )
+}
+
 
 #' Computes predictions using draws for model coefficients for a Beta regression model with constant dispersion parameter
 #'
