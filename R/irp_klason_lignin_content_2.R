@@ -1,32 +1,38 @@
-#' Predicts the holocellulose content from mid infrared spectra
+#' Predicts the Klason lignin content from mid infrared spectra
 #'
-#' `irp_holocellulose_content_2` predicts the holocellulose content from mid
+#' `irp_klason_lignin_content_2` predicts the Klason lignin content from mid
 #' infrared spectra for peat samples using the model
-#' [irpeatmodels::model_holocellulose_content_2]. This function may also work
+#' [irpeatmodels::model_klason_lignin_content_2]. This function may also work
 #' for organic matter in general. Note that this is a preliminary model only
 #' which has not been fully validated for peat samples yet and which has known
 #' limitations in predicting contents for peat samples
 #' \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @inheritParams irp_klason_lignin_content_2
+#' @inheritParams irp_eac_1
+#'
+#' @param x An object of class [`ir`][ir::ir_new_ir] with FTIR-ATR mid
+#' infrared spectra. Some tests are applied to check if the supplied spectra
+#' match the spectra used to fit the models (the spectral range is checked). The
+#' spectral resolution of the original spectral data should not be smaller than
+#' 4 cm\eqn{^{-1}} and it is not checked if this assumption is met.
 #'
 #' @note Note that this is a preliminary model only which has not been fully
 #' validated for peat samples yet and which has known limitations in predicting
 #' contents for peat samples \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @return `x` with a new column "holocellulose_content_2" with the predicted
-#' holocellulose contents \[g/g\].
+#' @return `x` with a new column "klason_lignin_content_2" with the predicted
+#' Klason lignin contents \[g/g\].
 #'
 #' @examples
 #' library(ir)
 #'
-#' irp_holocellulose_content_2(ir::ir_sample_data[1, ], do_summary = TRUE)
+#' irp_klason_lignin_content_2(ir::ir_sample_data[1, ], do_summary = TRUE)
 #'
 #' @references
 #'   \insertAllCited{}
 #'
 #' @export
-irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd) {
+irp_klason_lignin_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -38,8 +44,8 @@ irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_func
   x_or <- x
 
   # get data
-  m <- irpeatmodels::model_holocellulose_content_2
-  config <- irpeatmodels::model_holocellulose_content_2_config
+  m <- irpeatmodels::model_klason_lignin_content_2
+  config <- irpeatmodels::model_klason_lignin_content_2_config
 
   # check spectra
   x_flat <- ir::ir_flatten(x)
@@ -74,11 +80,42 @@ irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_func
       do_scale = config$irp_preprocess$do_scale,
       scale_center = config$data_scale$x_center,
       scale_scale = config$data_scale$x_scale,
-      do_return_as_ir = FALSE
+      do_return_as_ir = TRUE
     )
 
+  # check prediction domain
+  prediction_domain <-
+    switch(
+      check_prediction_domain,
+      "train" = irpeatmodels::model_klason_lignin_content_2_prediction_domain$train,
+      "test" = irpeatmodels::model_klason_lignin_content_2_prediction_domain$train,
+      "none" = NULL
+    )
+
+  res_pd <-
+    if(check_prediction_domain != "none") {
+      tibble::tibble(
+        y =
+          x %>%
+          irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
+          dplyr::pull(.data$is_in_prediction_domain)
+      )
+    } else {
+      tibble::tibble(
+        y = rep(NA, nrow(x_or))
+      )
+    }
+
+  # reformat for predictions
+  res <- ir::ir_flatten(x)
+  res_colnames <- paste0("V", res[, 1, drop= TRUE])
+  res <- as.data.frame(t(res[, -1, drop = FALSE]))
+  attr(res, "scaled:center") <- attr(x, "scaled:center")
+  attr(res, "scaled:scale") <- attr(x, "scaled:scale")
+  colnames(res) <- res_colnames
+
   # predict
-  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(x)), stringsAsFactors = FALSE), ...))
+  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(res)), stringsAsFactors = FALSE), ...))
   res <- res * config$data_scale$y_scale + config$data_scale$y_center
 
   # summarize and add unit
@@ -91,8 +128,8 @@ irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_func
       summary_function_sd = stats::sd
     )
 
-  x_or$holocellulose_content_2 <- res
-  x_or
+  x_or$klason_lignin_content_2 <- res
+  cbind(x_or, res_pd %>% stats::setNames(nm = "klason_lignin_content_2_in_pd"))
 
 }
 

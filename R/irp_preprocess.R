@@ -89,7 +89,7 @@
 #'
 #' @examples
 #' # get sample data
-#' x <- ir::ir_sample_data[1, ]
+#' x <- ir::ir_sample_data[1:5, ]
 #'
 #' # example preprocessing
 #' res <-

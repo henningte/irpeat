@@ -10,11 +10,11 @@
 \usage{
 irp_as_irp_prediction_domain(x, ...)
 
-\method{irp_as_irp_prediction_domain}{ir_flat}(x)
+\method{irp_as_irp_prediction_domain}{ir_flat}(x, ...)
 
-\method{irp_as_irp_prediction_domain}{ir}(x)
+\method{irp_as_irp_prediction_domain}{ir}(x, ...)
 
-\method{irp_as_irp_prediction_domain}{data.frame}(x)
+\method{irp_as_irp_prediction_domain}{data.frame}(x, ...)
 }
 \arguments{
 \item{x}{An object.}

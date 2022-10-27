@@ -14,8 +14,22 @@
 #' library(ir)
 #'
 #' irp_get_prediction_domain_for(
-#'    x = irpeat_sample_data
 #'    variable = "carbon_content_1"
+#' ) %>%
+#'   plot()
+#'
+#' irp_get_prediction_domain_for(
+#'    variable = "klason_lignin_content_1"
+#' ) %>%
+#'   plot()
+#'
+#' irp_get_prediction_domain_for(
+#'    variable = "klason_lignin_content_2"
+#' ) %>%
+#'   plot()
+#'
+#' irp_get_prediction_domain_for(
+#'    variable = "eac_1"
 #' ) %>%
 #'   plot()
 #'
@@ -25,7 +39,7 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
   stopifnot(is.character(variable) && length(variable) == 1L)
 
   # placeholder: ---todo: remove later
-  empty_preiction_domain <-
+  empty_prediction_domain <-
     tibble::tibble(
       x = numeric(),
       ymin = numeric(),
@@ -47,17 +61,12 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
 
   switch(
     variable,
-    "klason_lignin_content_1" = ,
-    "holocellulose_content_1" =
-      empty_preiction_domain,
-    "klason_lignin_content_2" =
-      empty_preiction_domain,
-    "holocellulose_content_2" =
-      empty_preiction_domain,
-    "eac_1" =
-      empty_preiction_domain,
-    "edc_1" =
-      empty_preiction_domain,
+    "klason_lignin_content_1" =,
+    "holocellulose_content_1" =,
+    "klason_lignin_content_2" =,
+    "holocellulose_content_2" =,
+    "eac_1" =,
+    "edc_1" =,
     "carbon_content_1" =,
     "nitrogen_content_1" =,
     "hydrogen_content_1" =,
@@ -79,16 +88,17 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "macroporosity_1" =,
     "saturated_hydraulic_conductivity_1" = {
       check_irpeatmodels(version = "0.0.0")
-      data(list = paste0("model_", variable, "_prediction_domain"), package = "irpeatmodels", envir = environment())
+      utils::data(list = paste0("model_", variable, "_prediction_domain"), package = "irpeatmodels", envir = environment())
       prediction_domain <- get(x = paste0("model_", variable, "_prediction_domain"), pos = -1)
-      switch(
-        check_prediction_domain,
-        "train" = prediction_domain$train,
-        "test" = prediction_domain$test,
-        "none" = empty_preiction_domain
-      )
     },
-    stop(paste0("Unknown value for `variable`: ", variable[[i]]))
+    stop(paste0("Unknown value for `variable`: ", variable))
+  )
+
+  switch(
+    check_prediction_domain,
+    "train" = prediction_domain$train,
+    "test" = prediction_domain$test,
+    "none" = empty_prediction_domain
   )
 
 }

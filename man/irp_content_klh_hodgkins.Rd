@@ -13,7 +13,8 @@ The original script was modified for this purpose.
 irp_content_klh_hodgkins(x, export = NULL, verbose = FALSE, make_plots = FALSE)
 }
 \arguments{
-\item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}.}
+\item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}} with all spectra being in
+the range 650 to 4000 cm\deqn{^{-1}}.}
 
 \item{export}{Either a valid path to an existing directory where to
 store the results of the original script (see section "Source")

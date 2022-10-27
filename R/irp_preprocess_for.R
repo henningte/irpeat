@@ -14,7 +14,7 @@
 #' library(ir)
 #'
 #' irp_preprocess_for(
-#'    x = irpeat_sample_data
+#'    x = irpeat_sample_data,
 #'    variable = "carbon_content_1"
 #' ) %>%
 #'   plot()
@@ -28,15 +28,24 @@ irp_preprocess_for <- function(x, variable) {
   switch(variable,
          "klason_lignin_content_1" = ,
          "holocellulose_content_1" =
-           x,
-         "klason_lignin_content_2" =
-           irp_klason_lignin_content_2(x = x),
-         "holocellulose_content_2" =
-           irp_holocellulose_content_2(x = x),
-         "eac_1" =
-           irp_eac_1(x = x),
-         "edc_1" =
-           irp_edc_1(x = x),
+           x %>%
+           irp_content_klh_hodgkins_preprocess(),
+         "klason_lignin_content_2" = {
+           check_irpeatmodels(version = "0.0.0")
+           irp_preprocess_eb1014(x = x, config = irpeatmodels::model_klason_lignin_content_2_config)
+         },
+         "holocellulose_content_2" = {
+           check_irpeatmodels(version = "0.0.0")
+           irp_preprocess_eb1014(x = x, config = irpeatmodels::model_holocellulose_content_2_config)
+         },
+         "eac_1" = {
+           check_irpeatmodels(version = "0.0.0")
+           irp_preprocess_eb1014(x = x, config = irpeatmodels::model_eac_1_config)
+         },
+         "edc_1" = {
+           check_irpeatmodels(version = "0.0.0")
+           irp_preprocess_eb1014(x = x, config = irpeatmodels::model_edc_1_config)
+         },
          "carbon_content_1" =,
          "nitrogen_content_1" =,
          "hydrogen_content_1" =,
@@ -58,11 +67,11 @@ irp_preprocess_for <- function(x, variable) {
          "macroporosity_1" =,
          "saturated_hydraulic_conductivity_1" = {
            check_irpeatmodels(version = "0.0.0")
-           data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
+           utils::data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
            config <- get(x = paste0("model_", variable, "_config"), pos = -1)
            irp_preprocess_eb1079(x = x, config = config)
          },
-         stop(paste0("Unknown value for `variable`: ", variable[[i]]))
+         stop(paste0("Unknown value for `variable`: ", variable))
   )
 
 }

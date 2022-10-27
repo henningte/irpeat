@@ -49,7 +49,7 @@ irp_as_irp_prediction_domain <- function(x, ...) {
 
 #' @rdname irp_prediction_domain-conversion
 #' @export
-irp_as_irp_prediction_domain.ir_flat <- function(x) {
+irp_as_irp_prediction_domain.ir_flat <- function(x, ...) {
 
   x_wavenumbers <- x$x
 
@@ -70,13 +70,13 @@ irp_as_irp_prediction_domain.ir_flat <- function(x) {
 
 #' @rdname irp_prediction_domain-conversion
 #' @export
-irp_as_irp_prediction_domain.ir <- function(x) {
+irp_as_irp_prediction_domain.ir <- function(x, ...) {
   irp_as_irp_prediction_domain(ir::ir_flatten(x))
 }
 
 #' @rdname irp_prediction_domain-conversion
 #' @export
-irp_as_irp_prediction_domain.data.frame <- function(x) {
+irp_as_irp_prediction_domain.data.frame <- function(x, ...) {
   new_irp_prediction_domain(x)
 }
 
@@ -90,8 +90,8 @@ irp_as_irp_prediction_domain.data.frame <- function(x) {
 #' @export
 plot.irp_prediction_domain <- function(x, ...) {
 
-  ggplot2::ggplot(x, ggplot2::aes(x = x)) +
-    ggplot2::geom_ribbon(ggplot2::aes(ymin = ymin, ymax = ymax), ...)
+  ggplot2::ggplot(x, ggplot2::aes(x = .data$x)) +
+    ggplot2::geom_ribbon(ggplot2::aes(ymin = .data$ymin, ymax = .data$ymax), ...)
 
 }
 
@@ -135,7 +135,7 @@ irp_is_in_prediction_domain <- function(x, prediction_domain) {
   x %>%
     dplyr::mutate(
       is_in_prediction_domain = (x_check_lower + x_check_upper) == 2,
-      is_in_prediction_domain = unname(is_in_prediction_domain)
+      is_in_prediction_domain = unname(.data$is_in_prediction_domain)
     )
 
 }

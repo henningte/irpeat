@@ -12,9 +12,13 @@
     2. `irp_holocellulose_2()` to `irp_holocellulose_content_2()`.
     3. `irp_klason_lignin_2()` to `irp_klason_lignin_content_2()`.
     4. Output from `irp_hkl_hodgkins()`: `holocellulose_hodgkins` --> `holocellulose_content_1`, `klason_lignin_hodgkins` --> `klason_lignin_content_1`.
+    5. Output from `irp_eac_1()`: `eac` --> `eac_1`.
+    6. Output from `irp_edc_1()`: `edc` --> `edc_1`.
 * Add sample data (transmission mid infrared spectra for peat samples from the 'redoxpeat' R package): `irpeat_sample_data`.
 * Add `irp_preprocess_for()`: Allows to extract the spectra after automated preprocessing as they would be used to make predictions.
 * Add `irp_get_prediction_domain_for()`: Allows to extract the prediction domain for a specific model.
+* For existing and new models: Training and testing prediction domains were added and can now be used to check whether the models cannot be used to make reliable predictions.
+* `irp_content_klh_hodgkins_predict()`: The function now checks that spectra have the correct wavenumber range.
 
 
 # irpeat 0.1.0

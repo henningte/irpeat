@@ -8,14 +8,12 @@
 #'
 #' @return `x` with values converted to delta values.
 #'
-#' @keywords Internal
+#' @keywords internal
 #' @noRd
 #'
 #' @examples
 #' # convert a 13C atom percentage to delta values
 #' irp_atompercent_to_delta(x = 1.2, r = 0.0112372)
-#'
-#' @export
 irp_atompercent_to_delta <- function(x, r) {
 
   stopifnot(is.numeric(x))

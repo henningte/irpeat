@@ -6,7 +6,8 @@
 #' have been shown to be biased for peat samples
 #' \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @param x An object of class [`ir`][ir::ir_new_ir].
+#' @param x An object of class [`ir`][ir::ir_new_ir] with all spectra being in
+#' the range 650 to 4000 cm\deqn{^{-1}}.
 #'
 #' @param export Either a valid path to an existing directory where to
 #' store the results of the original script (see section "Source")
@@ -165,10 +166,33 @@ irp_content_klh_hodgkins_predict <- function(x,
 
 }
 
+# Function to do the spectral preprocessing
+irp_content_klh_hodgkins_preprocess <- function(x) {
+
+  target_range <-
+    tibble::tibble(start = 650, end = 4000)
+
+  x_range <-
+    tibble::tibble(
+      start = purrr::map_dbl(x$spectra, function(.x) min(.x$x, na.rm = TRUE)),
+      end = purrr::map_dbl(x$spectra, function(.x) max(.x$x, na.rm = TRUE))
+    )
+
+  if(any(x_range$start > target_range$start) || any(x_range$end < target_range$end)) {
+    rlang::abort("Some spectra in `x` have a wavenumber range not covering [650, 4000] cm$^{-1}$. All spectra need to start at most at 650 cm$^{-1}$ and end at least at 4000 cm$^{-1}$.")
+  }
+
+  x %>%
+    ir::ir_interpolate(start = NULL, dw = 1) %>%
+    ir::ir_clip(range = target_range) %>% #---note: range of spectra in ir::ir_sample_data (spectra which were used in Hodgkins et al. to calibrate the models)
+    ir::ir_normalise(method = "area")
+
+}
+
 # Function to prepare objects of class ir for the main function
 irp_content_klh_hodgkins_prepare <- function(x) {
 
-  x_flat <- ir::ir_interpolate(x = x, start = NULL, dw = 1)
+  x_flat <- irp_content_klh_hodgkins_preprocess(x)
   x_flat <- ir::ir_flatten(x = x_flat, measurement_id = as.character(seq_len(nrow(x_flat))))
   x_flat <- ir::ir_flat_clean(x_flat, return_empty = FALSE)
   x_flat <- as.data.frame(x_flat[order(x_flat$x, decreasing = TRUE), ])

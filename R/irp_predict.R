@@ -95,7 +95,7 @@
 #'   }
 #'   \item{"saturated_hydraulic_conductivity_1"}{
 #'     Saturated hydraulic conductivity as computed by
-#'     [saturated_hydraulic_conductivity_1()].
+#'     [irp_saturated_hydraulic_conductivity_1()].
 #'   }
 #' }
 #'

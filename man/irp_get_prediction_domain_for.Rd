@@ -97,7 +97,7 @@ Macroporosity as computed by \code{\link[=irp_macroporosity_1]{irp_macroporosity
 }
 \item{"saturated_hydraulic_conductivity_1"}{
 Saturated hydraulic conductivity as computed by
-\code{\link[=saturated_hydraulic_conductivity_1]{saturated_hydraulic_conductivity_1()}}.
+\code{\link[=irp_saturated_hydraulic_conductivity_1]{irp_saturated_hydraulic_conductivity_1()}}.
 }
 }}
 
@@ -127,8 +127,22 @@ preprocessed spectra.
 library(ir)
 
 irp_get_prediction_domain_for(
-   x = irpeat_sample_data
    variable = "carbon_content_1"
+) \%>\%
+  plot()
+
+irp_get_prediction_domain_for(
+   variable = "klason_lignin_content_1"
+) \%>\%
+  plot()
+
+irp_get_prediction_domain_for(
+   variable = "klason_lignin_content_2"
+) \%>\%
+  plot()
+
+irp_get_prediction_domain_for(
+   variable = "eac_1"
 ) \%>\%
   plot()
 

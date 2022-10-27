@@ -40,7 +40,9 @@ Imports:
     utils,
     stats,
     lifecycle,
-    magrittr
+    magrittr,
+    ggplot2,
+    plyr
 RoxygenNote: 7.2.0
 RdMacros: 
   Rdpack
@@ -51,9 +53,15 @@ Suggests:
     spelling,
     irpeatmodels,
     brms,
-    rstanarm (>= 2.19.3)
+    rstanarm (>= 2.19.3),
+    kableExtra,
+    pls,
+    dimreduce,
+    stringr,
+    tibble,
+    units
 VignetteBuilder: knitr
-Date: 2022-04-21
+Date: 2022-10-27
 Roxygen: list(markdown = TRUE)
 Language: en-US
 URL: https://henningte.github.io/irpeat/
@@ -69,8 +77,8 @@ Collate:
     'irp_export_prepare.R'
     'irp_get_prediction_domain_for.R'
     'irp_hi.R'
-    'irp_holocellulose_2.R'
-    'irp_klason_lignin_2.R'
+    'irp_holocellulose_content_2.R'
+    'irp_klason_lignin_content_2.R'
     'irp_predict.R'
     'utils.R'
     'irp_predict_transmission_mir.R'
@@ -78,4 +86,5 @@ Collate:
     'irp_preprocess_for.R'
     'irpeat-package.R'
     'prediction_domain.R'
+    'utils-isotope-signatures.R'
     'utils-pipe.R'

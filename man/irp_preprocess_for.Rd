@@ -100,7 +100,7 @@ Macroporosity as computed by \code{\link[=irp_macroporosity_1]{irp_macroporosity
 }
 \item{"saturated_hydraulic_conductivity_1"}{
 Saturated hydraulic conductivity as computed by
-\code{\link[=saturated_hydraulic_conductivity_1]{saturated_hydraulic_conductivity_1()}}.
+\code{\link[=irp_saturated_hydraulic_conductivity_1]{irp_saturated_hydraulic_conductivity_1()}}.
 }
 }}
 }
@@ -118,7 +118,7 @@ preprocessed spectra.
 library(ir)
 
 irp_preprocess_for(
-   x = irpeat_sample_data
+   x = irpeat_sample_data,
    variable = "carbon_content_1"
 ) \%>\%
   plot()

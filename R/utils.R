@@ -130,7 +130,7 @@ irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, tar
           y =
             x %>%
             irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
-            dplyr::pull(is_in_prediction_domain)
+            dplyr::pull(.data$is_in_prediction_domain)
         )
     } else {
       tibble::tibble(
@@ -175,9 +175,9 @@ irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, tar
 
     res <-
       tibble::tibble(y = res) %>%
-      setNames(nm = target_variable_name)
+      stats::setNames(nm = target_variable_name)
 
-    cbind(x_or, res, res_pd %>% setNames(nm = paste0(target_variable_name, "_in_pd")))
+    cbind(x_or, res, res_pd %>% stats::setNames(nm = paste0(target_variable_name, "_in_pd")))
 
   }
 
@@ -244,7 +244,7 @@ irp_make_predictions_plsr <- function(x, m_pls, config) {
         dplyr::select(-1) %>%
         t()  %>%
         tibble::as_tibble(.name_repair = "minimal") %>%
-        setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
+        stats::setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
         as.matrix()
     )
 
@@ -269,10 +269,10 @@ irp_make_predictions_plsr <- function(x, m_pls, config) {
           newdata = x
         ) %>%
           tibble::as_tibble() %>%
-          setNames(nm = stringr::str_remove_all(colnames(.), pattern = " ")) %>%
+          stats::setNames(nm = stringr::str_remove_all(colnames(.), pattern = " ")) %>%
           purrr::map_dfc( function(.x) {
             #---note: scale the extracted components by dividing them by the standard deviation of the component with the largest variance. This is done to keep priors for slope coefficients roughly on the same scale (see Piironen.2020).
-            .x/sd(res_or[, 1, drop = TRUE])
+            .x/stats::sd(res_or[, 1, drop = TRUE])
           }) %>%
           as.matrix()
       }
@@ -297,7 +297,7 @@ irp_make_predictions_ispca <- function(x, m_pls, config) {
         dplyr::select(-1) %>%
         t()  %>%
         tibble::as_tibble(.name_repair = "minimal") %>%
-        setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
+        stats::setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
         as.matrix()
     )
 
@@ -319,7 +319,7 @@ irp_make_predictions_ispca <- function(x, m_pls, config) {
           tibble::as_tibble() %>%
           purrr::map_dfc( function(.x) {
             #---note: scale the extracted components by dividing them by the standard deviation of the component with the largest variance. This is done to keep priors for slope coefficients roughly on the same scale (see Piironen.2020).
-            .x/sd(res_or[, 1, drop = TRUE])
+            .x/stats::sd(res_or[, 1, drop = TRUE])
           }) %>%
           dplyr::select(seq_len(config$pls$ncomp)) %>%
           as.matrix()
@@ -376,7 +376,7 @@ irp_mcmc_predictions_normal_identity <- function(x, draws, config) {
 
 #### preprocessing helper functions ####
 
-#' Helper function to preprocess spectra for prediciton with the models from project eb1079
+#' Helper function to preprocess spectra for prediction with the models from project eb1079
 #'
 #' @keywords internal
 #' @noRd
@@ -417,6 +417,41 @@ irp_preprocess_eb1079 <- function(x, config) {
     bc_cutoff = 0,
     # bc_do_impute = config$irp_preprocess$bc_do_impute,
     bc_do_impute = TRUE,
+    do_smooth = config$irp_preprocess$do_smooth,
+    do_normalise = config$irp_preprocess$do_normalise,
+    normalise_method = config$irp_preprocess$normalise_method,
+    do_bin = config$irp_preprocess$do_bin,
+    bin_width = config$irp_preprocess$bin_width,
+    bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+    do_scale = config$irp_preprocess$do_scale,
+    scale_center = config$data_scale$x_center,
+    scale_scale = config$data_scale$x_scale,
+    do_return_as_ir = TRUE
+  )
+
+}
+
+
+#' Helper function to preprocess spectra for prediction with the models from project eb1014 (eac_1, edc_1)
+#'
+#' @keywords internal
+#' @noRd
+irp_preprocess_eb1014 <- function(x, config) {
+
+  # preprocess the spectra
+  irp_preprocess(
+    x,
+    do_interpolate = config$irp_preprocess$do_interpolate,
+    interpolate_start = config$irp_preprocess$interpolate_start,
+    interpolate_dw = config$irp_preprocess$interpolate_dw,
+    do_clip = config$irp_preprocess$do_clip,
+    clip_range = config$irp_preprocess$clip_range,
+    do_interpolate_region = config$irp_preprocess$do_interpolate_region,
+    interpolate_region_range = config$irp_preprocess$interpolate_region_range,
+    do_bc = config$irp_preprocess$do_bc,
+    bc_method = config$irp_preprocess$bc_method,
+    bc_cutoff = config$irp_preprocess$bc_cutoff,
+    bc_do_impute = config$irp_preprocess$bc_do_impute,
     do_smooth = config$irp_preprocess$do_smooth,
     do_normalise = config$irp_preprocess$do_normalise,
     normalise_method = config$irp_preprocess$normalise_method,

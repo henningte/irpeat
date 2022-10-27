@@ -8,5 +8,7 @@
 ## usethis namespace: end
 
 #' @importFrom Rdpack reprompt
+#' @importFrom rlang .data
+#' @importFrom plyr .
 NULL
 utils::globalVariables(c("irp_content_h_hodgkins_model", "irp_content_kl_hodgkins_model"))
