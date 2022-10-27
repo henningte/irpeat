@@ -310,133 +310,133 @@ x <- irpeat::irp_carbon_content_1(
 
 # nitrogen content
 irpeat::irp_nitrogen_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # hydrogen content
 irpeat::irp_hydrogen_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # oxygen content
 irpeat::irp_oxygen_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # phosphorus content
 irpeat::irp_phosphorus_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # potassium content
 irpeat::irp_potassium_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # sulfur content
 irpeat::irp_sulfur_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # titanium content
 irpeat::irp_titanium_content_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # d13C values
 irpeat::irp_d13C_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # d15N values
 irpeat::irp_d15N_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # nominal oxidation state of carbon (NOSC)
 irpeat::irp_nosc_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # Gibbs free energy of formation
 irpeat::irp_dgf0_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # dry bulk density
 irpeat::irp_bulk_density_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # O/C
 irpeat::irp_O_to_C_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # H/C
 irpeat::irp_H_to_C_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # C/N
 irpeat::irp_C_to_N_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # volume fraction of solids
 irpeat::irp_volume_fraction_solids_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # non-macroporosity
 irpeat::irp_non_macroporosity_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # macroporosity
 irpeat::irp_macroporosity_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
 # volume fraction of solids, macroporosity, non-macroporosity
 irpeat::irp_saturated_hydraulic_conductivity_1(
-  ir::ir_sample_data[1, ],
+  irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )

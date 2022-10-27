@@ -309,7 +309,7 @@ irp_carbon_content_1 <-
 #' @examples
 #' # nitrogen content
 #' irpeat::irp_nitrogen_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -344,7 +344,7 @@ irp_nitrogen_content_1 <-
 #' @examples
 #' # hydrogen content
 #' irpeat::irp_hydrogen_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -380,7 +380,7 @@ irp_hydrogen_content_1 <-
 #' @examples
 #' # oxygen content
 #' irpeat::irp_oxygen_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -416,7 +416,7 @@ irp_oxygen_content_1 <-
 #' @examples
 #' # phosphorus content
 #' irpeat::irp_phosphorus_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -452,7 +452,7 @@ irp_phosphorus_content_1 <-
 #' @examples
 #' # potassium content
 #' irpeat::irp_potassium_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -488,7 +488,7 @@ irp_potassium_content_1 <-
 #' @examples
 #' # sulfur content
 #' irpeat::irp_sulfur_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -524,7 +524,7 @@ irp_sulfur_content_1 <-
 #' @examples
 #' # titanium content
 #' irpeat::irp_titanium_content_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -560,7 +560,7 @@ irp_titanium_content_1 <-
 #' @examples
 #' # d13C values
 #' irpeat::irp_d13C_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -596,7 +596,7 @@ irp_d13C_1 <-
 #' @examples
 #' # d15N values
 #' irpeat::irp_d15N_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -632,7 +632,7 @@ irp_d15N_1 <-
 #' @examples
 #' # nominal oxidation state of carbon (NOSC)
 #' irpeat::irp_nosc_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -668,7 +668,7 @@ irp_nosc_1 <-
 #' @examples
 #' # Gibbs free energy of formation
 #' irpeat::irp_dgf0_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -704,7 +704,7 @@ irp_dgf0_1 <-
 #' @examples
 #' # dry bulk density
 #' irpeat::irp_bulk_density_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -740,7 +740,7 @@ irp_bulk_density_1 <-
 #' @examples
 #' # O/C
 #' irpeat::irp_O_to_C_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -776,7 +776,7 @@ irp_O_to_C_1 <-
 #' @examples
 #' # H/C
 #' irpeat::irp_H_to_C_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -812,7 +812,7 @@ irp_H_to_C_1 <-
 #' @examples
 #' # C/N
 #' irpeat::irp_C_to_N_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -847,7 +847,7 @@ irp_C_to_N_1 <-
 #' @examples
 #' # volume fraction of solids, macroporosity, non-macroporosity
 #' irpeat::irp_porosity_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -936,7 +936,7 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 #' @examples
 #' # volume fraction of solids
 #' irpeat::irp_volume_fraction_solids_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -961,7 +961,7 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
 #' @examples
 #' # non-macroporosity
 #' irpeat::irp_non_macroporosity_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -987,7 +987,7 @@ irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function
 #' @examples
 #' # macroporosity
 #' irpeat::irp_macroporosity_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )
@@ -1014,7 +1014,7 @@ irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mea
 #' @examples
 #' # volume fraction of solids, macroporosity, non-macroporosity
 #' irpeat::irp_saturated_hydraulic_conductivity_1(
-#'   ir::ir_sample_data[1, ],
+#'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
 #'   check_prediction_domain = "train"
 #' )

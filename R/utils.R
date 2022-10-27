@@ -158,8 +158,8 @@ irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, tar
     res <-
       switch(
         target_variable_name,
-        "d13C_1" = purrr::map_dfc(res, irp_atompercent_to_delta, r = 0.0112372), # standard atom percent for VPDB
-        "d15N_1" = purrr::map_dfc(res, irp_atompercent_to_delta, r = 0.0036765), # standard atom percent for AIR,
+        "d13C_1" = purrr::map_dfc(res, function(.x) irp_atompercent_to_delta(.x * 100, r = 0.0112372)), # standard atom percent for VPDB
+        "d15N_1" = purrr::map_dfc(res, function(.x) irp_atompercent_to_delta(.x * 100, r = 0.0036765)), # standard atom percent for AIR,
         res
       )
 
