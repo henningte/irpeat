@@ -1,8 +1,11 @@
-# irpeat (development version)
+# irpeat 0.2.0
 
 * Performance improvement for `irp_preprocess()`.
 * Updated `irp_preprocess()`, model preprocessing configurations, and prediction functions to consider the new arguments (1) `new_x_type` from `ir::ir_bin()`, and (2) `bd_do_impute` from `ir::ir_bc()`.
 * Update the documentation: Adding explicit warnings to `irp_content_klh_hodgkins()`, `irp_content_kl_hodgkins_model`, and `irp_content_h_hodgkins_model` that the related models are not reliable for peat.
+
+#### Bug fixes
+
 * Correct a typo which made it impossible to compute `holocellulose_2` with `irp_content()`.
 
 # irpeat 0.1.0
