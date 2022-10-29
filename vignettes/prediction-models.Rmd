@@ -1,0 +1,374 @@
+---
+title: "Using the prediction models"
+output: rmarkdown::html_vignette
+author: Henning Teickner
+date: "`r Sys.Date()`"
+vignette: >
+  %\VignetteIndexEntry{prediction-models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: '../inst/REFERENCES.bib'
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+This vignette shows you how to make predictions with own data using the 'irpeat' package.
+This vignette does not explain the limitations of the prediction models (for this, see vignette [`r `rmarkdown::yaml_front_matter("irpeatmodels-models.Rmd")$title`](irpeatmodels-models.html)).
+
+
+# Preparation
+
+To make predictions with 'irpeat', you have to make sure the 'irpeatmodels' package is installed:
+
+```r
+# ---todo
+```
+
+For this tutorial, we need the following packages
+
+```{r load-packages}
+# packages
+library(irpeat)
+library(ir)
+library(ggplot2)
+library(quantities)
+library(brms)
+```
+
+And we will use the sample data in the 'irpeat' package. These are a set of peat samples collected from across the world [@Teickner.2022]:
+
+```{r load-data}
+d <- irpeat_sample_data
+```
+
+
+# Making predictions
+
+To make predictions for a peat property x, you just have to put the raw spectra into the corresponding prediction function. If you know the name of x in 'irpeat', the function is just `irp_x()`.  
+
+For example, to predict the carbon content for the sample data, you can use:
+
+```{r}
+d1 <- irp_carbon_content_1(d)
+```
+
+This will add a column `carbon_content_1` with the predicted values and a column `carbon_content_1_in_pd` which we will discuss in section ... [---todo:ref].
+
+
+## Making predictions: How is the variable I want to predict named?
+
+To find the name for a peat property as used in 'irpeat', you can have a look at the list of all peat properties for which predictions can be made shown in `?irp_predict()`.
+
+Peat property names in 'irpeat' have a number to differentiate the model by which they are predicted. For example, `carbon_content_1` is the C content predicted by the first model included in 'irpeat' which predicts the C content.  
+
+Another example: `klason_lignin_2()` is the Klason lignin content predicted by the second model included in 'irpeat' which predicts the Klason lignin content.
+
+
+## Making predictions: Options
+
+The prediction functions have additional options with which one can define if and how to summarize predictions. Moreover, there is an option to control how additional checks are performed. These check control options are described in section ... [---todo].
+
+`do_summary` specifies how the predicted values should be summarized. This makes only a difference when the underlying prediction model has been computed via Markov Chain Monte Carlo (MCMC) sampling, as is for example the case for Bayesian models.
+
+In this case, `do_summary = FALSE` (the default) will return not _one_ predicted value for each sample, but a vector of predicted values, each representing a MCMC draw from the model. This vector represents the full posterior predictive distribution for a sample.
+
+`do_summary = TRUE` will summarize the MCMC draws for each sample into one numeric value representing the location (e.g. the average) and one numeric value representing the spread (e.g. the standard deviation). Both values are stored together in a `quantities` object (this is a numeric vector with additional information on errors and measurement units).
+
+`summary_function_mean` defines the function which is used to compute the location (by default, this is `mean`), and `summary_function_sd` defines the function which is used to compute the spread (by default, this is `stats::sd`).
+
+<!--The following code predicts the carbon content two times: The first time, we do not summarize MCMC draws. The second time we do. Then, we plot the densities for both cases.
+
+```{r, eval=FALSE, echo=FALSE}
+# predict C content. Note: We rename the column after the first prediciton to make sure it does not get overwritten
+d <- 
+  d %>%
+  dplyr::select(-carbon_content_1_in_pd) %>% # cleanup from first prediction
+  irp_carbon_content_1(do_summary = FALSE) %>%
+  dplyr::rename(carbon_content_1_mcmc = "carbon_content_1") %>%
+  dplyr::select(-carbon_content_1_in_pd) %>%
+  irp_carbon_content_1(do_summary = TRUE)
+  
+# plot the densities for the implied distributions
+p1 <- 
+  ggplot(mapping = aes(x = d$carbon_content_1_mcmc[[1]])) +
+  geom_histogram()
+```
+-->
+
+
+# Can I trust the model?
+
+This is a very good question which should always be checked before using a model in a specific analysis.  
+
+Whilst there is no guaranty that a prediction model will produce correct predictions in a specific case, 'irpeat' is designed to provide information necessary to judge whether you can trust a specific prediction model in your case.
+
+## Does the model have known limitations?
+
+The first thing to do is to check whether the model you want to use has known limitations. ... [---todo:ref] provides an overview table which summarizes for each variable 'irpeat' can predict the known limitations. If such a limitation applies to your case, don't use the model.
+
+For example, currently all models for holocellulose and Klason lignin contents are known to be biased and if you plan to make inferences about their contents for peat, you better not use the 'irpeat' models. 
+
+You may wonder why models with known limitations such as "produces biased predictions" are not just discarded from 'irpeat'. There are many reasons why to keep even "bad" models. Two important are:
+
+1. For some purposes, bad models are even required. For example when you compute a new prediction model and want to compare its behavior to known biased models, you can easily do this with 'irpeat'.
+
+2. Limitations are gradual: For some purposes, bad models produce predictions with sufficient accuracy, but for others, these may make a model useless. 'irpeat' places the responsibility to decide this on the shoulders of the user and provides information for the user to take this responsibility.
+
+
+## Have I used the same measurement device?
+
+When you have used a different measurement device than was used for the data the model was fitted on, the model may produce erroneous predictions. But it can also produce accurate predictions, depending on how operation principles of the devices differ.
+
+An automatic check which is performed during any prediction with 'irpeat' often detects such issues when they result in large differences relative to the training data. This will be explained in the next paragraph.
+
+
+## Are my spectra within the model's prediction domain?
+
+The prediction domain is the range of predictor variables the model was trained on [@Wadoux.2021]. For example, the prediction domain for `carbon_content_1` can be visualized like so:
+
+```{r prediction-domain-1}
+irp_get_prediction_domain_for(
+  variable = "carbon_content_1",
+  check_prediction_domain = "train"
+) %>%
+  plot()
+```
+
+The y axis shows intensity values at the respective wavenumber values (the x axis) which have been $z$-transformed. When the spectra in the training data for the `carbon_content_1` model have been preprocessed, they are all within the shaded region.
+
+The `carbon_content_1` model uses all these variables to make predictions. Thus, if a new spectrum for which prediction will be made is outside the shaded region, the model extrapolates. 
+
+Extrapolation is always a warning for a prediction model, especially when it has many predictor variables and complex preprocessing, as is the case for infrared spectra. If extrapolation occurs for a sample, this is an indication that the predicted values might be wrong.
+
+As mentioned above, such a check is automatically performed whenever 'irpeat' makes predictions. For example:
+
+```{r prediction-domain-2}
+d1 <- 
+  irp_carbon_content_1(d)
+```
+
+The column named `x_in_pd`, where `x` is the variable name --- e.g. `carbon_content_1_in_pd` --- stores information whether the spectrum is within the prediction domain or not. It has value `FALSE` if a spectrum is _not_ within the prediction domain and `TRUE` if it is within the prediction domain.
+
+You can specify the behavior of this check via argument `check_prediction_domain`:
+
+1. `"train"` (the default) means that the prediction domain computed on the training data for the model is used for the check.
+
+2. `"test"` means that the prediction domain computed on the testing data for the model is used for the check.
+
+3. `"none"` means that no check is performed (all values in column `x_in_pd` are `NA`).
+
+Compare:
+
+```{r prediction-domain-3}
+d1 <- irp_carbon_content_1(d, check_prediction_domain = "train")
+d2 <- irp_carbon_content_1(d, check_prediction_domain = "test")
+d3 <- irp_carbon_content_1(d, check_prediction_domain = "none")
+```
+
+You can also extract the prediction domain for a model:
+
+```{r prediction-domain-4}
+pd_carbon_content_1_train <- 
+  irp_get_prediction_domain_for(
+    variable = "carbon_content_1",
+    check_prediction_domain = "train"
+  )
+
+pd_carbon_content_1_test <- 
+  irp_get_prediction_domain_for(
+    variable = "carbon_content_1",
+    check_prediction_domain = "test"
+  )
+
+pd_carbon_content_1_none <- 
+  irp_get_prediction_domain_for(
+    variable = "carbon_content_1",
+    check_prediction_domain = "none"
+  )
+```
+
+And you can easily visualize them:
+
+```{r prediction-domain-5}
+plot(pd_carbon_content_1_train)
+plot(pd_carbon_content_1_test)
+plot(pd_carbon_content_1_none)
+```
+
+[---todo: describe how to add spectra to plot and to color them according to whether the check is passed or not. This should be added to plot.irp_prediction_domain(). This needs modification of plot.ir() to allow getting the data for plotting instead of a ggplot.]
+
+
+Again: Extrapolation is always a warning. If extrapolation occurs for a sample, this is an indication that the predicted values might be wrong. The automated checks warn about this. However, if extrapolation is only marginal (this can be checked with the plots shown above), the models may still produce reasonable predictions.
+
+Note also that by default, 'irpeat' checks the prediction domain computed on the training data. However, the test prediction domain may differ from this and estimates for predictions errors are valid only for the test prediction domain. [---todo: I think this needs much more elboration to be understandable.]
+
+
+## Consider prediction uncertainties!
+
+When we want to make inferences with predicted values, we don't want to sweep the prediction uncertainties under the carpet, especially since these might be large for some variables. When making predictions with 'irpeat', uncertainties from the model get propagated into the predictions.
+
+How this uncertainty is returned depends on the arguments of the prediction method (see section [Making predictions: Options]). 
+
+When draws from the posterior predictive distribution are returned, you can just work with all these samples to propagate uncertainties. For example, we can compute the difference in C content of two samples by just subtracting all the returned draws:
+
+```{r uncertainties-1}
+# Predict C content
+d1 <- 
+  irp_carbon_content_1(d, do_summary = FALSE)
+
+# Compute the difference in C content between the first and second sample
+d1_C_difference <- d1$carbon_content_1[[1]] - d1$carbon_content_1[[2]]
+
+# Visualize as histogram
+ggplot() + 
+  geom_histogram(aes(x = d1_C_difference))
+```
+
+When `do_summary = TRUE` (see section [Making predictions: Options]), the prediction standard deviation is returned within a `quantities` object [---todo: ref to quantities] which means that you can use all functionalities of the 'quantities' package to handle these uncertainties (using a normal approximation).
+
+For example, to get the prediction uncertainty for the same difference in C contents as above, you could compute:
+
+```{r uncertainties-2}
+# Predict C content
+d2 <- 
+  irp_carbon_content_1(
+    d, 
+    do_summary = TRUE, 
+    summary_function_mean = mean, 
+    summary_function_sd = stats::sd
+  )
+
+# Compute the difference in C content between the first and second sample
+(d2_C_difference <- d2$carbon_content_1[[1]] - d2$carbon_content_1[[2]])
+```
+
+The printed number means an average difference of $0.01 \pm 0.02$ g/g.
+
+The key point is to consider these uncertainties when using the prediction models to make inferences. Moreover, you can judge whether the prediction model is accurate enough for your purposes.
+
+
+# Batch predictions
+
+If you want to predict a large number of variables, instead of chaining together calls to individual prediction functions, you can also use `irp_predict()`. Compare both options:
+
+```{r irp-predict}
+# Chaining together individual functions
+d1 <- 
+  d %>%
+  irp_carbon_content_1(do_summary = TRUE) %>%
+  irp_nitrogen_content_1(do_summary = TRUE) %>%
+  irp_hydrogen_content_1(do_summary = TRUE) %>%
+  irp_oxygen_content_1(do_summary = TRUE) %>%
+  irp_phosphorus_content_1(do_summary = TRUE) %>%
+  irp_potassium_content_1(do_summary = TRUE)
+
+# Batch processing
+target_variables <- 
+  paste0(c("carbon", "nitrogen", "hydrogen", "oxygen", "phosphorus", "potassium"), "_content_1")
+
+d2 <- 
+  d %>%
+  irp_predict(variable = target_variables, do_summary = TRUE)
+
+
+# Compare
+identical(d1, d2) #---todo: check whether this works when seeds are set for rbeta, rnorm, rdirichlet!
+```
+
+There is also a shorthand option `"all"` to predict all available peat properties (note: this can take some time):
+
+```{r irp-predict-all, eval=FALSE}
+d3 <- 
+  d %>%
+  irp_predict(variable = "all", do_summary = TRUE)
+  
+```
+
+
+
+
+
+```{r, eval=FALSE, echo=FALSE}
+library(irpeat)
+
+a <- 
+  irpeat_sample_data %>%
+  irp_predict(variable = "bulk_density_1", do_summary = TRUE) %>%
+  irp_predict(variable = "macroporosity_1", do_summary = TRUE) %>%
+  irp_predict(variable = c("carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1"), do_summary = TRUE)
+
+ggplot(a, aes(x = as.numeric(carbon_content_1), y = as.numeric(C))) + 
+  geom_errorbar(aes(
+    xmin = as.numeric(carbon_content_1) - 2*errors::errors(carbon_content_1), 
+    xmax = as.numeric(carbon_content_1) + 2*errors::errors(carbon_content_1)),
+    height = 0, color = "grey") + 
+  geom_point(aes(color = carbon_content_1_in_pd)) +
+  geom_abline(intercept = 0, slope = 1, color = "grey50")
+
+ggplot(a, aes(x = as.numeric(oxygen_content_1), y = as.numeric(O))) + 
+  geom_errorbar(aes(
+    xmin = as.numeric(oxygen_content_1) - 2*errors::errors(oxygen_content_1), 
+    xmax = as.numeric(oxygen_content_1) + 2*errors::errors(oxygen_content_1)),
+    height = 0, color = "grey") + 
+  geom_point(aes(color = oxygen_content_1_in_pd)) +
+  geom_abline(intercept = 0, slope = 1, color = "grey50")
+
+ggplot(a, aes(x = as.numeric(hydrogen_content_1), y = as.numeric(H))) + 
+  geom_errorbar(aes(
+    xmin = as.numeric(hydrogen_content_1) - 2*errors::errors(hydrogen_content_1), 
+    xmax = as.numeric(hydrogen_content_1) + 2*errors::errors(hydrogen_content_1)),
+    height = 0, color = "grey") + 
+  geom_point(aes(color = hydrogen_content_1_in_pd)) +
+  geom_abline(intercept = 0, slope = 1, color = "grey50")
+
+###
+
+a <- 
+  irpeat_sample_data %>%
+  irp_predict(variable = "hydrogen_content_1", do_summary = TRUE) %>%
+  irp_preprocess_for(variable = "hydrogen_content_1") %>%
+  dplyr::rename(bulk_density_1_in_pd = "hydrogen_content_1_in_pd")
+
+a_pd <- 
+  irp_get_prediction_domain_for(variable = "hydrogen_content_1", check_prediction_domain = "train")
+
+ggplot() +
+  geom_path(
+    data = 
+      a %>%
+      dplyr::select(spectra, bulk_density_1_in_pd) %>%
+      dplyr::arrange(dplyr::desc(bulk_density_1_in_pd)) %>%
+      dplyr::mutate(measurement_id = seq_along(.data$spectra)) %>%
+      tidyr::unnest(cols = "spectra"), 
+    aes(
+      x = .data$x,
+      y = .data$y,
+      group = .data$measurement_id,
+      color = .data$bulk_density_1_in_pd
+    )
+  ) +
+  geom_ribbon(
+    data = a_pd, 
+    aes(x = x, ymin = ymin, ymax = ymax), 
+    color = "grey", alpha = 0.3
+  ) + 
+  scale_y_continuous(limits = c(-10, 16))
+```
+
+
+# Session info
+
+```{r session-info, echo=FALSE}
+sessionInfo()
+```
+
+
+# References
