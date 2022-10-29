@@ -63,12 +63,13 @@ library(irpeat)
 library(ir)
 library(irpeatmodels)
 library(ggplot2)
+library(units)
 ```
 
-You can test 'irpeat' with sample data from the R package 'ir':
+You can test 'irpeat' with sample data from the R package 'irpeat':
 
 ```{r ir_sample_data_load}
-ir::ir_sample_data
+irpeat::irpeat_sample_data
 ```
 
 `irpeat_sample_data` contains transmission mid infrared spectra of peat different samples (See @Teickner.2022 and @Teickner.2021c for details).
@@ -86,12 +87,12 @@ x <-
       irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
       dplyr::pull(hi_1630_1090)
   ) %>%
-  irpeat::irp_carbon_content_1(do_summary = TRUE) %>%     # C content
-  # irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
+  irpeat::irp_nitrogen_content_1(do_summary = TRUE) %>%   # N content
+  irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
   irpeat::irp_macroporosity_1(do_summary = TRUE)          # macroporosity
 ```
 
-`x` is identical to `ir::ir_sample_data`, but contains additional columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`) and the computed carbon content (`carbon_content_1`)
+`x` is identical to `irpeat_sample_data`, but contains additional columns for the computed humification indicex (`h1_1630_1090`) and the computed nitrogen content (`nitrogen_content_1`)
 
 ```{r x_inspect}
 x
@@ -100,13 +101,20 @@ x
 Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
 
 ```{r x_plot}
-ggplot(
-  x, 
-  aes(x = quantities::drop_quantities(carbon_content_1) * 100, y = hi_1630_1090)
-) + 
+x %>%
+  ggplot(
+    aes(
+      x = 
+        nitrogen_content_1 %>%
+        units::set_units(value = "%") %>%
+        quantities::drop_quantities(), 
+      y = 
+        hi_1630_1090
+    )
+  ) + 
   geom_point() +
   labs(
-    x = "Carbon content [mass-%]", 
+    x = "Nitrogen content [mass-%]", 
     y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
   )
 ```
@@ -115,7 +123,7 @@ ggplot(
 All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
 
 ```{r x_klh_inspect_quantities}
-x$carbon_content_1[1:5]
+x$nitrogen_content_1[1:5]
 ```
 
 ### Future development

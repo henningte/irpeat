@@ -24,15 +24,15 @@ The following peat properties can currently be predicted:
     and
     ![\delta^{15}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B15%7D "\delta^{15}")N)
 -   physical properties (bulk density, volume fraction of solids,
-    non-macroporosity, macroporosity saturaed hydraulic conductivity)
+    non-macroporosity, macroporosity, saturated hydraulic conductivity)
 -   standard Gibbs free energy of formation
     (![\Delta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta "\Delta")G![\_\text{f}^0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;_%5Ctext%7Bf%7D%5E0 "_\text{f}^0"))
 -   electrochemical properties (electron accepting capacity, electron
     donating capacity)
 
 The package also contains functions to predict holocellulose and Klason
-lignin contents \[Hodgkins et al. (2018); Teickner.2022a\], but these
-models have been shown to be biased (Teickner and Knorr 2022).
+lignin contents (Hodgkins et al. 2018; Teickner and Knorr 2022), but
+these models have been shown to be biased (Teickner and Knorr 2022).
 
 ### How to install
 
@@ -62,28 +62,30 @@ library(irpeat)
 
 # load additional packages needed for this tutorial
 library(ir)
+library(irpeatmodels)
 library(ggplot2)
+library(units)
+#> udunits database from C:/Users/henni/AppData/Local/R/win-library/4.2/units/share/udunits/udunits2.xml
 ```
 
-You can test ‘irpeat’ with sample data from the R package ‘ir’:
+You can test ‘irpeat’ with sample data from the R package ‘irpeat’:
 
 ``` r
-ir::ir_sample_data
-#> # A tibble: 58 × 7
-#>    id_measurement id_sample sample_type sample_comment             klason_lignin
-#>             <int> <chr>     <chr>       <chr>                      <units>      
-#>  1              1 GN 11-389 needles     Abies Firma Momi fir       0.359944     
-#>  2              2 GN 11-400 needles     Cupressocyparis leylandii… 0.339405     
-#>  3              3 GN 11-407 needles     Juniperus chinensis Chine… 0.267552     
-#>  4              4 GN 11-411 needles     Metasequoia glyptostroboi… 0.350016     
-#>  5              5 GN 11-416 needles     Pinus strobus Torulosa     0.331100     
-#>  6              6 GN 11-419 needles     Pseudolarix amabili Golde… 0.279360     
-#>  7              7 GN 11-422 needles     Sequoia sempervirens Cali… 0.329672     
-#>  8              8 GN 11-423 needles     Taxodium distichum Cascad… 0.356950     
-#>  9              9 GN 11-428 needles     Thuja occidentalis Easter… 0.369360     
-#> 10             10 GN 11-434 needles     Tsuga caroliniana Carolin… 0.289050     
-#> # … with 48 more rows, and 2 more variables: holocellulose <units>,
-#> #   spectra <named list>
+irpeat::irpeat_sample_data
+#> # A tibble: 59 × 11
+#>    id_90 sample_id measurement_id spectra         C      H       N     O       S
+#>  * <int>     <int>          <int> <named lis> [g/g]  [g/g]   [g/g] [g/g]   [g/g]
+#>  1     1         1             23 <df>        0.479 0.0562 0.00968 0.398 0.00395
+#>  2     2         2             32 <df>        0.447 0.0561 0.00478 0.443 0.00008
+#>  3     3         3             38 <df>        0.460 0.0560 0.00788 0.412 0.00008
+#>  4     5         5             52 <df>        0.471 0.0585 0.00755 0.414 0.00008
+#>  5     6         6             54 <df>        0.502 0.0550 0.0127  0.373 0.0013 
+#>  6     7         7             55 <df>        0.484 0.0557 0.0091  0.392 0.0012 
+#>  7     8         8             56 <df>        0.466 0.0566 0.00725 0.401 0.0008 
+#>  8     9         9             57 <df>        0.490 0.0576 0.00885 0.394 0.0013 
+#>  9    10        10             24 <df>        0.459 0.0560 0.00838 0.454 0      
+#> 10    11        11             25 <df>        0.465 0.0566 0.00723 0.420 0      
+#> # … with 49 more rows, and 2 more variables: d15N <dbl>, d13C <dbl>
 ```
 
 `irpeat_sample_data` contains transmission mid infrared spectra of peat
@@ -107,31 +109,35 @@ x <-
       irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
       dplyr::pull(hi_1630_1090)
   ) %>%
-  irpeat::irp_carbon_content_1(do_summary = TRUE) %>%     # C content
-  irpeat::irp_bulk_density_1(do_summary = TRUE)           # bulk density
+  irpeat::irp_nitrogen_content_1(do_summary = TRUE) %>%   # N content
+  irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
+  irpeat::irp_macroporosity_1(do_summary = TRUE)          # macroporosity
 ```
 
-`x` is identical to `ir::ir_sample_data`, but contains additional
-columns for the computed humification indices (`h1`, `h2`, `h3`, `h4`)
-and the computed carbon content (`carbon_content_1`)
+`x` is identical to `irpeat_sample_data`, but contains additional
+columns for the computed humification indicex (`h1_1630_1090`) and the
+computed nitrogen content (`nitrogen_content_1`)
 
 ``` r
 x
-#> # A tibble: 59 × 9
-#>    id_90 sample_id measurement_id hi_1630_1090 carbon_content_1 carbon_content_…
-#>  * <int>     <int>          <int> <numeric>         (err) [g/g] <logical>       
-#>  1     1         1             23 0.6190412             0.43(2) FALSE           
-#>  2     2         2             32 0.4393524             0.39(2) FALSE           
-#>  3     3         3             38 0.5568726             0.43(2) FALSE           
-#>  4     5         5             52 0.6164633             0.42(2) FALSE           
-#>  5     6         6             54 0.9495150             0.46(2) FALSE           
-#>  6     7         7             55 0.8387912             0.45(2) FALSE           
-#>  7     8         8             56 0.7038940             0.42(2) FALSE           
-#>  8     9         9             57 0.8111736             0.46(2) FALSE           
-#>  9    10        10             24 0.5434465             0.38(2) FALSE           
-#> 10    11        11             25 0.6056091             0.38(2) FALSE           
-#> # … with 49 more rows, and 3 more variables: bulk_density_1 (err) [g/cm^3],
-#> #   bulk_density_1_in_pd <logical>, spectra <named list>
+#> # A tibble: 59 × 18
+#>    id_90 sample_id measurement_id          C        H        N        O        S
+#>  * <int>     <int>          <int> (err) [g/… (err) [… (err) [… (err) [… (err) […
+#>  1     1         1             23 0.4790247… 0.05625… 0.00968… 0.39768… 0.00395…
+#>  2     2         2             32 0.4468899… 0.0561(… 0.00478… 0.44283…  8(0)e-5
+#>  3     3         3             38 0.4599222… 0.05598… 0.00788… 0.41248…  8(0)e-5
+#>  4     5         5             52 0.4708597… 0.05853… 0.00755… 0.41433…  8(0)e-5
+#>  5     6         6             54 0.5019724… 0.05495… 0.0127(… 0.3732(… 0.0013(…
+#>  6     7         7             55 0.4844088… 0.0557(… 0.0091(… 0.39185… 0.0012(…
+#>  7     8         8             56 0.4661264… 0.05655… 0.00725… 0.40095…  8(0)e-4
+#>  8     9         9             57 0.4897663… 0.05765… 0.00885… 0.39395… 0.0013(…
+#>  9    10        10             24 0.4594893… 0.05598… 0.00838… 0.45435…     0(0)
+#> 10    11        11             25 0.4647567… 0.05663… 0.00723… 0.42003…     0(0)
+#> # … with 49 more rows, and 10 more variables: d15N <dbl>, d13C <dbl>,
+#> #   hi_1630_1090 <numeric>, nitrogen_content_1 (err) [g/g],
+#> #   nitrogen_content_1_in_pd <logical>, bulk_density_1 (err) [g/cm^3],
+#> #   bulk_density_1_in_pd <logical>, macroporosity_1 (err) [L/L],
+#> #   macroporoity_1_in_pd <logical>, spectra <named list>
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -139,13 +145,20 @@ Plot of the humification index (ratio of the intensities at 1420 and
 content:
 
 ``` r
-ggplot2::ggplot(
-  x, 
-  aes(x = quantities::drop_quantities(carbon_content_1) * 100, y = hi_1630_1090)
-) + 
-  ggplot2::geom_point() +
-  ggplot2::labs(
-    x = "Carbon content [mass-%]", 
+x %>%
+  ggplot(
+    aes(
+      x = 
+        nitrogen_content_1 %>%
+        units::set_units(value = "%") %>%
+        quantities::drop_quantities(), 
+      y = 
+        hi_1630_1090
+    )
+  ) + 
+  geom_point() +
+  labs(
+    x = "Nitrogen content [mass-%]", 
     y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
   )
 ```
@@ -156,11 +169,11 @@ All computed quantities come with units and standard errors (thanks to
 the [quantities](https://github.com/r-quantities/quantities) package):
 
 ``` r
-x$carbon_content_1[1:5]
+x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.01611127 0.01714743 0.01647694 0.01669999 0.01584673
-#>        V1        V2        V3        V4        V5 
-#> 0.4317706 0.3906542 0.4286142 0.4227900 0.4623638
+#> Errors: 0.0011526237 0.0008731474 0.0010761203 0.0010050674 0.0012564458
+#>          V1          V2          V3          V4          V5 
+#> 0.010339500 0.005543934 0.008672246 0.007671897 0.012424216
 ```
 
 ### Future development
@@ -177,7 +190,7 @@ is developed to collect the data required for this task.
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-29.
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-30.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
