@@ -32,7 +32,7 @@ where \(y_x1\) is the intensity of the spectrum at x axis value \(x1\) and
     
     <a class="navbar-brand me-2" href="../index.html">irpeat</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,20 +94,27 @@ where \(y_x1\) is the intensity of the spectrum at x axis value \(x1\) and
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="https://henningte.github.io/ir/reference/ir_new_ir.html" class="external-link">ir</a></code>.</p></dd>
+
+
 <dt>x1</dt>
 <dd><p>A numeric vector with values representing x axis values in the spectra
 of <code>x</code>. This is \(x1\) in the equation displayed above. If
 multiple humification indices for the same <code>x2</code> should be computed, <code>x1</code>
 can contain multiple values. If <code>x1 = NULL</code>,
 the default humification indices will be computed (see details section).</p></dd>
+
+
 <dt>x2</dt>
 <dd><p>A numeric value representing an x axis value in the spectra
 of <code>x</code>. This is \(x2\) in the equation displayed above. If <code>x2 = NULL</code>,
 the default humification indices will be computed (see details section).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An object of class <code><a href="https://henningte.github.io/ir/reference/ir_new_ir.html" class="external-link">ir</a></code> with additional
+    
+
+<p>An object of class <code><a href="https://henningte.github.io/ir/reference/ir_new_ir.html" class="external-link">ir</a></code> with additional
 columns for additional humification indices. If <code>x1 = NULL</code> and <code>x2 = NULL</code>,
 these are four new columns (hi1, hi2, hi3 and hi4) that correspond to the humification
 indices defined in the details section. If <code>x1</code> and <code>x2</code> are not <code>NULL</code>,
@@ -173,7 +180,7 @@ aromatic esters)/polysaccharides</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>

@@ -18,7 +18,7 @@ optionally, but occur on a fixed order that cannot be changed."><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">irpeat</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +79,7 @@ optionally, but occur on a fixed order that cannot be changed.</p>
   bc_method <span class="op">=</span> <span class="st">"rubberband"</span>,
   bc_degree <span class="op">=</span> <span class="fl">2</span>,
   bc_cutoff <span class="op">=</span> <span class="fl">0</span>,
+  bc_do_impute <span class="op">=</span> <span class="cn">FALSE</span>,
   do_smooth <span class="op">=</span> <span class="cn">TRUE</span>,
   smooth_method <span class="op">=</span> <span class="st">"sg"</span>,
   smooth_p <span class="op">=</span> <span class="fl">3</span>,
@@ -90,6 +91,7 @@ optionally, but occur on a fixed order that cannot be changed.</p>
   normalise_method <span class="op">=</span> <span class="st">"area"</span>,
   do_bin <span class="op">=</span> <span class="cn">TRUE</span>,
   bin_width <span class="op">=</span> <span class="fl">10</span>,
+  bin_new_x_type <span class="op">=</span> <span class="st">"start"</span>,
   do_scale <span class="op">=</span> <span class="cn">TRUE</span>,
   scale_center <span class="op">=</span> <span class="cn">TRUE</span>,
   scale_scale <span class="op">=</span> <span class="cn">TRUE</span>
@@ -101,77 +103,138 @@ optionally, but occur on a fixed order that cannot be changed.</p>
     <dl><dt>x</dt>
 <dd><p>An object of class <code><a href="https://henningte.github.io/ir/reference/ir_new_ir.html" class="external-link">ir</a></code> (it is assumed
 that <code>x</code> is not yet preprocessed).</p></dd>
+
+
 <dt>do_interpolate</dt>
 <dd><p>A logical value indicating if spectra should be
 interpolated using <code><a href="https://henningte.github.io/ir/reference/ir_interpolate.html" class="external-link">ir::ir_interpolate()</a></code>.</p></dd>
+
+
 <dt>interpolate_start</dt>
 <dd><p>See <code>ir_interpolate</code> (parameter <code>start</code>).</p></dd>
+
+
 <dt>interpolate_dw</dt>
 <dd><p>See <code>ir_interpolate</code> (parameter <code>dw</code>).</p></dd>
+
+
 <dt>do_clip</dt>
 <dd><p>A logical value indicating if spectra should be
 clipped using <code><a href="https://henningte.github.io/ir/reference/ir_clip.html" class="external-link">ir::ir_clip()</a></code>.</p></dd>
+
+
 <dt>clip_range</dt>
 <dd><p>See <code>ir_clip</code> (parameter <code>range</code>).</p></dd>
+
+
 <dt>do_interpolate_region</dt>
 <dd><p>A logical value indicating if spectra should
 be linearly interpolated in selected regions using
 <code><a href="https://henningte.github.io/ir/reference/ir_interpolate_region.html" class="external-link">ir::ir_interpolate_region()</a></code>.</p></dd>
+
+
 <dt>interpolate_region_range</dt>
 <dd><p>See <code>ir_interpolate_region</code> (parameter
 <code>range</code>).</p></dd>
+
+
 <dt>do_bc</dt>
 <dd><p>A logical value indicating if spectra should be
 baseline corrected using <code><a href="https://henningte.github.io/ir/reference/ir_bc.html" class="external-link">ir::ir_bc()</a></code>.</p></dd>
+
+
 <dt>bc_method</dt>
 <dd><p>See <code>ir_bc</code> (parameter <code>method</code>).</p></dd>
+
+
 <dt>bc_degree</dt>
 <dd><p>See <code>ir_bc</code> (parameter <code>degree</code>).</p></dd>
+
+
 <dt>bc_cutoff</dt>
 <dd><p>A numeric value representing the wavenumber
 units to remove at the start and end of each spectrum in <code>x</code> during
 baseline correction. This may be done to remove artifacts due to baseline
 correction.</p></dd>
+
+
+<dt>bc_do_impute</dt>
+<dd><p>See <code>ir_bc</code> (parameter <code>do_impute</code>).</p></dd>
+
+
 <dt>do_smooth</dt>
 <dd><p>A logical value indicating if spectra should be
 smoothed using <code><a href="https://henningte.github.io/ir/reference/ir_smooth.html" class="external-link">ir::ir_smooth()</a></code>.</p></dd>
+
+
 <dt>smooth_method</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>method</code>).</p></dd>
+
+
 <dt>smooth_p</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>p</code>).</p></dd>
+
+
 <dt>smooth_n</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>n</code>).</p></dd>
+
+
 <dt>smooth_m</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>m</code>).</p></dd>
+
+
 <dt>smooth_ts</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>ts</code>).</p></dd>
+
+
 <dt>smooth_k</dt>
 <dd><p>See <code>ir_smooth</code> (parameter <code>k</code>).</p></dd>
+
+
 <dt>do_normalise</dt>
 <dd><p>A logical value indicating if spectra should be
 normalized using <code><a href="https://henningte.github.io/ir/reference/ir_normalize.html" class="external-link">ir::ir_normalize()</a></code>.</p></dd>
+
+
 <dt>normalise_method</dt>
 <dd><p>See <code>ir_normalize</code> (parameter <code>method</code>).</p></dd>
+
+
 <dt>do_bin</dt>
 <dd><p>A logical value indicating if spectra should be
 binned using <code><a href="https://henningte.github.io/ir/reference/ir_bin.html" class="external-link">ir::ir_bin()</a></code>.</p></dd>
+
+
 <dt>bin_width</dt>
 <dd><p>See <code>ir_bin</code> (parameter <code>width</code>).</p></dd>
+
+
+<dt>bin_new_x_type</dt>
+<dd><p>See <code>ir_bin</code> (parameter <code>new_x_type</code>).</p></dd>
+
+
 <dt>do_scale</dt>
 <dd><p>A logical value indicating if spectral variables should be
 scaled using <code><a href="https://rdrr.io/r/base/scale.html" class="external-link">base::scale()</a></code>.</p></dd>
+
+
 <dt>scale_center</dt>
 <dd><p>See <code>scale</code> (parameter <code>center</code>). To scale each
 spectral variable independently, provide a vector with length equal to the
 number of spectral variables returned after preprocessing.</p></dd>
+
+
 <dt>scale_scale</dt>
 <dd><p>See <code>scale</code> (parameter <code>scale</code>). To scale each
 spectral variable independently, provide a vector with length equal to the
 number of spectral variables returned after preprocessing.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with spectra in rows and a column for each spectral
+    
+
+<p>A data frame with spectra in rows and a column for each spectral
 variable after preprocessing.</p>
     </div>
 
@@ -192,11 +255,13 @@ variable after preprocessing.</p>
 <span class="r-in">    do_interpolate_region <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in">    bc_method <span class="op">=</span> <span class="st">"rubberband"</span>,</span>
 <span class="r-in">    bc_cutoff <span class="op">=</span> <span class="fl">10</span>,</span>
+<span class="r-in">    bc_do_impute <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in">    do_smooth <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span class="r-in">    do_normalise <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">    normalise_method <span class="op">=</span> <span class="st">"area"</span>,</span>
 <span class="r-in">    do_bin <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">    bin_width <span class="op">=</span> <span class="fl">10</span>,</span>
+<span class="r-in">    bin_new_x_type <span class="op">=</span> <span class="st">"start"</span>,</span>
 <span class="r-in">    do_scale <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">    scale_center <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span class="r-in">    scale_scale <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -213,7 +278,7 @@ variable after preprocessing.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
     </footer></div>
