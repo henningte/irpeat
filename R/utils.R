@@ -356,10 +356,17 @@ irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
 #'
 #' @keywords internal
 #' @noRd
-irp_mcmc_predictions_normal_identity <- function(x, draws, config) {
+irp_mcmc_predictions_normal_identity_non_centered <- function(x, draws, config) {
+
+  # scale intercept and slopes
+  intercept <- draws$Intercept * config$parameter_scale$Intercept_sigma + config$parameter_scale$Intercept_mu
+  b <- draws %>%
+    dplyr::select(dplyr::starts_with("b[")) %>%
+    magrittr::multiply_by(config$parameter_scale$b_sigma) %>%
+    magrittr::add(config$parameter_scale$b_mu)
 
   # linear predictor
-  mu <- draws$Intercept + as.matrix(draws %>% dplyr::select(dplyr::starts_with("b["))) %*% t(x$x)
+  mu <- intercept + as.matrix(b) %*% t(x$x)
   mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
 
   # predictions
