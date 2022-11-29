@@ -763,9 +763,9 @@ irp_O_to_C_1 <-
     irpeatmodels_required_version =
       "0.0.0",
     .f_check_packages =
-      check_irpeatmodels_and_pls,
+      check_irpeatmodels_and_dimreduce,
     .f_dimreduce =
-      irp_make_predictions_plsr,
+      irp_make_predictions_ispca,
     .f_predict =
       irp_mcmc_predictions_beta_logit
   )
@@ -799,9 +799,9 @@ irp_H_to_C_1 <-
     irpeatmodels_required_version =
       "0.0.0",
     .f_check_packages =
-      check_irpeatmodels_and_pls,
+      check_irpeatmodels_and_dimreduce,
     .f_dimreduce =
-      irp_make_predictions_plsr,
+      irp_make_predictions_ispca,
     .f_predict =
       irp_mcmc_predictions_beta_logit
   )

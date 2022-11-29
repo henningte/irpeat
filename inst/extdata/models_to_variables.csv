@@ -21,7 +21,6 @@ model_saturated_hydraulic_conductivity_1,saturated_hydraulic_conductivity_1
 model_porosity_1,volume_fraction_solids_1
 model_porosity_1,non_macroporosity_1
 model_porosity_1,macroporosity_1
-model_CHNO_1,carbon_content_2
-model_CHNO_1,nitrogen_content_2
-model_CHNO_1,hydrogen_content_2
-model_CHNO_1,oxygen_content_2
+model_C_to_N_1,C_to_N_1
+model_O_to_C_1,O_to_C_1
+model_H_to_C_1,H_to_C_1
