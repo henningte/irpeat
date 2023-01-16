@@ -24,6 +24,8 @@
 \alias{irp_non_macroporosity_1}
 \alias{irp_macroporosity_1}
 \alias{irp_saturated_hydraulic_conductivity_1}
+\alias{irp_specific_heat_capacity_1}
+\alias{irp_dry_thermal_conductivity_1}
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
@@ -214,6 +216,25 @@ irp_saturated_hydraulic_conductivity_1(
   summary_function_sd = stats::sd,
   check_prediction_domain = "train"
 )
+
+irp_specific_heat_capacity_1(
+  x,
+  temperature = 273.15,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
+
+irp_dry_thermal_conductivity_1(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}} with transmission mid
@@ -255,6 +276,9 @@ prediction domain formed by the testing data for the model.}
 prediction domain for the model.}
 }
 Note: Currently ignored for \code{irp_eac_1()}, \code{irp_edc_1()}.}
+
+\item{temperature}{For \code{irp_specific_heat_capacity_1()}: The temperature in K
+for which to predict the specific heat capacity.}
 }
 \value{
 \code{x} with a new column with the predicted peat property and a new
@@ -434,8 +458,23 @@ irpeat::irp_macroporosity_1(
   check_prediction_domain = "train"
 )
 
-# volume fraction of solids, macroporosity, non-macroporosity
+# saturated hydraulic conductivity
 irpeat::irp_saturated_hydraulic_conductivity_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# specific heat capacity
+irpeat::irp_specific_heat_capacity_1(
+  irpeat_sample_data[1, ],
+  temperature = 290,
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# dry thermal conductivity
+irpeat::irp_dry_thermal_conductivity_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"

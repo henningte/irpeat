@@ -97,6 +97,14 @@
 #'     Saturated hydraulic conductivity as computed by
 #'     [irp_saturated_hydraulic_conductivity_1()].
 #'   }
+#'   \item{"specific_heat_capacity_1"}{
+#'     Specific heat capacity as computed by
+#'     [irp_specific_heat_capacity_1()].
+#'   }
+#'   \item{"dry_thermal_conductivity_1"}{
+#'     Dry thermal conductivity as computed by
+#'     [irp_dry_thermal_conductivity_1()].
+#'   }
 #' }
 #'
 #' @param ... Further arguments passed to individual prediction functions.
@@ -140,7 +148,7 @@ irp_predict <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorus_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1")
+  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorus_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1", "specific_heat_capacity_1", "dry_thermal_conductivity_1")
   if("all" %in% variable) {
     variable <- variable_values
   }
@@ -219,6 +227,10 @@ irp_predict <- function(x, variable, ...) {
              },
              "saturated_hydraulic_conductivity_1" =
                irp_saturated_hydraulic_conductivity_1(x = x, ...),
+             "specific_heat_capacity_1" =
+               irp_specific_heat_capacity_1(x = x, ...),
+             "dry_thermal_conductivity_1" =
+               irp_dry_thermal_conductivity_1(x = x, ...),
              stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }

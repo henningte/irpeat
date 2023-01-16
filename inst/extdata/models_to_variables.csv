@@ -24,3 +24,5 @@ model_porosity_1,macroporosity_1
 model_C_to_N_1,C_to_N_1
 model_O_to_C_1,O_to_C_1
 model_H_to_C_1,H_to_C_1
+model_specific_heat_capacity_1,specific_heat_capacity_1
+model_dry_thermal_conductivity_1,dry_thermal_conductivity_1

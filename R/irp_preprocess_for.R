@@ -65,7 +65,9 @@ irp_preprocess_for <- function(x, variable) {
          "volume_fraction_solids_1" =,
          "non_macroporosity_1" =,
          "macroporosity_1" =,
-         "saturated_hydraulic_conductivity_1" = {
+         "saturated_hydraulic_conductivity_1" =,
+         "specific_heat_capacity_1" =,
+         "dry_thermal_conductivity_1" = {
            check_irpeatmodels(version = "0.0.0")
            utils::data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
            config <- get(x = paste0("model_", variable, "_config"), pos = -1)

@@ -99,6 +99,14 @@ Macroporosity as computed by \code{\link[=irp_macroporosity_1]{irp_macroporosity
 Saturated hydraulic conductivity as computed by
 \code{\link[=irp_saturated_hydraulic_conductivity_1]{irp_saturated_hydraulic_conductivity_1()}}.
 }
+\item{"specific_heat_capacity_1"}{
+Specific heat capacity as computed by
+\code{\link[=irp_specific_heat_capacity_1]{irp_specific_heat_capacity_1()}}.
+}
+\item{"dry_thermal_conductivity_1"}{
+Dry thermal conductivity as computed by
+\code{\link[=irp_dry_thermal_conductivity_1]{irp_dry_thermal_conductivity_1()}}.
+}
 }}
 
 \item{check_prediction_domain}{A character value indicating if and how it

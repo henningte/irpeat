@@ -18,6 +18,9 @@
 #' spectral resolution of the original spectral data should not be smaller than
 #' 4 cm\eqn{^{-1}} and it is not checked if this assumption is met.
 #'
+#' @param temperature For `irp_specific_heat_capacity_1()`: The temperature in K
+#' for which to predict the specific heat capacity.
+#'
 #' @param ... Additional arguments passed to
 #' [rstanarm::posterior_predict.stanreg()] (`irp_eac_1()`,`irp_eac_2()`).
 #'
@@ -1012,7 +1015,7 @@ irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mea
 #' @rdname irp-predict-transmission-mir
 #'
 #' @examples
-#' # volume fraction of solids, macroporosity, non-macroporosity
+#' # saturated hydraulic conductivity
 #' irpeat::irp_saturated_hydraulic_conductivity_1(
 #'   irpeat_sample_data[1, ],
 #'   do_summary = TRUE,
@@ -1041,7 +1044,7 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
     irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
     dplyr::rename(saturated_hydraulic_conductivity_1_in_pd = "bulk_density_1_in_pd")
 
-  ## predict porosity
+  ## predict saturated hydraulic conductivity
 
   # get predictor matrix
   X <-
@@ -1081,7 +1084,8 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
       res <- stats::rbeta(n = nrow(mu), shape1 = mu[, i] * phi[, i], shape2 = (1 - mu[, i]) * phi[, i])
 
       # scale
-      res * config_ks_1$data_scale$y_scale + config_ks_1$data_scale$y_center
+      tibble::tibble(x = res * config_ks_1$data_scale$y_scale + config_ks_1$data_scale$y_center) %>%
+        stats::setNames(nm = paste0("V", i))
 
     })
 
@@ -1100,5 +1104,185 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
     stats::setNames(nm = "saturated_hydraulic_conductivity_1")
 
   cbind(x_or, res, x %>% dplyr::select(.data$saturated_hydraulic_conductivity_1_in_pd))
+
+}
+
+
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # specific heat capacity
+#' irpeat::irp_specific_heat_capacity_1(
+#'   irpeat_sample_data[1, ],
+#'   temperature = 290,
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  stopifnot(temperature >= 0)
+
+  # check additional packages
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+
+  x_or <- x
+  x_has_nitrogen_content <- any(colnames(x) == "nitrogen_content_1")
+
+  # import data
+  m_draws_cp_1 <- irpeatmodels::model_specific_heat_capacity_1_draws
+  config_cp_1 <-  irpeatmodels::model_specific_heat_capacity_1_config
+
+  # predict N
+  x <-
+    x %>%
+    dplyr::select(! dplyr::any_of(c("nitrogen_content_1", "nitrogen_content_1_in_pd"))) %>%
+    irp_nitrogen_content_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    dplyr::rename(specific_heat_capacity_1_in_pd = "nitrogen_content_1_in_pd")
+
+  ## predict specific heat capacity
+
+  # get predictor matrix
+  X_nitrogen_content_1 <-
+    as.data.frame(x$nitrogen_content_1) %>%
+    as.matrix() %>%
+    magrittr::subtract(config_cp_1$data_scale$x_center) %>%
+    magrittr::divide_by(config_cp_1$data_scale$x_scale["b_N"])
+  X_temperature <-
+    matrix(data = temperature - 273.15, nrow = nrow(X_nitrogen_content_1), ncol = ncol(X_nitrogen_content_1), byrow = FALSE) %>%
+    magrittr::subtract(config_cp_1$data_scale$x_center) %>%
+    magrittr::divide_by(config_cp_1$data_scale$x_scale["b_temperature"])
+  X_nitrogen_content_1_by_temperature <-
+    X_nitrogen_content_1 * X_temperature
+
+  Intercept_mu <-
+    m_draws_cp_1$b_Intercept +
+    apply(m_draws_cp_1 %>% dplyr::select(.data$sd_sample_label__Intercept), 1, sum)
+
+  # linear predictor
+  mu <-
+    Intercept_mu +
+    sweep(X_nitrogen_content_1, 1, (m_draws_cp_1 %>% dplyr::pull(.data$b_N)), FUN = "*") +
+    sweep(X_temperature, 1, (m_draws_cp_1 %>% dplyr::pull(.data$b_temperature)), FUN = "*") +
+    sweep(X_nitrogen_content_1_by_temperature, 1, (m_draws_cp_1 %>% dplyr::pull(.data$`b_N:temperature`)), FUN = "*")
+
+  mu <- as.data.frame(config_cp_1$likelihood$linkinv(mu))
+  shape <- m_draws_cp_1$shape
+
+  # predictions
+  res <-
+    purrr::map_dfc(seq_len(ncol(mu)), function(i) {
+
+      res <- stats::rgamma(n = nrow(mu), shape = shape, rate = shape/mu[, i])
+
+      # scale
+      tibble::tibble(x = res * config_cp_1$data_scale$y_scale + config_cp_1$data_scale$y_center) %>%
+        stats::setNames(nm = paste0("V", i))
+
+    })
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "J/(g * K)",
+      do_summary = do_summary,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd
+    )
+
+  res <-
+    tibble::tibble(y = res) %>%
+    stats::setNames(nm = "specific_heat_capacity_1")
+
+  cbind(x_or, res, x %>% dplyr::select(.data$specific_heat_capacity_1_in_pd))
+
+}
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # dry thermal conductivity
+#' irpeat::irp_dry_thermal_conductivity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  # check additional packages
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+
+  x_or <- x
+  x_has_bulk_density <- any(colnames(x) == "bulk_density_1")
+
+  # import data
+  m_draws_kt_1 <- irpeatmodels::model_dry_thermal_conductivity_1_draws
+  config_kt_1 <-  irpeatmodels::model_dry_thermal_conductivity_1_config
+
+  # predict bulk density
+  x <-
+    x %>%
+    dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
+    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    dplyr::rename(dry_thermal_conductivity_1_in_pd = "bulk_density_1_in_pd")
+
+  ## predict dry thermal conductivity
+
+  # get predictor matrix
+  X_bulk_density_1 <-
+    as.data.frame(x$bulk_density_1) %>%
+    as.matrix() %>%
+    magrittr::subtract(config_kt_1$data_scale$x_center) %>%
+    magrittr::divide_by(config_kt_1$data_scale$x_scale)
+
+  Intercept_mu <-
+    m_draws_kt_1$b_Intercept
+
+  # linear predictor
+  mu <-
+    Intercept_mu +
+    sweep(X_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_bulk_density)), FUN = "*")
+
+  mu <- as.data.frame(config_kt_1$likelihood$linkinv(mu))
+  shape <- m_draws_kt_1$shape
+
+  # predictions
+  res <-
+    purrr::map_dfc(seq_len(ncol(mu)), function(i) {
+
+      res <- stats::rgamma(n = nrow(mu), shape = shape, rate = shape/mu[, i])
+
+      # scale
+      tibble::tibble(x = res * config_kt_1$data_scale$y_scale + config_kt_1$data_scale$y_center) %>%
+        stats::setNames(nm = paste0("V", i))
+
+    })
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "W/(m * K)",
+      do_summary = do_summary,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd
+    )
+
+  res <-
+    tibble::tibble(y = res) %>%
+    stats::setNames(nm = "dry_thermal_conductivity_1")
+
+  cbind(x_or, res, x %>% dplyr::select(.data$dry_thermal_conductivity_1_in_pd))
 
 }

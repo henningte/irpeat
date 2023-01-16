@@ -29,7 +29,7 @@ The following peat properties can currently be predicted:
 
 + Elemental contents (C, H, N, O, S, P, K, Ti)
 + isotope values ($\delta^{13}$C and $\delta^{15}$N)
-+ physical properties (bulk density, volume fraction of solids, non-macroporosity, macroporosity, saturated hydraulic conductivity)
++ physical properties (bulk density, volume fraction of solids, non-macroporosity, macroporosity, saturated hydraulic conductivity, specific heat capacity, dry thermal conductivity)
 + standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$) 
 + electrochemical properties (electron accepting capacity, electron donating capacity)
 

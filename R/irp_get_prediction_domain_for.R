@@ -54,8 +54,11 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
       "volume_fraction_solids_1" =,
       "non_macroporosity_1" =,
       "macroporosity_1" =,
-      "saturated_hydraulic_conductivity_1" =
+      "saturated_hydraulic_conductivity_1" =,
+      "dry_thermal_conductivity_1" =
         "bulk_density_1",
+      "specific_heat_capacity_1" =
+        "nitrogen_content_1",
       variable
     )
 
@@ -86,7 +89,9 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "volume_fraction_solids_1" =,
     "non_macroporosity_1" =,
     "macroporosity_1" =,
-    "saturated_hydraulic_conductivity_1" = {
+    "saturated_hydraulic_conductivity_1" =,
+    "specific_heat_capacity_1" =,
+    "dry_thermal_conductivity_1" = {
       check_irpeatmodels(version = "0.0.0")
       utils::data(list = paste0("model_", variable, "_prediction_domain"), package = "irpeatmodels", envir = environment())
       prediction_domain <- get(x = paste0("model_", variable, "_prediction_domain"), pos = -1)

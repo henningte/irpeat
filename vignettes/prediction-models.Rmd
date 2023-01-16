@@ -289,7 +289,6 @@ There is also a shorthand option `"all"` to predict all available peat propertie
 d3 <- 
   d %>%
   irp_predict(variable = "all", do_summary = TRUE)
-  
 ```
 
 
