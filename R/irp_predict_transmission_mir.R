@@ -947,15 +947,18 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 #' @export
 irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
-  irp_porosity_1(
-    x = x,
-    ...,
-    do_summary = do_summary,
-    summary_function_mean = mean,
-    summary_function_sd = stats::sd,
-    check_prediction_domain = check_prediction_domain
-  ) %>%
-    dplyr::select(-.data$non_macroporosity_1_in_pd, -.data$macroporosity_1_in_pd, -.data$non_macroporosity_1, -.data$macroporosity_1)
+  dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
+    x,
+    irp_porosity_1(
+      x = x %>% dplyr::select(spectra),
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+      dplyr::select(.data$volume_fraction_solids_1, .data$volume_fraction_solids_1_in_pd)
+  )
 
 }
 
@@ -972,15 +975,18 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
 #' @export
 irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
-  irp_porosity_1(
-    x = x,
-    ...,
-    do_summary = do_summary,
-    summary_function_mean = mean,
-    summary_function_sd = stats::sd,
-    check_prediction_domain = check_prediction_domain
-  ) %>%
-    dplyr::select(-.data$volume_fraction_solids_1_in_pd, -.data$macroporosity_1_in_pd, -.data$volume_fraction_solids_1, -.data$macroporosity_1)
+  dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
+    x,
+    irp_porosity_1(
+      x = x %>% dplyr::select(spectra),
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+      dplyr::select(.data$non_macroporosity_1, .data$non_macroporosity_1_in_pd)
+  )
 
 }
 
@@ -998,15 +1004,18 @@ irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function
 #' @export
 irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
-  irp_porosity_1(
-    x = x,
-    ...,
-    do_summary = do_summary,
-    summary_function_mean = mean,
-    summary_function_sd = stats::sd,
-    check_prediction_domain = check_prediction_domain
-  ) %>%
-    dplyr::select(-.data$non_macroporosity_1_in_pd, -.data$volume_fraction_solids_1_in_pd, -.data$non_macroporosity_1, -.data$volume_fraction_solids_1)
+  dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
+    x,
+    irp_porosity_1(
+      x = x %>% dplyr::select(spectra),
+      ...,
+      do_summary = do_summary,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd,
+      check_prediction_domain = check_prediction_domain
+    ) %>%
+      dplyr::select(.data$macroporosity_1, .data$macroporosity_1_in_pd)
+  )
 
 }
 
