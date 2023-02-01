@@ -114,8 +114,11 @@ irp_is_in_prediction_domain <- function(x, prediction_domain) {
   stopifnot(inherits(prediction_domain, "irp_prediction_domain"))
 
   # check matching wavenumbers
-  stopifnot(all(purrr::map_lgl(x$spectra, function(.x) identical(.x$x, x$spectra[[1]]$x))))
-  stopifnot(identical(prediction_domain$x, x$spectra[[1]]$x))
+  index_nonempty_spectra <- purrr::map_lgl(x$spectra, function(.x) ! (nrow(.x) == 0 || all(is.na(.x$y))))
+  if(! all(purrr::map_lgl(x$spectra[index_nonempty_spectra], function(.x) identical(.x$x, x$spectra[index_nonempty_spectra][[1]]$x)))) {
+    rlang::abort("Not all non-empty spectra in `x` have the same x axis values. Make sure that all spectra have the same x axis values (except for empty spectra).")
+  }
+  stopifnot(identical(prediction_domain$x, x$spectra[index_nonempty_spectra][[1]]$x))
 
   x_flat <-
     x %>%
