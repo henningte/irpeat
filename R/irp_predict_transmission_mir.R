@@ -21,6 +21,22 @@
 #' @param temperature For `irp_specific_heat_capacity_1()`: The temperature in K
 #' for which to predict the specific heat capacity.
 #'
+#' @param bulk_density For `irp_porosity_1()`, `irp_non_macroporosity_1()`,
+#' `irp_macroporosity_1()`, `irp_volume_fraction_of_solids_1()`,
+#' `irp_saturated_hydraulic_conductivity_1()`,
+#' `irp_dry_thermal_conductivity_1()`: A numeric vector with the same
+#' number of elements as spectra in `x` with values for the dry bulk density
+#' in g cm\eqn{^{-3}}. These values will be used to predict the peat property.
+#' If set to `NULL`, the dry bulk density will be estimated from the spectra in
+#' `x` and these estimates will be used to predict the peat property.
+#'
+#' @param nitrogen_content For `irp_specific_heat_capacity_1()`:  A numeric
+#' vector with the same number of elements as spectra in `x` with values for the
+#' nitrogen content in g g\eqn{^{-1}}. These values will be used to predict the
+#' peat property. If set to `NULL`, the nitrogen content will be estimated from
+#' the spectra in `x` and these estimates will be used to predict the peat
+#' property.
+#'
 #' @param ... Additional arguments passed to
 #' [rstanarm::posterior_predict.stanreg()] (`irp_eac_1()`,`irp_eac_2()`).
 #'
@@ -855,13 +871,23 @@ irp_C_to_N_1 <-
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_porosity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @noRd
 #' @keywords internal
-irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  if(!(is.null(bulk_density) || length(bulk_density) == nrow(x))) {
+    rlang::abort("`bulk_density` must either be `NULL` or a numeric vector with an element for each row in `x`.")
   }
 
   x_or <- x
@@ -871,15 +897,30 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
   config_porosity_1 <-  irpeatmodels::model_porosity_1_config
 
   # predict bulk density
-  x <-
-    x %>%
-    dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
-    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
-    dplyr::rename(non_macroporosity_1_in_pd = "bulk_density_1_in_pd") %>%
-    dplyr::mutate(
-      macroporosity_1_in_pd = .data$non_macroporosity_1_in_pd,
-      volume_fraction_solids_1_in_pd = .data$non_macroporosity_1_in_pd
-    )
+  if(!is.null(bulk_density)) {
+    x <-
+      x %>%
+      dplyr::mutate(
+        bulk_density_1 =
+          purrr::map(!!bulk_density, function(.x) {
+            rep(.x, nrow(irpeatmodels::model_porosity_1_draws))
+          }),
+        non_macroporosity_1_in_pd = NA,
+        macroporosity_1_in_pd = NA,
+        volume_fraction_solids_1_in_pd = NA
+      )
+  } else {
+    x <-
+      x %>%
+      dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
+      irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+      dplyr::rename(non_macroporosity_1_in_pd = "bulk_density_1_in_pd") %>%
+      dplyr::mutate(
+        macroporosity_1_in_pd = .data$non_macroporosity_1_in_pd,
+        volume_fraction_solids_1_in_pd = .data$non_macroporosity_1_in_pd
+      )
+  }
+
 
   ## predict porosity
 
@@ -944,13 +985,20 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_volume_fraction_solids_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @export
 irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
     x,
     irp_porosity_1(
-      x = x %>% dplyr::select(spectra),
+      x = x %>% dplyr::select(.data$spectra),
       ...,
       do_summary = do_summary,
       summary_function_mean = mean,
@@ -972,13 +1020,20 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_non_macroporosity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @export
 irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
     x,
     irp_porosity_1(
-      x = x %>% dplyr::select(spectra),
+      x = x %>% dplyr::select(.data$spectra),
       ...,
       do_summary = do_summary,
       summary_function_mean = mean,
@@ -1001,13 +1056,20 @@ irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_macroporosity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @export
 irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
     x,
     irp_porosity_1(
-      x = x %>% dplyr::select(spectra),
+      x = x %>% dplyr::select(.data$spectra),
       ...,
       do_summary = do_summary,
       summary_function_mean = mean,
@@ -1031,12 +1093,22 @@ irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mea
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_saturated_hydraulic_conductivity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @export
-irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  if(!(is.null(bulk_density) || length(bulk_density) == nrow(x))) {
+    rlang::abort("`bulk_density` must either be `NULL` or a numeric vector with an element for each row in `x`.")
   }
 
   x_or <- x
@@ -1047,11 +1119,23 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
   config_ks_1 <-  irpeatmodels::model_saturated_hydraulic_conductivity_1_config
 
   # predict bulk density
-  x <-
-    x %>%
-    dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
-    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
-    dplyr::rename(saturated_hydraulic_conductivity_1_in_pd = "bulk_density_1_in_pd")
+  if(!is.null(bulk_density)) {
+    x <-
+      x %>%
+      dplyr::mutate(
+        bulk_density_1 =
+          purrr::map(!!bulk_density, function(.x) {
+            rep(.x, nrow(m_draws_ks_1))
+          }),
+        saturated_hydraulic_conductivity_1_in_pd = NA
+      )
+  } else {
+    x <-
+      x %>%
+      dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
+      irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+      dplyr::rename(saturated_hydraulic_conductivity_1_in_pd = "bulk_density_1_in_pd")
+  }
 
   ## predict saturated hydraulic conductivity
 
@@ -1130,14 +1214,25 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_specific_heat_capacity_1(
+#'   irpeat_sample_data[1, ],
+#'   temperature = 290,
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   nitrogen_content = irpeat_sample_data$N[1]
+#' )
+#'
 #' @export
-irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", nitrogen_content = NULL) {
 
   stopifnot(temperature >= 0)
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  if(!(is.null(nitrogen_content) || length(nitrogen_content) == nrow(x))) {
+    rlang::abort("`nitrogen_content` must either be `NULL` or a numeric vector with an element for each row in `x`.")
   }
 
   x_or <- x
@@ -1148,11 +1243,23 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
   config_cp_1 <-  irpeatmodels::model_specific_heat_capacity_1_config
 
   # predict N
-  x <-
-    x %>%
-    dplyr::select(! dplyr::any_of(c("nitrogen_content_1", "nitrogen_content_1_in_pd"))) %>%
-    irp_nitrogen_content_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
-    dplyr::rename(specific_heat_capacity_1_in_pd = "nitrogen_content_1_in_pd")
+  if(!is.null(nitrogen_content)) {
+    x <-
+      x %>%
+      dplyr::mutate(
+        nitrogen_content_1 =
+          purrr::map(!!nitrogen_content, function(.x) {
+            rep(.x, nrow(m_draws_cp_1))
+          }),
+        specific_heat_capacity_1_in_pd = NA
+      )
+  } else {
+    x <-
+      x %>%
+      dplyr::select(! dplyr::any_of(c("nitrogen_content_1", "nitrogen_content_1_in_pd"))) %>%
+      irp_nitrogen_content_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+      dplyr::rename(specific_heat_capacity_1_in_pd = "nitrogen_content_1_in_pd")
+  }
 
   ## predict specific heat capacity
 
@@ -1224,12 +1331,22 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
 #'   check_prediction_domain = "train"
 #' )
 #'
+#' irpeat::irp_dry_thermal_conductivity_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train",
+#'   bulk_density = 0.04
+#' )
+#'
 #' @export
-irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  if(!(is.null(bulk_density) || length(bulk_density) == nrow(x))) {
+    rlang::abort("`bulk_density` must either be `NULL` or a numeric vector with an element for each row in `x`.")
   }
 
   x_or <- x
@@ -1240,11 +1357,23 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
   config_kt_1 <-  irpeatmodels::model_dry_thermal_conductivity_1_config
 
   # predict bulk density
+  if(!is.null(bulk_density)) {
+    x <-
+      x %>%
+      dplyr::mutate(
+        bulk_density_1 =
+          purrr::map(!!bulk_density, function(.x) {
+            rep(.x, nrow(irpeatmodels::model_porosity_1_draws))
+          }),
+        dry_thermal_conductivity_1_in_pd = NA
+      )
+  } else {
   x <-
     x %>%
     dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
     irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
     dplyr::rename(dry_thermal_conductivity_1_in_pd = "bulk_density_1_in_pd")
+  }
 
   ## predict dry thermal conductivity
 

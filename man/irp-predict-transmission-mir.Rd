@@ -214,7 +214,8 @@ irp_saturated_hydraulic_conductivity_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  bulk_density = NULL
 )
 
 irp_specific_heat_capacity_1(
@@ -224,7 +225,8 @@ irp_specific_heat_capacity_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  nitrogen_content = NULL
 )
 
 irp_dry_thermal_conductivity_1(
@@ -233,7 +235,8 @@ irp_dry_thermal_conductivity_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  bulk_density = NULL
 )
 }
 \arguments{
@@ -277,8 +280,24 @@ prediction domain for the model.}
 }
 Note: Currently ignored for \code{irp_eac_1()}, \code{irp_edc_1()}.}
 
+\item{bulk_density}{For \code{irp_porosity_1()}, \code{irp_non_macroporosity_1()},
+\code{irp_macroporosity_1()}, \code{irp_volume_fraction_of_solids_1()},
+\code{irp_saturated_hydraulic_conductivity_1()},
+\code{irp_dry_thermal_conductivity_1()}: A numeric vector with the same
+number of elements as spectra in \code{x} with values for the dry bulk density
+in g cm\eqn{^{-3}}. These values will be used to predict the peat property.
+If set to \code{NULL}, the dry bulk density will be estimated from the spectra in
+\code{x} and these estimates will be used to predict the peat property.}
+
 \item{temperature}{For \code{irp_specific_heat_capacity_1()}: The temperature in K
 for which to predict the specific heat capacity.}
+
+\item{nitrogen_content}{For \code{irp_specific_heat_capacity_1()}:  A numeric
+vector with the same number of elements as spectra in \code{x} with values for the
+nitrogen content in g g\eqn{^{-1}}. These values will be used to predict the
+peat property. If set to \code{NULL}, the nitrogen content will be estimated from
+the spectra in \code{x} and these estimates will be used to predict the peat
+property.}
 }
 \value{
 \code{x} with a new column with the predicted peat property and a new
@@ -444,11 +463,25 @@ irpeat::irp_volume_fraction_solids_1(
   check_prediction_domain = "train"
 )
 
+irpeat::irp_volume_fraction_solids_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  bulk_density = 0.04
+)
+
 # non-macroporosity
 irpeat::irp_non_macroporosity_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
+)
+
+irpeat::irp_non_macroporosity_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  bulk_density = 0.04
 )
 
 # macroporosity
@@ -458,11 +491,25 @@ irpeat::irp_macroporosity_1(
   check_prediction_domain = "train"
 )
 
+irpeat::irp_macroporosity_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  bulk_density = 0.04
+)
+
 # saturated hydraulic conductivity
 irpeat::irp_saturated_hydraulic_conductivity_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
+)
+
+irpeat::irp_saturated_hydraulic_conductivity_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  bulk_density = 0.04
 )
 
 # specific heat capacity
@@ -473,11 +520,26 @@ irpeat::irp_specific_heat_capacity_1(
   check_prediction_domain = "train"
 )
 
+irpeat::irp_specific_heat_capacity_1(
+  irpeat_sample_data[1, ],
+  temperature = 290,
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  nitrogen_content = irpeat_sample_data$N[1]
+)
+
 # dry thermal conductivity
 irpeat::irp_dry_thermal_conductivity_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
+)
+
+irpeat::irp_dry_thermal_conductivity_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train",
+  bulk_density = 0.04
 )
 
 }
