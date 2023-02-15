@@ -343,7 +343,11 @@ irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
   # predictions
   yhat <-
     purrr::map_dfc(mu, function(.x) {
-      stats::rbeta(n = length(.x), shape1 = .x * phi, shape2 = (1 - .x) * phi)
+      if(all(is.na(.x))) {
+        rep(NA_real_, length(.x))
+      } else {
+        stats::rbeta(n = length(.x), shape1 = .x * phi, shape2 = (1 - .x) * phi)
+      }
     })
 
   # scale
@@ -372,7 +376,11 @@ irp_mcmc_predictions_normal_identity_non_centered <- function(x, draws, config) 
   # predictions
   yhat <-
     purrr::map_dfc(mu, function(.x) {
-      stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma/config$parameter_scale$sigma_scale)
+      if(all(is.na(.x))) {
+        rep(NA_real_, length(.x))
+      } else {
+        stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma/config$parameter_scale$sigma_scale)
+      }
     })
 
   # scale

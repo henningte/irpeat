@@ -186,12 +186,14 @@ irp_preprocess <- function(
 
   # baseline correction
   if(do_bc) {
+    spectrum_is_empty <-
+      purrr::map_lgl(x$spectra, function(.x) nrow(.x) == 0)
     x_spectra_x_range <-
       data.frame(
         start =
-          min(purrr::map_dbl(x$spectra, function(.x) min(.x$x))),
+          min(purrr::map_dbl(x$spectra[!spectrum_is_empty], function(.x) min(.x$x))),
         end =
-          max(purrr::map_dbl(x$spectra, function(.x) max(.x$x)))
+          max(purrr::map_dbl(x$spectra[!spectrum_is_empty], function(.x) max(.x$x)))
       )
 
     bc_clip_range <-
