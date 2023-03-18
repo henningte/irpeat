@@ -391,6 +391,39 @@ irp_mcmc_predictions_normal_identity_non_centered <- function(x, draws, config) 
 
 #### preprocessing helper functions ####
 
+#' Helper function to take care of the assignment of arguments in `irp_preprocess()` from a config list
+#'
+#' @keywords internal
+#' @noRd
+irp_preprocess_unpack_config <- function(x, config) {
+
+  irp_preprocess(
+    x,
+    do_interpolate = config$irp_preprocess$do_interpolate,
+    interpolate_start = config$irp_preprocess$interpolate_start,
+    interpolate_dw = config$irp_preprocess$interpolate_dw,
+    do_clip = config$irp_preprocess$do_clip,
+    clip_range = config$irp_preprocess$clip_range,
+    do_interpolate_region = config$irp_preprocess$do_interpolate_region,
+    interpolate_region_range = config$irp_preprocess$interpolate_region_range,
+    do_bc = config$irp_preprocess$do_bc,
+    bc_method = config$irp_preprocess$bc_method,
+    bc_cutoff = config$irp_preprocess$bc_cutoff,
+    bc_do_impute = config$irp_preprocess$bc_do_impute,
+    do_smooth = config$irp_preprocess$do_smooth,
+    do_normalise = config$irp_preprocess$do_normalise,
+    normalise_method = config$irp_preprocess$normalise_method,
+    do_bin = config$irp_preprocess$do_bin,
+    bin_width = config$irp_preprocess$bin_width,
+    bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+    do_scale = config$irp_preprocess$do_scale,
+    scale_center = config$data_scale$x_center,
+    scale_scale = config$data_scale$x_scale,
+    do_return_as_ir = config$irp_preprocess$do_return_as_ir
+  )
+
+}
+
 #' Helper function to preprocess spectra for prediction with the models from project eb1079
 #'
 #' @keywords internal

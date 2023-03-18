@@ -5,6 +5,12 @@
 #' @param x An object of class [`ir`][ir::ir_new_ir]. See the individual
 #' prediction models for further data requirements.
 #'
+#' @param y An object of class [`ir`][ir::ir_new_ir] or `NULL`. Needed for
+#' prediction functions using more than one set of spectra
+#' (`irp_microbial_nitrogen_content_1`). See the individual
+#' prediction models for further data requirements. For other functions, `y` is
+#' not used and should be set to `NULL` (the default).
+#'
 #' @param variable A character vector with one or more values that define for which
 #' components contents are computed for the spectra in `x`. Currently allowed values
 #' are:
@@ -105,6 +111,10 @@
 #'     Dry thermal conductivity as computed by
 #'     [irp_dry_thermal_conductivity_1()].
 #'   }
+#'   \item{"microbial_nitrogen_content_1"}{
+#'     Microbial nitrogen content as computed by
+#'     [irp_microbial_nitrogen_content_1()].
+#'   }
 #' }
 #'
 #' @param ... Further arguments passed to individual prediction functions.
@@ -139,7 +149,7 @@
 #' }
 #'
 #' @export
-irp_predict <- function(x, variable, ...) {
+irp_predict <- function(x, y = NULL, variable, ...) {
 
   stopifnot(inherits(x, "ir"))
   if(!is.character(variable)) {
@@ -148,12 +158,13 @@ irp_predict <- function(x, variable, ...) {
   if(length(variable) == 0) {
     rlang::abort(paste0("`variable` must contain at least one element, not ", length(variable), " elements."))
   }
-  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorus_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1", "specific_heat_capacity_1", "dry_thermal_conductivity_1")
+  variable_values <- c("klason_lignin_content_1", "holocellulose_content_1", "holocellulose_content_2", "klason_lignin_content_2", "eac_1", "edc_1", "carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1", "phosphorus_content_1", "potassium_content_1", "sulfur_content_1", "titanium_content_1", "d13C_1", "d15N_1", "nosc_1", "dgf0_1", "bulk_density_1", "O_to_C_1", "H_to_C_1", "C_to_N_1", "volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1", "saturated_hydraulic_conductivity_1", "specific_heat_capacity_1", "dry_thermal_conductivity_1", "microbial_nitrogen_content_1")
   if("all" %in% variable) {
     variable <- variable_values
   }
   variable_values_present <- variable_values[variable_values %in% colnames(x)]
   variable_values_nonrequested <- variable_values[! variable_values %in% variable & ! variable_values %in% variable_values_present]
+  stopifnot(inherits(y, "ir") || (is.null(y) && ! all(variable %in% c("microbial_nitrogen_content_1"))))
 
   # settings to avoid duplicate computation
   has_holocellulose_content_1 <- FALSE
@@ -231,6 +242,8 @@ irp_predict <- function(x, variable, ...) {
                irp_specific_heat_capacity_1(x = x, ...),
              "dry_thermal_conductivity_1" =
                irp_dry_thermal_conductivity_1(x = x, ...),
+             "microbial_nitrogen_content_1" =
+               irp_microbial_nitrogen_content_1(x = x, y = y, ...),
              stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }

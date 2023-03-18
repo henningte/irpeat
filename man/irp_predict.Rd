@@ -5,13 +5,19 @@
 \alias{irp_content}
 \title{Batch-prediction of sample properties}
 \usage{
-irp_predict(x, variable, ...)
+irp_predict(x, y = NULL, variable, ...)
 
 irp_content(x, variable, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}}. See the individual
 prediction models for further data requirements.}
+
+\item{y}{An object of class \code{\link[ir:ir_new_ir]{ir}} or \code{NULL}. Needed for
+prediction functions using more than one set of spectra
+(\code{irp_microbial_nitrogen_content_1}). See the individual
+prediction models for further data requirements. For other functions, \code{y} is
+not used and should be set to \code{NULL} (the default).}
 
 \item{variable}{A character vector with one or more values that define for which
 components contents are computed for the spectra in \code{x}. Currently allowed values
@@ -112,6 +118,10 @@ Specific heat capacity as computed by
 \item{"dry_thermal_conductivity_1"}{
 Dry thermal conductivity as computed by
 \code{\link[=irp_dry_thermal_conductivity_1]{irp_dry_thermal_conductivity_1()}}.
+}
+\item{"microbial_nitrogen_content_1"}{
+Microbial nitrogen content as computed by
+\code{\link[=irp_microbial_nitrogen_content_1]{irp_microbial_nitrogen_content_1()}}.
 }
 }}
 

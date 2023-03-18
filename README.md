@@ -16,23 +16,27 @@ spectra of peat samples. These functions are functions to compute
 humification indices and functions to predict peat properties. Some
 functions may also work with organic matter samples in general.
 
-The following peat properties can currently be predicted:
+The following peat properties can be predicted (note model-specific
+limitations described in the documentation):
 
--   Elemental contents (C, H, N, O, S, P, K, Ti)
--   isotope values
-    (![\delta^{13}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B13%7D "\delta^{13}")C
-    and
-    ![\delta^{15}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B15%7D "\delta^{15}")N)
--   physical properties (bulk density, volume fraction of solids,
-    non-macroporosity, macroporosity, saturated hydraulic conductivity)
--   standard Gibbs free energy of formation
-    (![\Delta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta "\Delta")G![\_\text{f}^0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;_%5Ctext%7Bf%7D%5E0 "_\text{f}^0"))
--   electrochemical properties (electron accepting capacity, electron
-    donating capacity)
+- Elemental contents (C, H, N, O, S, P, K, Ti)
+- isotope values
+  (![\delta^{13}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B13%7D "\delta^{13}")C
+  and
+  ![\delta^{15}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B15%7D "\delta^{15}")N)
+- physical properties (bulk density, volume fraction of solids,
+  non-macroporosity, macroporosity, saturated hydraulic conductivity,
+  specific heat capacity, dry thermal conductivity)
+- standard Gibbs free energy of formation
+  (![\Delta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta "\Delta")G![\_\text{f}^0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;_%5Ctext%7Bf%7D%5E0 "_\text{f}^0"))
+- electrochemical properties (electron accepting capacity, electron
+  donating capacity)
+- microbial nitrogen content (modified version of the model described in
+  Reuter et al. (2020))
 
 The package also contains functions to predict holocellulose and Klason
 lignin contents (Hodgkins et al. 2018; Teickner and Knorr 2022), but
-these models have been shown to be biased (Teickner and Knorr 2022).
+these models are biased for peat samples (Teickner and Knorr 2022).
 
 ### How to install
 
@@ -122,7 +126,7 @@ computed nitrogen content (`nitrogen_content_1`)
 x
 #> # A tibble: 59 × 18
 #>    id_90 sample_id measurement_id          C        H        N        O        S
-#>  * <int>     <int>          <int> (err) [g/… (err) [… (err) [… (err) [… (err) […
+#>    <int>     <int>          <int> (err) [g/… (err) [… (err) [… (err) [… (err) […
 #>  1     1         1             23 0.4790247… 0.05625… 0.00968… 0.39768… 0.00395…
 #>  2     2         2             32 0.4468899… 0.0561(… 0.00478… 0.44283…  8(0)e-5
 #>  3     3         3             38 0.4599222… 0.05598… 0.00788… 0.41248…  8(0)e-5
@@ -136,8 +140,8 @@ x
 #> # … with 49 more rows, and 10 more variables: d15N <dbl>, d13C <dbl>,
 #> #   hi_1630_1090 <numeric>, nitrogen_content_1 (err) [g/g],
 #> #   nitrogen_content_1_in_pd <logical>, bulk_density_1 (err) [g/cm^3],
-#> #   bulk_density_1_in_pd <logical>, macroporosity_1 (err) [L/L],
-#> #   macroporoity_1_in_pd <logical>, spectra <named list>
+#> #   bulk_density_1_in_pd <logical>, spectra <named list>,
+#> #   macroporosity_1 (err) [L/L], macroporosity_1_in_pd <logical>
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -171,9 +175,9 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.0011526237 0.0008731474 0.0010761203 0.0010050674 0.0012564458
+#> Errors: 0.001157014 0.000871431 0.001076665 0.001012812 0.001258238
 #>          V1          V2          V3          V4          V5 
-#> 0.010339500 0.005543934 0.008672246 0.007671897 0.012424216
+#> 0.010407304 0.005570570 0.008703218 0.007687649 0.012470859
 ```
 
 ### Future development
@@ -189,8 +193,8 @@ is developed to collect the data required for this task.
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2022). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2022-09-30.
+> Henning Teickner, Suzanne B. Hodgkins (2023). *irpeat: Functions to
+> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2023-03-18.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
@@ -221,7 +225,7 @@ downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and
 is distributed under the Creative Commons Attribution 4.0 International
 License (<https://creativecommons.org/licenses/by/4.0/>). The data on
 Klason lignin and holocellulose content was originally derived from De
-La Cruz, Florentino B., Osborne, and Barlaz (2016).
+la Cruz, Osborne, and Barlaz (2016).
 
 Modified prediction models for holocellulose and Klason lignin
 (`model_holocellulose_2`, `model_klason_lignin_2`) are derived from
@@ -232,9 +236,9 @@ capacities (EAC, EDC) of peat were derived from Teickner, Gao, and Knorr
 (2022) and Teickner, Gao, and Knorr (2021)
 
 This packages was developed in R (R version 4.2.0 (2022-04-22 ucrt)) (R
-Core Team 2019) using functions from devtools (Wickham, Hester, and
-Chang 2019), usethis (Wickham and Bryan 2019), rrtools (Marwick 2019)
-and roxygen2 (Wickham et al. 2019).
+Core Team 2020) using functions from devtools (Wickham et al. 2021),
+usethis (Wickham, Bryan, and Barrett 2022), and roxygen2 (Wickham et al.
+2022).
 
 ### References
 
@@ -242,47 +246,48 @@ and roxygen2 (Wickham et al. 2019).
 
 <div id="ref-Broder.2012" class="csl-entry">
 
-Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “<span
-class="nocase">Peat decomposition records in three pristine ombrotrophic
-bogs in southern Patagonia</span>.” *Biogeosciences* 9 (4): 1479–91.
+Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat
+Decomposition Records in Three Pristine Ombrotrophic Bogs in Southern
+Patagonia.” *Biogeosciences* 9 (4): 1479–91.
 <https://doi.org/10.5194/bg-9-1479-2012>.
 
 </div>
 
-<div id="ref-LaCruz.2016" class="csl-entry">
+<div id="ref-DelaCruz.2016" class="csl-entry">
 
-De La Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016.
-“<span class="nocase">Determination of Sources of Organic Matter in
-Solid Waste by Analysis of Phenolic Copper Oxide Oxidation Products of
-Lignin</span>.” *Journal of Environmental Engineering* 142 (2):
-04015076. <https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
+De la Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016.
+“Determination of Sources of Organic Matter in Solid Waste by Analysis
+of Phenolic Copper Oxide Oxidation Products of Lignin.” *Journal of
+Environmental Engineering* 142 (2): 04015076.
+<https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
 
 </div>
 
 <div id="ref-Hodgkins.2018" class="csl-entry">
 
 Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang,
-Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018. “<span
-class="nocase">Tropical peatland carbon storage linked to global
-latitudinal trends in peat recalcitrance</span>.” *Nature
-Communications* 9 (1): 3640.
+Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018.
+“Tropical Peatland Carbon Storage Linked to Global Latitudinal Trends in
+Peat Recalcitrance.” *Nature Communications* 9 (1): 3640.
 <https://doi.org/10.1038/s41467-018-06050-2>.
 
 </div>
 
-<div id="ref-Marwick.2019" class="csl-entry">
+<div id="ref-RCoreTeam.2020" class="csl-entry">
 
-Marwick, Ben. 2019. “<span class="nocase">rrtools: Creates a
-Reproducible Research Compendium</span>.”
-<https://github.com/benmarwick/rrtools>.
+R Core Team. 2020. *R: A Language and Environment for Statistical
+Computing*. Manual. Vienna, Austria: R Foundation for Statistical
+Computing.
 
 </div>
 
-<div id="ref-RCoreTeam.2019" class="csl-entry">
+<div id="ref-Reuter.2020" class="csl-entry">
 
-R Core Team. 2019. “<span class="nocase">R: A Language and Environment
-for Statistical Computing</span>.” Vienna, Austria: R Foundation for
-Statistical Computing. <https://www.R-project.org/>.
+Reuter, Hendrik, Julia Gensel, Marcus Elvert, and Dominik Zak. 2020.
+“Evidence for Preferential Protein Depolymerization in Wetland Soils in
+Response to External Nitrogen Availability Provided by a Novel FTIR
+Routine.” *Biogeosciences* 17 (2): 499–514.
+<https://doi.org/10.5194/bg-17-499-2020>.
 
 </div>
 
@@ -290,7 +295,7 @@ Statistical Computing. <https://www.R-project.org/>.
 
 Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021.
 “Reproducible Research Compendium with R Code and Data for:
-’Electrochemical Properties of Peat Particulate Organic Matter on a
+’Electrochemical Properties of Üeat Particulate Organic Matter on a
 Global Scale: Relation to Peat Chemistry and Degree of Decomposition’.”
 Zenodo. <https://doi.org/10.5281/zenodo.5792970>.
 
@@ -300,7 +305,7 @@ Zenodo. <https://doi.org/10.5281/zenodo.5792970>.
 
 ———. 2022. “Electrochemical Properties of Peat Particulate Organic
 Matter on a Global Scale: Relation to Peat Chemistry and Degree of
-Decomposition.” *Global Biogeochemical Cycles*, February.
+Decomposition.” *Global Biogeochemical Cycles* 36 (2): e2021GB007160.
 <https://doi.org/10.1029/2021GB007160>.
 
 </div>
@@ -314,27 +319,26 @@ Matter with Mid Infrared Spectra.” Preprint. Soil and methods.
 
 </div>
 
-<div id="ref-Wickham.2019b" class="csl-entry">
+<div id="ref-Wickham.2022" class="csl-entry">
 
-Wickham, Hadley, and Jennifer Bryan. 2019. “<span
-class="nocase">usethis: Automate Package and Project Setup</span>.”
-<https://CRAN.R-project.org/package=usethis>.
+Wickham, Hadley, Jennifer Bryan, and Malcolm Barrett. 2022. “<span
+class="nocase">usethis</span>: Automate Package and Project Setup.”
 
 </div>
 
-<div id="ref-Wickham.2019c" class="csl-entry">
+<div id="ref-Wickham.2022a" class="csl-entry">
 
 Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster.
-2019. “<span class="nocase">roxygen2: In-Line Documentation for
-R</span>.” <https://CRAN.R-project.org/package=roxygen2>.
+2022. “<span class="nocase">roxygen2</span>: <span
+class="nocase">In-line</span> Documentation for R.”
 
 </div>
 
-<div id="ref-Wickham.2019" class="csl-entry">
+<div id="ref-Wickham.2021" class="csl-entry">
 
-Wickham, Hadley, Jim Hester, and Winston Chang. 2019. “<span
-class="nocase">devtools: Tools to Make Developing R Packages
-Easier</span>.” <https://CRAN.R-project.org/package=devtools>.
+Wickham, Hadley, Jim Hester, Winston Chang, and Jennifer Bryan. 2021.
+“<span class="nocase">devtools</span>: Tools to Make Developing R
+Packages Easier.”
 
 </div>
 

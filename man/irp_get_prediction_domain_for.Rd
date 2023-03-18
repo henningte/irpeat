@@ -107,6 +107,10 @@ Specific heat capacity as computed by
 Dry thermal conductivity as computed by
 \code{\link[=irp_dry_thermal_conductivity_1]{irp_dry_thermal_conductivity_1()}}.
 }
+\item{"microbial_nitrogen_content_1"}{
+Microbial nitrogen content as computed by
+\code{\link[=irp_microbial_nitrogen_content_1]{irp_microbial_nitrogen_content_1()}}.
+}
 }}
 
 \item{check_prediction_domain}{A character value indicating if and how it

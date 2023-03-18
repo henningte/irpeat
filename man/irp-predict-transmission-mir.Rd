@@ -26,11 +26,15 @@
 \alias{irp_saturated_hydraulic_conductivity_1}
 \alias{irp_specific_heat_capacity_1}
 \alias{irp_dry_thermal_conductivity_1}
+\alias{irp_microbial_nitrogen_content_1}
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
 \item{\code{irp_eac_1()}, \code{irp_edc_1()}}{
 \insertCite{Teickner.2022;textual}{irpeat}.
+}
+\item{\code{irp_microbial_nitrogen_content_1()}}{
+\insertCite{Reuter.2020;textual}{irpeat}
 }
 }
 }
@@ -238,13 +242,29 @@ irp_dry_thermal_conductivity_1(
   check_prediction_domain = "train",
   bulk_density = NULL
 )
+
+irp_microbial_nitrogen_content_1(
+  x,
+  y,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train"
+)
 }
 \arguments{
 \item{x}{An object of class \code{\link[ir:ir_new_ir]{ir}} with transmission mid
 infrared spectra. Some tests are applied to check if the supplied spectra
 match the spectra used to fit the models (the spectral range is checked). The
 spectral resolution of the original spectral data should not be smaller than
-4 cm\eqn{^{-1}} and it is not checked if this assumption is met.}
+4 cm\eqn{^{-1}} and it is not checked if this assumption is met. For the
+following models, \code{x} has special meaning:
+\describe{
+\item{\code{irp_microbial_nitrogen_content_1()}}{Here, \code{x} is a set of litter
+spectra after decomposition (and \code{y} is a set of litter spectra before
+decomposition). See the Details section.}
+}}
 
 \item{...}{Additional arguments passed to
 \code{\link[rstanarm:posterior_predict.stanreg]{rstanarm::posterior_predict.stanreg()}} (\code{irp_eac_1()},\code{irp_eac_2()}).}
@@ -298,6 +318,14 @@ nitrogen content in g g\eqn{^{-1}}. These values will be used to predict the
 peat property. If set to \code{NULL}, the nitrogen content will be estimated from
 the spectra in \code{x} and these estimates will be used to predict the peat
 property.}
+
+\item{y}{An object of class \code{\link[ir:ir_new_ir]{ir}} with transmission mid
+infrared spectra. This argument is required for the following models which
+need more than one set of spectra to make predictions:
+\describe{
+\item{\code{irp_microbial_nitrogen_content_1()}}{Here, \code{y} is a set of litter
+spectra before decomposition.}
+}}
 }
 \value{
 \code{x} with a new column with the predicted peat property and a new
@@ -320,6 +348,20 @@ The models use the models of the same name in the 'irpeatmodels' package. The
 The model still has a relatively large uncertainty because it is fitted
 with few samples \insertCite{Teickner.2022}{irpeat}. For further
 limitations, see \insertCite{Teickner.2022;textual}{irpeat}.
+}
+\item{\code{irp_microbial_nitrogen_content_1()}}{
+\insertCite{Reuter.2020;textual}{irpeat} describes limitations and uncertainties:
+“Small method modifications should be considered for the applicability of
+the method in aerobic decomposition studies. These modifications include
+an optimization of the calibration curve, either through the addition of
+very low N litters to a decomposition study as calibration samples or
+through the artificial mixing of undecomposed litter with microbial
+biomass. Furthermore, the contribution of fungi must be considered, which
+we assumed to be negligible in anoxic soils. Differences in the amount of
+DNA per biomass units and in the C/N ratio should be considered for the
+decomposer biomass in aerobic systems. Finally, the applicability of the
+same calibration curve for decomposed litters of different plant species
+still has to be investigated.”
 }
 }
 }
@@ -540,6 +582,16 @@ irpeat::irp_dry_thermal_conductivity_1(
   do_summary = TRUE,
   check_prediction_domain = "train",
   bulk_density = 0.04
+)
+
+# microbial nitrogen content (note that the data are not ideal uses cases for
+# the model (see the documentation). The following only demonstrates how to
+# use the prediction function)
+irpeat::irp_microbial_nitrogen_content_1(
+  x = irpeat_sample_data[1, ],
+  y = irpeat_sample_data[2, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
 )
 
 }

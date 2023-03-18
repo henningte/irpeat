@@ -16,7 +16,21 @@
 #' infrared spectra. Some tests are applied to check if the supplied spectra
 #' match the spectra used to fit the models (the spectral range is checked). The
 #' spectral resolution of the original spectral data should not be smaller than
-#' 4 cm\eqn{^{-1}} and it is not checked if this assumption is met.
+#' 4 cm\eqn{^{-1}} and it is not checked if this assumption is met. For the
+#' following models, `x` has special meaning:
+#' \describe{
+#'   \item{`irp_microbial_nitrogen_content_1()`}{Here, `x` is a set of litter
+#'   spectra after decomposition (and `y` is a set of litter spectra before
+#'   decomposition). See the Details section.}
+#' }
+#'
+#' @param y An object of class [`ir`][ir::ir_new_ir] with transmission mid
+#' infrared spectra. This argument is required for the following models which
+#' need more than one set of spectra to make predictions:
+#' \describe{
+#'   \item{`irp_microbial_nitrogen_content_1()`}{Here, `y` is a set of litter
+#'   spectra before decomposition.}
+#' }
 #'
 #' @param temperature For `irp_specific_heat_capacity_1()`: The temperature in K
 #' for which to predict the specific heat capacity.
@@ -83,12 +97,29 @@
 #'     with few samples \insertCite{Teickner.2022}{irpeat}. For further
 #'     limitations, see \insertCite{Teickner.2022;textual}{irpeat}.
 #'   }
+#'   \item{`irp_microbial_nitrogen_content_1()`}{
+#'    \insertCite{Reuter.2020;textual}{irpeat} describes limitations and uncertainties:
+#'    “Small method modifications should be considered for the applicability of
+#'    the method in aerobic decomposition studies. These modifications include
+#'    an optimization of the calibration curve, either through the addition of
+#'    very low N litters to a decomposition study as calibration samples or
+#'    through the artificial mixing of undecomposed litter with microbial
+#'    biomass. Furthermore, the contribution of fungi must be considered, which
+#'    we assumed to be negligible in anoxic soils. Differences in the amount of
+#'    DNA per biomass units and in the C/N ratio should be considered for the
+#'    decomposer biomass in aerobic systems. Finally, the applicability of the
+#'    same calibration curve for decomposed litters of different plant species
+#'    still has to be investigated.”
+#'   }
 #' }
 #'
 #' @source
 #' \describe{
 #'   \item{`irp_eac_1()`, `irp_edc_1()`}{
 #'     \insertCite{Teickner.2022;textual}{irpeat}.
+#'   }
+#'   \item{`irp_microbial_nitrogen_content_1()`}{
+#'     \insertCite{Reuter.2020;textual}{irpeat}
 #'   }
 #' }
 #'
@@ -1422,5 +1453,107 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
     stats::setNames(nm = "dry_thermal_conductivity_1")
 
   cbind(x_or, res, x %>% dplyr::select(.data$dry_thermal_conductivity_1_in_pd))
+
+}
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # microbial nitrogen content (note that the data are not ideal uses cases for
+#' # the model (see the documentation). The following only demonstrates how to
+#' # use the prediction function)
+#' irpeat::irp_microbial_nitrogen_content_1(
+#'   x = irpeat_sample_data[1, ],
+#'   y = irpeat_sample_data[2, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_microbial_nitrogen_content_1 <- function(x, y, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+
+  # check additional packages
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+
+  x_or <- x
+
+  # import data
+  m_mbn_1 <- irpeatmodels::model_microbial_nitrogen_content_1
+  config <-  irpeatmodels::model_microbial_nitrogen_content_1_config
+  prediction_domain <- irpeatmodels::model_microbial_nitrogen_content_1_prediction_domain
+  target_variable_name <- "microbial_nitrogen_content_1"
+
+  # check spectra
+  x_flat <- ir::ir_flatten(x)
+  if(x_flat$x[[1]] > config$irp_preprocess$clip_range$start) {
+    rlang::warn(paste0("The minimum wavenumber value in `x` is ", x_flat$x[[1]], " , but should be ", config$irp_preprocess$clip_range$start, " or smaller."))
+  }
+  if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
+    rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
+  }
+  y_flat <- ir::ir_flatten(y)
+  if(y_flat$x[[1]] > config$irp_preprocess$clip_range$start) {
+    rlang::warn(paste0("The minimum wavenumber value in `y` is ", y_flat$x[[1]], " , but should be ", config$irp_preprocess$clip_range$start, " or smaller."))
+  }
+  if(y_flat$x[[nrow(y_flat)]] < config$irp_preprocess$clip_range$end) {
+    rlang::warn(paste0("The maximum wavenumber value in `y` is ", y_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
+  }
+
+  # preprocessing
+  x <- irp_preprocess_for(x = x, y = y, variable = target_variable_name)
+
+  # check prediction domain
+  prediction_domain <-
+    switch(
+      check_prediction_domain,
+      "train" = prediction_domain$train,
+      "test" = prediction_domain$test,
+      "none" = NULL
+    )
+
+  res_pd <-
+    if(check_prediction_domain != "none") {
+      tibble::tibble(
+        microbial_nitrogen_content_1_in_pd =
+          x %>%
+          irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
+          dplyr::pull(.data$is_in_prediction_domain)
+      )
+    } else {
+      tibble::tibble(
+        microbial_nitrogen_content_1_in_pd = rep(NA, nrow(x_or))
+      )
+    }
+
+  # predict microbial N content
+  res <-
+    brms::posterior_predict(
+      m_mbn_1,
+      newdata =
+        tibble::tibble(
+          intensity_1220 =
+            purrr::map_dbl(x$spectra, function(.x) .x$y)
+        )
+    ) %>%
+    as.data.frame()
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "g/g",
+      do_summary = do_summary,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd
+    )
+
+  res <-
+    tibble::tibble(y = res) %>%
+    stats::setNames(nm = "microbial_nitrogen_content_1")
+
+  cbind(x_or, res, res_pd %>% dplyr::select(.data$microbial_nitrogen_content_1_in_pd))
 
 }

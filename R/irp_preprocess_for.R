@@ -20,10 +20,11 @@
 #'   plot()
 #'
 #' @export
-irp_preprocess_for <- function(x, variable) {
+irp_preprocess_for <- function(x, y = NULL, variable) {
 
   stopifnot(inherits(x, "ir"))
   stopifnot(is.character(variable) && length(variable) == 1L)
+  stopifnot(inherits(y, "ir")|| (is.null(y) && ! variable %in% c("microbial_nitrogen_content_1")))
 
   switch(variable,
          "klason_lignin_content_1" = ,
@@ -72,6 +73,37 @@ irp_preprocess_for <- function(x, variable) {
            utils::data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
            config <- get(x = paste0("model_", variable, "_config"), pos = -1)
            irp_preprocess_eb1079(x = x, config = config)
+         },
+         "microbial_nitrogen_content_1" = {
+           check_irpeatmodels(version = "0.0.0")
+           utils::data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
+           config <- get(x = paste0("model_", variable, "_config"), pos = -1)
+
+           # preprocess both
+           x <- irp_preprocess_unpack_config(x = x, config = config)
+           y <- irp_preprocess_unpack_config(x = y, config = config)
+
+           # make sure x matches wavenumber range in y
+           x <- ir::ir_clip(x, range = data.frame(start = min(y$spectra[[1]]$x), end = max(y$spectra[[1]]$x)))
+
+           # compute second derivative difference spectra
+           ir::ir_subtract(x, y) %>%
+             magrittr::multiply_by(-100) %>%
+             ir::ir_smooth(method = "sg", p = 3, n = 65, ts = 1, m = 2) %>%
+             ir::ir_get_intensity(wavenumber = 1220) %>%
+             dplyr::mutate(
+               spectra =
+                 purrr::map(.data$intensity, function(.y) {
+                   .y %>%
+                     dplyr::mutate(
+                       y =
+                         y %>%
+                         magrittr::multiply_by(config$data_scale$x_scale) %>%
+                         magrittr::subtract(config$data_scale$x_center)
+                     )
+                 })
+             )
+
          },
          stop(paste0("Unknown value for `variable`: ", variable))
   )
