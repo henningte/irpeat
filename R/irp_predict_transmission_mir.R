@@ -83,7 +83,6 @@
 #'   \item{`"none"`}{It is not checked whether the spectra in `x` are within the
 #'   prediction domain for the model.}
 #' }
-#' Note: Currently ignored for `irp_eac_1()`, `irp_edc_1()`.
 #'
 #' @return `x` with a new column with the predicted peat property and a new
 #' column with value `TRUE` if the respective spectrum is within the prediction
@@ -157,6 +156,12 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
   stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
+  x <-
+    x %>%
+    dplyr::mutate(
+      `__id_sample__` = seq_len(nrow(.))
+    )
+
   x_or <- x
 
   # get data
@@ -171,6 +176,11 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
   if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
     rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
   }
+
+  # identify and discard empty spectra
+  x <-
+    x %>%
+    dplyr::filter(! ir::ir_identify_empty_spectra(x))
 
   # preprocessing
   x <-
@@ -221,8 +231,25 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
       summary_function_sd = stats::sd
     )
 
-  x_or$eac_1 <- res
-  cbind(x_or, res_pd %>% stats::setNames(nm = "eac_1_in_pd"))
+  # combine results
+  dplyr::left_join(
+    x_or,
+    x %>%
+      dplyr::select("__id_sample__") %>%
+      dplyr::mutate(
+        eac_1 = res
+      ),
+    by = "__id_sample__"
+  ) %>%
+    dplyr::left_join(
+      x %>%
+        dplyr::select("__id_sample__") %>%
+        dplyr::mutate(
+          eac_1_in_pd = res_pd$y
+        ),
+      by = "__id_sample__"
+    ) %>%
+    dplyr::select(-"__id_sample__")
 
 }
 
@@ -247,6 +274,12 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
   stopifnot(inherits(x, "ir"))
   stopifnot(is.logical(do_summary) && length(do_summary) == 1)
 
+  x <-
+    x %>%
+    dplyr::mutate(
+      `__id_sample__` = seq_len(nrow(.))
+    )
+
   x_or <- x
 
   # get data
@@ -261,6 +294,11 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
   if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
     rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
   }
+
+  # identify and discard empty spectra
+  x <-
+    x %>%
+    dplyr::filter(! ir::ir_identify_empty_spectra(x))
 
   # preprocessing
   x <-
@@ -311,8 +349,25 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
       summary_function_sd = stats::sd
     )
 
-  x_or$edc_1 <- res
-  cbind(x_or, res_pd %>% stats::setNames(nm = "eac_1_in_pd"))
+  # combine results
+  dplyr::left_join(
+    x_or,
+    x %>%
+      dplyr::select("__id_sample__") %>%
+      dplyr::mutate(
+        edc_1 = res
+      ),
+    by = "__id_sample__"
+  ) %>%
+    dplyr::left_join(
+      x %>%
+        dplyr::select("__id_sample__") %>%
+        dplyr::mutate(
+          edc_1_in_pd = res_pd$y
+        ),
+      by = "__id_sample__"
+    ) %>%
+    dplyr::select(-"__id_sample__")
 
 }
 

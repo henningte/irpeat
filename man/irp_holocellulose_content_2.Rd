@@ -51,8 +51,7 @@ prediction domain formed by the training data for the model.}
 prediction domain formed by the testing data for the model.}
 \item{\code{"none"}}{It is not checked whether the spectra in \code{x} are within the
 prediction domain for the model.}
-}
-Note: Currently ignored for \code{irp_eac_1()}, \code{irp_edc_1()}.}
+}}
 }
 \value{
 \code{x} with a new column "holocellulose_content_2" with the predicted

@@ -297,8 +297,7 @@ prediction domain formed by the training data for the model.}
 prediction domain formed by the testing data for the model.}
 \item{\code{"none"}}{It is not checked whether the spectra in \code{x} are within the
 prediction domain for the model.}
-}
-Note: Currently ignored for \code{irp_eac_1()}, \code{irp_edc_1()}.}
+}}
 
 \item{bulk_density}{For \code{irp_porosity_1()}, \code{irp_non_macroporosity_1()},
 \code{irp_macroporosity_1()}, \code{irp_volume_fraction_of_solids_1()},

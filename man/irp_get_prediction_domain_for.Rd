@@ -123,8 +123,7 @@ prediction domain formed by the training data for the model.}
 prediction domain formed by the testing data for the model.}
 \item{\code{"none"}}{It is not checked whether the spectra in \code{x} are within the
 prediction domain for the model.}
-}
-Note: Currently ignored for \code{irp_eac_1()}, \code{irp_edc_1()}.}
+}}
 }
 \value{
 An object of class \code{irp_prediction_domain} with the specified
