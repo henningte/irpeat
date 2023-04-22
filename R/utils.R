@@ -222,9 +222,11 @@ irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_me
         unit = x_unit,
         errors = purrr::map_dbl(x, summary_function_sd),
         mode = "standard"
-      )
+      ) %>%
+      unname()
   } else {
-    purrr::map(x, units::set_units, value = x_unit, mode = "standard")
+    purrr::map(x, units::set_units, value = x_unit, mode = "standard") %>%
+      unname()
   }
 
 }
