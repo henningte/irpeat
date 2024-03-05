@@ -191,7 +191,8 @@ irp_volume_fraction_solids_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  bulk_density = NULL
 )
 
 irp_non_macroporosity_1(
@@ -200,7 +201,8 @@ irp_non_macroporosity_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  bulk_density = NULL
 )
 
 irp_macroporosity_1(
@@ -209,7 +211,8 @@ irp_macroporosity_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  bulk_density = NULL
 )
 
 irp_saturated_hydraulic_conductivity_1(
@@ -302,21 +305,36 @@ prediction domain for the model.}
 \item{bulk_density}{For \code{irp_porosity_1()}, \code{irp_non_macroporosity_1()},
 \code{irp_macroporosity_1()}, \code{irp_volume_fraction_of_solids_1()},
 \code{irp_saturated_hydraulic_conductivity_1()},
-\code{irp_dry_thermal_conductivity_1()}: A numeric vector with the same
-number of elements as spectra in \code{x} with values for the dry bulk density
-in g cm\eqn{^{-3}}. These values will be used to predict the peat property.
-If set to \code{NULL}, the dry bulk density will be estimated from the spectra in
-\code{x} and these estimates will be used to predict the peat property.}
+\code{irp_dry_thermal_conductivity_1()}: One of:
+\describe{
+\item{1.}{A numeric vector with the same number of elements as spectra in
+\code{x} with values for the dry bulk density in g cm\eqn{^{-3}}. These values
+will be used to predict the peat property.}
+\item{2.}{A list with the same number of elements as spectra in \code{x}. Each
+element must be a numeric vector with the same number of elements as there
+are MCMC draws in the corresponding model to use. Each numeric value is the
+the dry bulk density in g cm\eqn{^{-3}}. These values will be used to
+predict the peat property.}
+\item{3.}{\code{NULL}: Dry bulk density will be estimated from the spectra in \code{x}
+and these estimates will be used to predict the peat property.}
+}}
 
 \item{temperature}{For \code{irp_specific_heat_capacity_1()}: The temperature in K
 for which to predict the specific heat capacity.}
 
-\item{nitrogen_content}{For \code{irp_specific_heat_capacity_1()}:  A numeric
-vector with the same number of elements as spectra in \code{x} with values for the
-nitrogen content in g g\eqn{^{-1}}. These values will be used to predict the
-peat property. If set to \code{NULL}, the nitrogen content will be estimated from
-the spectra in \code{x} and these estimates will be used to predict the peat
-property.}
+\item{nitrogen_content}{For \code{irp_specific_heat_capacity_1()}: One of:
+\describe{
+\item{1.}{A numeric vector with the same number of elements as spectra in
+\code{x} with values for the nitrogen content in g g\eqn{^{-1}}. These values
+will be used to predict the peat property.}
+\item{2.}{A list with the same number of elements as spectra in \code{x}. Each
+element must be a numeric vector with the same number of elements as there
+are MCMC draws in the corresponding model to use. Each numeric value is the
+the nitrogen content in g g\eqn{^{-1}}. These values will be used to
+predict the peat property.}
+\item{3.}{\code{NULL}: Nitrogen content will be estimated from the spectra in \code{x}
+and these estimates will be used to predict the peat property.}
+}}
 
 \item{y}{An object of class \code{\link[ir:ir_new_ir]{ir}} with transmission mid
 infrared spectra. This argument is required for the following models which

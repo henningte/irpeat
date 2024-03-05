@@ -43,7 +43,7 @@ Imports:
     magrittr,
     ggplot2,
     plyr
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.3
 RdMacros: 
   Rdpack
 Suggests: 
@@ -59,7 +59,8 @@ Suggests:
     dimreduce,
     stringr,
     tibble,
-    units
+    units,
+    signal
 VignetteBuilder: knitr
 Date: 2022-10-27
 Roxygen: list(markdown = TRUE)
