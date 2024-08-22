@@ -1053,24 +1053,27 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 
   Intercept_non_macroporosity <-
     m_draws_porosity_1$b_munonmacroporosity_Intercept +
-    apply(m_draws_porosity_1 %>% dplyr::select(dplyr::contains("b_munonmacroporosity") & !dplyr::contains("Intercept")), 1, sum)
+    m_draws_porosity_1$b_munonmacroporosity_bulk_density * config_porosity_1$data_scale$x_center[["b_bulkdensity"]] +
+    m_draws_porosity_1$b_munonmacroporosity_logbulk_density * config_porosity_1$data_scale$x_center[["b_logbulkdensity"]]
 
   Intercept_macroporosity <-
     m_draws_porosity_1$b_mumacroporosity_Intercept +
-    apply(m_draws_porosity_1 %>% dplyr::select(dplyr::contains("b_mumacroporosity") & !dplyr::contains("Intercept")), 1, sum)
+    m_draws_porosity_1$b_mumacroporosity_bulk_density * config_porosity_1$data_scale$x_center[["b_bulkdensity"]] +
+    m_draws_porosity_1$b_mumacroporosity_logbulk_density * config_porosity_1$data_scale$x_center[["b_logbulkdensity"]]
 
 
   # linear predictor
-  mu <- list(
-    non_macroporosity =
-      Intercept_non_macroporosity +
-      sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_bulk_density)), FUN = "*") +
-      sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_logbulk_density)), FUN = "*"),
-    macroporosity =
-      Intercept_macroporosity +
-      sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_bulk_density)), FUN = "*") +
-      sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_logbulk_density)), FUN = "*")
-  )
+  mu <-
+    list(
+      non_macroporosity =
+        Intercept_non_macroporosity +
+        sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_bulk_density)), FUN = "*") +
+        sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_munonmacroporosity_logbulk_density)), FUN = "*"),
+      macroporosity =
+        Intercept_macroporosity +
+        sweep(X, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_bulk_density)), FUN = "*") +
+        sweep(logX, 1, (m_draws_porosity_1 %>% dplyr::pull(.data$b_mumacroporosity_logbulk_density)), FUN = "*")
+    )
   mu <- simplify2array(mu)
   mu_inv <- brms:::inv_link_categorical(mu)
 
@@ -1084,7 +1087,15 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
     purrr::transpose() %>%
     purrr::map2_dfc(names(.), function(.x, .y) {
       tibble::tibble(
-        y = unname(irp_summarize_predictions(as.data.frame(.x), x_unit = "L/L", do_summary = do_summary, summary_function_mean = summary_function_mean, summary_function_sd = summary_function_sd))
+        y =
+          irp_summarize_predictions(
+            as.data.frame(.x),
+            x_unit = "L/L",
+            do_summary = do_summary,
+            summary_function_mean = summary_function_mean,
+            summary_function_sd = summary_function_sd
+          ) %>%
+          unname()
       ) %>%
         stats::setNames(nm = .y)
     })
@@ -1285,14 +1296,16 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
   X <- X - config_ks_1$data_scale$x_center["b_bulkdensity"]
   logX <- logX - config_ks_1$data_scale$x_center["b_logbulkdensity"]
 
+  # correct intercept for scaled predictor variables (brms returns the intercepts for the unscaled predictor variables)
   Intercept_mu <-
     m_draws_ks_1$b_Intercept +
-    apply(m_draws_ks_1 %>% dplyr::select(!dplyr::starts_with("b_phi_") & !dplyr::contains("Intercept")), 1, sum)
+    m_draws_ks_1$b_bulk_density * config_ks_1$data_scale$x_center[["b_bulkdensity"]] +
+    m_draws_ks_1$b_logbulk_density * config_ks_1$data_scale$x_center[["b_logbulkdensity"]]
 
   Intercept_phi <-
     m_draws_ks_1$b_phi_Intercept +
-    apply(m_draws_ks_1 %>% dplyr::select(dplyr::starts_with("b_phi_") & !dplyr::contains("Intercept")), 1, sum)
-
+    m_draws_ks_1$b_phi_bulk_density * config_ks_1$data_scale$x_center[["b_bulkdensity"]] +
+    m_draws_ks_1$b_phi_logbulk_density * config_ks_1$data_scale$x_center[["b_logbulkdensity"]]
 
   # linear predictor
   mu <-
@@ -1432,7 +1445,9 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
 
   Intercept_mu <-
     m_draws_cp_1$b_Intercept +
-    apply(m_draws_cp_1 %>% dplyr::select(.data$sd_sample_label__Intercept), 1, sum)
+    m_draws_cp_1$b_N * config_cp_1$model_scale$x_center[["b_N"]] +
+    m_draws_cp_1$b_temperature * config_cp_1$model_scale$x_center[["b_temperature"]] +
+    m_draws_cp_1$`b_N:temperature` * config_cp_1$model_scale$x_center[["b_N"]] * config_cp_1$model_scale$x_center[["b_temperature"]]
 
   # linear predictor
   mu <-
@@ -1555,7 +1570,8 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
     magrittr::divide_by(config_kt_1$data_scale$x_scale)
 
   Intercept_mu <-
-    m_draws_kt_1$b_Intercept
+    m_draws_kt_1$b_Intercept +
+    m_draws_kt_1$b_bulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]]
 
   # linear predictor
   mu <-
