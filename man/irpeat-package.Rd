@@ -6,7 +6,7 @@
 \alias{irpeat-package}
 \title{irpeat: Functions to Analyze Mid Infrared Spectra of Peat Samples}
 \description{
-'irpeat' provides functions to analyze mid infrared spectra of peat samples (various humification indices, Klason lignin content, holocellulose content, electron accepting capacity, electron donating capacity).
+Provides functions to analyze mid infrared spectra of peat samples (humification indices, prediction models for peat properties).
 }
 \seealso{
 Useful links:

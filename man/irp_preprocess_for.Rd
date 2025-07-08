@@ -69,6 +69,12 @@ Sulfur content as computed by \code{\link[=irp_sulfur_content_1]{irp_sulfur_cont
 \item{"titanium_content_1"}{
 Titanium content as computed by \code{\link[=irp_titanium_content_1]{irp_titanium_content_1()}}.
 }
+\item{"silicon_content_1"}{
+Silicon content as computed by \code{\link[=irp_silicon_content_1]{irp_silicon_content_1()}}.
+}
+\item{"calcium_content_1"}{
+Calcium content as computed by \code{\link[=irp_calcium_content_1]{irp_calcium_content_1()}}.
+}
 \item{"d13C_1"}{
 \eqn{\delta^{13}}C values as computed by \code{\link[=irp_d13C_1]{irp_d13C_1()}}.
 }
@@ -84,6 +90,9 @@ The standard Gibbs free energy of formation content as computed by
 }
 \item{"bulk_density_1"}{
 Bulk density as computed by \code{\link[=irp_bulk_density_1]{irp_bulk_density_1()}}.
+}
+\item{"loss_on_ignition_1"}{
+Loss on ignition as computed by \code{\link[=irp_loss_on_ignition_1]{irp_loss_on_ignition_1()}}.
 }
 \item{"O_to_C_1"}{
 O/C ratio as computed by \code{\link[=irp_O_to_C_1]{irp_O_to_C_1()}}.
@@ -138,7 +147,7 @@ library(ir)
 irp_preprocess_for(
    x = irpeat_sample_data,
    variable = "carbon_content_1"
-) \%>\%
+) |>
   plot()
 
 }

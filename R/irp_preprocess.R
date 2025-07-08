@@ -6,7 +6,7 @@
 #' derivatization), normalization, binning, and scaling. All these steps are
 #' optionally, but occur on a fixed order that cannot be changed.
 #'
-#' @param x An object of class [`ir`][ir::ir_new_ir] (it is assumed
+#' @param x An object of class [`ir`](ir::ir_new_ir()) (it is assumed
 #' that `x` is not yet preprocessed).
 #'
 #' @param do_interpolate A logical value indicating if spectra should be
@@ -81,8 +81,8 @@
 #' number of spectral variables returned after preprocessing.
 #'
 #' @param do_return_as_ir Logical value indicating whether the preprocessed
-#' spectra should be returned as [`ir`](ir::ir_new_ir) object (`TRUE`) or as data frame
-#' with the same structure as [`ir_flat`](ir::ir_new_ir_flat)  object (`FALSE`).
+#' spectra should be returned as [`ir`](ir::ir_new_ir()) object (`TRUE`) or as data frame
+#' with the same structure as [`ir_flat`](ir::ir_new_ir_flat())  object (`FALSE`).
 #'
 #' @return A data frame with spectra in rows and a column for each spectral
 #' variable after preprocessing.

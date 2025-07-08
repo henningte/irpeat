@@ -64,6 +64,12 @@
 #'   \item{"titanium_content_1"}{
 #'     Titanium content as computed by [irp_titanium_content_1()].
 #'   }
+#'   \item{"silicon_content_1"}{
+#'     Silicon content as computed by [irp_silicon_content_1()].
+#'   }
+#'   \item{"calcium_content_1"}{
+#'     Calcium content as computed by [irp_calcium_content_1()].
+#'   }
 #'   \item{"d13C_1"}{
 #'     \eqn{\delta^{13}}C values as computed by [irp_d13C_1()].
 #'   }
@@ -79,6 +85,9 @@
 #'   }
 #'   \item{"bulk_density_1"}{
 #'     Bulk density as computed by [irp_bulk_density_1()].
+#'   }
+#'   \item{"loss_on_ignition_1"}{
+#'     Loss on ignition as computed by [irp_loss_on_ignition_1()].
 #'   }
 #'   \item{"O_to_C_1"}{
 #'     O/C ratio as computed by [irp_O_to_C_1()].
@@ -210,6 +219,10 @@ irp_predict <- function(x, y = NULL, variable, ...) {
                irp_sulfur_content_1(x = x, ...),
              "titanium_content_1" =
                irp_titanium_content_1(x = x, ...),
+             "silicon_content_1" =
+               irp_silicon_content_1(x = x, ...),
+             "calcium_content_1" =
+               irp_calcium_content_1(x = x, ...),
              "d13C_1" =
                irp_d13C_1(x = x, ...),
              "d15N_1" =
@@ -220,6 +233,8 @@ irp_predict <- function(x, y = NULL, variable, ...) {
                irp_dgf0_1(x = x, ...),
              "bulk_density_1" =
                irp_bulk_density_1(x = x, ...),
+             "loss_on_ignition_1" =
+               irp_loss_on_ignition_1(x = x, ...),
              "H_to_C_1" =
                irp_H_to_C_1(x = x, ...),
              "O_to_C_1" =
@@ -249,8 +264,8 @@ irp_predict <- function(x, y = NULL, variable, ...) {
   }
 
   # delete not requested variables
-  x %>%
-    dplyr::select(!dplyr::any_of(c(variable_values_nonrequested, paste0(variable_values_nonrequested, "_in_pd"))))
+  x |>
+    dplyr::select(! dplyr::any_of(c(variable_values_nonrequested, paste0(variable_values_nonrequested, "_in_pd"))))
 
 }
 

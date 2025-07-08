@@ -15,22 +15,22 @@
 #'
 #' irp_get_prediction_domain_for(
 #'    variable = "carbon_content_1"
-#' ) %>%
+#' ) |>
 #'   plot()
 #'
 #' irp_get_prediction_domain_for(
 #'    variable = "klason_lignin_content_1"
-#' ) %>%
+#' ) |>
 #'   plot()
 #'
 #' irp_get_prediction_domain_for(
 #'    variable = "klason_lignin_content_2"
-#' ) %>%
+#' ) |>
 #'   plot()
 #'
 #' irp_get_prediction_domain_for(
 #'    variable = "eac_1"
-#' ) %>%
+#' ) |>
 #'   plot()
 #'
 #' @export
@@ -38,7 +38,6 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
 
   stopifnot(is.character(variable) && length(variable) == 1L)
 
-  # placeholder: ---todo: remove later
   empty_prediction_domain <-
     tibble::tibble(
       x = numeric(),
@@ -69,7 +68,11 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "klason_lignin_content_2" =,
     "holocellulose_content_2" =,
     "eac_1" =,
-    "edc_1" =,
+    "edc_1" = {
+      check_irpeatmodels(version = "0.0.0")
+      utils::data(list = paste0("model_", variable, "_prediction_domain"), package = "irpeatmodels", envir = environment())
+      prediction_domain <- get(x = paste0("model_", variable, "_prediction_domain"), pos = -1)
+    },
     "carbon_content_1" =,
     "nitrogen_content_1" =,
     "hydrogen_content_1" =,
@@ -78,11 +81,14 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "potassium_content_1" =,
     "sulfur_content_1" =,
     "titanium_content_1" =,
+    "silicon_content_1" =,
+    "calcium_content_1" =,
     "d13C_1" =,
     "d15N_1" =,
     "nosc_1" =,
     "dgf0_1" =,
     "bulk_density_1" =,
+    "loss_on_ignition_1" =,
     "H_to_C_1" =,
     "O_to_C_1" =,
     "C_to_N_1" =,
@@ -91,7 +97,10 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "macroporosity_1" =,
     "saturated_hydraulic_conductivity_1" =,
     "specific_heat_capacity_1" =,
-    "dry_thermal_conductivity_1" =,
+    "dry_thermal_conductivity_1" = {
+      check_irpeatmodels(version = "0.0.0")
+      prediction_domain <- readRDS(system.file("extdata", paste0("model_", variable, "_prediction_domain.rds"), package = "irpeatmodels"))
+    },
     "microbial_nitrogen_content_1" = {
       check_irpeatmodels(version = "0.0.0")
       utils::data(list = paste0("model_", variable, "_prediction_domain"), package = "irpeatmodels", envir = environment())

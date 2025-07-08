@@ -2,6 +2,8 @@
 % Please edit documentation in R/irp_predict_transmission_mir.R
 \name{irp-predict-transmission-mir}
 \alias{irp-predict-transmission-mir}
+\alias{irp_holocellulose_content_2}
+\alias{irp_klason_lignin_content_2}
 \alias{irp_eac_1}
 \alias{irp_edc_1}
 \alias{irp_carbon_content_1}
@@ -12,14 +14,17 @@
 \alias{irp_potassium_content_1}
 \alias{irp_sulfur_content_1}
 \alias{irp_titanium_content_1}
+\alias{irp_silicon_content_1}
+\alias{irp_calcium_content_1}
 \alias{irp_d13C_1}
 \alias{irp_d15N_1}
 \alias{irp_nosc_1}
 \alias{irp_dgf0_1}
 \alias{irp_bulk_density_1}
+\alias{irp_loss_on_ignition_1}
 \alias{irp_O_to_C_1}
-\alias{irp_H_to_C_1}
 \alias{irp_C_to_N_1}
+\alias{irp_H_to_C_1}
 \alias{irp_volume_fraction_solids_1}
 \alias{irp_non_macroporosity_1}
 \alias{irp_macroporosity_1}
@@ -30,21 +35,48 @@
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
+\item{\code{irp_holocellulose_2()}, \code{irp_klason_lignin_2()}}{
+\insertCite{Teickner.2022a;textual}{irpeat}.
+}
 \item{\code{irp_eac_1()}, \code{irp_edc_1()}}{
 \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \item{\code{irp_microbial_nitrogen_content_1()}}{
 \insertCite{Reuter.2020;textual}{irpeat}
 }
+\item{All other models}{
+\insertCite{Teickner.2023;textual}{irpeat}
+}
 }
 }
 \usage{
+irp_holocellulose_content_2(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  return_as_list = FALSE,
+  check_prediction_domain = "train"
+)
+
+irp_klason_lignin_content_2(
+  x,
+  ...,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  return_as_list = FALSE,
+  check_prediction_domain = "train"
+)
+
 irp_eac_1(
   x,
   ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
+  return_as_list = FALSE,
   check_prediction_domain = "train"
 )
 
@@ -54,6 +86,7 @@ irp_edc_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
+  return_as_list = FALSE,
   check_prediction_domain = "train"
 )
 
@@ -62,7 +95,8 @@ irp_carbon_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_nitrogen_content_1(
@@ -70,7 +104,8 @@ irp_nitrogen_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_hydrogen_content_1(
@@ -78,7 +113,8 @@ irp_hydrogen_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_oxygen_content_1(
@@ -86,7 +122,8 @@ irp_oxygen_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_phosphorus_content_1(
@@ -94,7 +131,8 @@ irp_phosphorus_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_potassium_content_1(
@@ -102,7 +140,8 @@ irp_potassium_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_sulfur_content_1(
@@ -110,7 +149,8 @@ irp_sulfur_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_titanium_content_1(
@@ -118,7 +158,26 @@ irp_titanium_content_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_silicon_content_1(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_calcium_content_1(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_d13C_1(
@@ -126,7 +185,8 @@ irp_d13C_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_d15N_1(
@@ -134,7 +194,8 @@ irp_d15N_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_nosc_1(
@@ -142,7 +203,8 @@ irp_nosc_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_dgf0_1(
@@ -150,7 +212,8 @@ irp_dgf0_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_bulk_density_1(
@@ -158,7 +221,17 @@ irp_bulk_density_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_loss_on_ignition_1(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_O_to_C_1(
@@ -166,15 +239,8 @@ irp_O_to_C_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
-)
-
-irp_H_to_C_1(
-  x,
-  do_summary = FALSE,
-  summary_function_mean = mean,
-  summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
 irp_C_to_N_1(
@@ -182,78 +248,88 @@ irp_C_to_N_1(
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 
-irp_volume_fraction_solids_1(
+irp_H_to_C_1(
   x,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_volume_fraction_solids_1(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE,
   bulk_density = NULL
 )
 
 irp_non_macroporosity_1(
   x,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE,
   bulk_density = NULL
 )
 
 irp_macroporosity_1(
   x,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE,
   bulk_density = NULL
 )
 
 irp_saturated_hydraulic_conductivity_1(
   x,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE,
   bulk_density = NULL
 )
 
 irp_specific_heat_capacity_1(
   x,
   temperature = 273.15,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE,
   nitrogen_content = NULL
 )
 
 irp_dry_thermal_conductivity_1(
   x,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
   check_prediction_domain = "train",
+  return_as_list = FALSE,
   bulk_density = NULL
 )
 
 irp_microbial_nitrogen_content_1(
   x,
   y,
-  ...,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
-  check_prediction_domain = "train"
+  check_prediction_domain = "train",
+  return_as_list = FALSE
 )
 }
 \arguments{
@@ -276,12 +352,13 @@ decomposition). See the Details section.}
 be returned in a summarized version (\code{TRUE}) or not (\code{FALSE}).
 \itemize{
 \item If \code{do_summary = FALSE}, a list column is returned and each
-element of the list column is a numeric vector with draws from the
-posterior distribution, including the residual variance of the model.
+element of the list column is a numeric vector, or an \code{rvar} object is
+returned as column in \code{x}, depending on the value of \code{return_as_list}. In
+both cases, the column contains draws from the posterior predictive
+distribution.
 \item If \code{do_summary = TRUE}, each element is a
-\code{\link[quantities:quantities]{quantities::quantities()}} object with the
-\code{error} attribute being the standard deviation of the unsummarized
-values.
+\code{\link[quantities:quantities]{quantities::quantities()}} object with value and error summarized from
+posterior draws via \code{summary_function_mean} and \code{summary_function_sd}
 }}
 
 \item{summary_function_mean}{A function used to summarize the predicted
@@ -289,6 +366,11 @@ values (average).}
 
 \item{summary_function_sd}{A function used to summarize the predicted
 values (spread).}
+
+\item{return_as_list}{Logical value. If set to \code{TRUE}, the result will be
+returned as list of draws, otherwise the result will be returned as \code{rvar}
+object. This is a new argument currently only implemented for models
+predicting the degree of decomposition.}
 
 \item{check_prediction_domain}{A character value indicating if and how it
 should be checked whether the spectra in \code{x} are within the prediction domain
@@ -389,6 +471,20 @@ x <- ir::ir_sample_data[1, ]
 
 ## make predictions
 
+# holocellulose content
+x <- irpeat::irp_holocellulose_content_2(
+  x,
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# Klason lignin content
+x <- irpeat::irp_klason_lignin_content_2(
+  x,
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
 # electron accepting capacity
 x <- irpeat::irp_eac_1(
   x,
@@ -404,11 +500,12 @@ x <- irpeat::irp_edc_1(
 )
 
 # carbon content
-x <- irpeat::irp_carbon_content_1(
-  x,
-  do_summary = TRUE,
-  check_prediction_domain = "train"
-)
+x <-
+  irp_carbon_content_1(
+    x,
+    do_summary = TRUE,
+    check_prediction_domain = "train"
+  )
 
 # nitrogen content
 irpeat::irp_nitrogen_content_1(
@@ -459,6 +556,20 @@ irpeat::irp_titanium_content_1(
   check_prediction_domain = "train"
 )
 
+# silicon content
+irpeat::irp_silicon_content_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
+# calcium content
+irpeat::irp_calcium_content_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
 # d13C values
 irpeat::irp_d13C_1(
   irpeat_sample_data[1, ],
@@ -494,6 +605,13 @@ irpeat::irp_bulk_density_1(
   check_prediction_domain = "train"
 )
 
+# loss on ignition
+irp_loss_on_ignition_1(
+  irpeat_sample_data[1, ],
+  do_summary = TRUE,
+  check_prediction_domain = "train"
+)
+
 # O/C
 irpeat::irp_O_to_C_1(
   irpeat_sample_data[1, ],
@@ -501,15 +619,15 @@ irpeat::irp_O_to_C_1(
   check_prediction_domain = "train"
 )
 
-# H/C
-irpeat::irp_H_to_C_1(
+# C/N
+irpeat::irp_C_to_N_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
 
-# C/N
-irpeat::irp_C_to_N_1(
+# H/C
+irpeat::irp_H_to_C_1(
   irpeat_sample_data[1, ],
   do_summary = TRUE,
   check_prediction_domain = "train"

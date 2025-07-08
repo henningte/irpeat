@@ -37,6 +37,7 @@ For this tutorial, we need the following packages
 ```{r load-packages}
 # packages
 library(irpeat)
+library(irpeatmodels)
 library(ir)
 library(ggplot2)
 library(quantities)
@@ -84,25 +85,6 @@ In this case, `do_summary = FALSE` (the default) will return not _one_ predicted
 
 `summary_function_mean` defines the function which is used to compute the location (by default, this is `mean`), and `summary_function_sd` defines the function which is used to compute the spread (by default, this is `stats::sd`).
 
-<!--The following code predicts the carbon content two times: The first time, we do not summarize MCMC draws. The second time we do. Then, we plot the densities for both cases.
-
-```{r, eval=FALSE, echo=FALSE}
-# predict C content. Note: We rename the column after the first prediciton to make sure it does not get overwritten
-d <- 
-  d %>%
-  dplyr::select(-carbon_content_1_in_pd) %>% # cleanup from first prediction
-  irp_carbon_content_1(do_summary = FALSE) %>%
-  dplyr::rename(carbon_content_1_mcmc = "carbon_content_1") %>%
-  dplyr::select(-carbon_content_1_in_pd) %>%
-  irp_carbon_content_1(do_summary = TRUE)
-  
-# plot the densities for the implied distributions
-p1 <- 
-  ggplot(mapping = aes(x = d$carbon_content_1_mcmc[[1]])) +
-  geom_histogram()
-```
--->
-
 
 # Can I trust the model?
 
@@ -138,7 +120,7 @@ The prediction domain is the range of predictor variables the model was trained 
 irp_get_prediction_domain_for(
   variable = "carbon_content_1",
   check_prediction_domain = "train"
-) %>%
+) |>
   plot()
 ```
 
@@ -225,11 +207,11 @@ d1 <-
   irp_carbon_content_1(d, do_summary = FALSE)
 
 # Compute the difference in C content between the first and second sample
-d1_C_difference <- d1$carbon_content_1[[1]] - d1$carbon_content_1[[2]]
+d1_C_difference <- as.data.frame(d1)$carbon_content_1[[1]] - as.data.frame(d1)$carbon_content_1[[2]]
 
 # Visualize as histogram
 ggplot() + 
-  geom_histogram(aes(x = d1_C_difference))
+  geom_histogram(aes(x = mean(d1_C_difference)))
 ```
 
 When `do_summary = TRUE` (see section [Making predictions: Options]), the prediction standard deviation is returned within a `quantities` object [---todo: ref to quantities] which means that you can use all functionalities of the 'quantities' package to handle these uncertainties (using a normal approximation).
@@ -243,7 +225,7 @@ d2 <-
     d, 
     do_summary = TRUE, 
     summary_function_mean = mean, 
-    summary_function_sd = stats::sd
+    summary_function_sd = posterior::sd
   )
 
 # Compute the difference in C content between the first and second sample
@@ -262,33 +244,55 @@ If you want to predict a large number of variables, instead of chaining together
 ```{r irp-predict}
 # Chaining together individual functions
 d1 <- 
-  d %>%
-  irp_carbon_content_1(do_summary = TRUE) %>%
-  irp_nitrogen_content_1(do_summary = TRUE) %>%
-  irp_hydrogen_content_1(do_summary = TRUE) %>%
-  irp_oxygen_content_1(do_summary = TRUE) %>%
-  irp_phosphorus_content_1(do_summary = TRUE) %>%
-  irp_potassium_content_1(do_summary = TRUE)
+  d |>
+  irp_carbon_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  ) |>
+  irp_nitrogen_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  ) |>
+  irp_hydrogen_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  ) |>
+  irp_oxygen_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  ) |>
+  irp_phosphorus_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  ) |>
+  irp_potassium_content_1(
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  )
 
 # Batch processing
 target_variables <- 
   paste0(c("carbon", "nitrogen", "hydrogen", "oxygen", "phosphorus", "potassium"), "_content_1")
 
 d2 <- 
-  d %>%
-  irp_predict(variable = target_variables, do_summary = TRUE)
+  d |>
+  irp_predict(
+    variable = target_variables, 
+    do_summary = TRUE, 
+    summary_function_sd = posterior::sd
+  )
 
 
 # Compare
-identical(d1, d2) #---todo: check whether this works when seeds are set for rbeta, rnorm, rdirichlet!
+identical(d1, d2)
 ```
 
 There is also a shorthand option `"all"` to predict all available peat properties (note: this can take some time):
 
 ```{r irp-predict-all, eval=FALSE}
 d3 <- 
-  d %>%
-  irp_predict(variable = "all", do_summary = TRUE)
+  d |>
+  irp_predict(variable = "all", do_summary = TRUE, summary_function_sd = posterior::sd)
 ```
 
 
@@ -299,10 +303,10 @@ d3 <-
 library(irpeat)
 
 a <- 
-  irpeat_sample_data %>%
-  irp_predict(variable = "bulk_density_1", do_summary = TRUE) %>%
-  irp_predict(variable = "macroporosity_1", do_summary = TRUE) %>%
-  irp_predict(variable = c("carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1"), do_summary = TRUE)
+  irpeat_sample_data |>
+  irp_predict(variable = "bulk_density_1", do_summary = TRUE, summary_function_sd = posterior::sd) |>
+  irp_predict(variable = "macroporosity_1", do_summary = TRUE, summary_function_sd = posterior::sd) |>
+  irp_predict(variable = c("carbon_content_1", "nitrogen_content_1", "hydrogen_content_1", "oxygen_content_1"), do_summary = TRUE, summary_function_sd = posterior::sd)
 
 ggplot(a, aes(x = as.numeric(carbon_content_1), y = as.numeric(C))) + 
   geom_errorbar(aes(
@@ -331,9 +335,9 @@ ggplot(a, aes(x = as.numeric(hydrogen_content_1), y = as.numeric(H))) +
 ###
 
 a <- 
-  irpeat_sample_data %>%
-  irp_predict(variable = "hydrogen_content_1", do_summary = TRUE) %>%
-  irp_preprocess_for(variable = "hydrogen_content_1") %>%
+  irpeat_sample_data |>
+  irp_predict(variable = "hydrogen_content_1", do_summary = TRUE, summary_function_sd = posterior::sd) |>
+  irp_preprocess_for(variable = "hydrogen_content_1") |>
   dplyr::rename(bulk_density_1_in_pd = "hydrogen_content_1_in_pd")
 
 a_pd <- 
@@ -342,10 +346,10 @@ a_pd <-
 ggplot() +
   geom_path(
     data = 
-      a %>%
-      dplyr::select(spectra, bulk_density_1_in_pd) %>%
-      dplyr::arrange(dplyr::desc(bulk_density_1_in_pd)) %>%
-      dplyr::mutate(measurement_id = seq_along(.data$spectra)) %>%
+      a |>
+      dplyr::select(spectra, bulk_density_1_in_pd) |>
+      dplyr::arrange(dplyr::desc(bulk_density_1_in_pd)) |>
+      dplyr::mutate(measurement_id = seq_along(.data$spectra)) |>
       tidyr::unnest(cols = "spectra"), 
     aes(
       x = .data$x,

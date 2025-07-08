@@ -42,149 +42,6 @@ check_irpeatmodels_and_dimreduce <- function(irpeatmodels_required_version) {
 }
 
 
-#' Function factory to generate prediction functions for models from project eb1079
-#'
-#' @param m A data frame with the model parameters (each column is a
-#' parameter and each row a draw from the posterior distribution).
-#'
-#' @param m_pls A `pls::mvr` or `dimreduce::dimreduce` model.
-#'
-#' @param config A list with configuration parameters for the prediction.
-#'
-#' @param prediction_domain A list with two elements:
-#' \describe{
-#'   \item{`train`}{An
-#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
-#'   representing the prediction domain for the training data.}
-#'   \item{`test`}{An
-#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
-#'   representing the prediction domain for the testing data.}
-#' }
-#'
-#' @param target_variable_name A character value representing the column name
-#' for the column with predicted values.
-#'
-#' @param x_unit A character value giving the unit which will be assigned to
-#' predicted values.
-#'
-#' @param irpeatmodels_required_version A character value with format "x.y.z"
-#' representing the minimum version of the 'irpeatmodels' package required
-#' to make predictions with the function which is generated.
-#'
-#' @param .f_check_packages A function which checks whether the correct version
-#' of 'irpeatmodels' is installed and of other packages which may be required.
-#' Must take the argument `irpeatmodels_required_version` as input.
-#'
-#' @param .f_dimreduce A function which returns a data
-#' frame with score values of the dimension reduction method predicted for new
-#' data. See `irp_make_predictions_plsr` for the structure and value of the
-#' function.
-#'
-#' @param .f_predict A function which returns a data frame with predicted values
-#' (samples in columns, rows represent draws from the posterior predictive
-#' distribution). See `irp_mcmc_predictions_beta_logit` for the structure and
-#' value of the function.
-#'
-#' @return A function which allows to make predictions with a model computed in
-#' project eb1079.
-#'
-#' @keywords internal
-#' @noRd
-irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, target_variable_name, x_unit, irpeatmodels_required_version, .f_check_packages, .f_dimreduce, .f_predict) {
-
-  stopifnot(is.character(target_variable_name) && length(target_variable_name) == 1)
-  stopifnot(is.character(x_unit) && length(x_unit) == 1)
-
-  function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
-
-    .f_check_packages(irpeatmodels_required_version = irpeatmodels_required_version)
-    stopifnot(inherits(x, "ir"))
-    stopifnot(is.logical(do_summary) && length(do_summary) == 1)
-
-    x_or <- x
-
-    # check spectra
-    x_flat <- ir::ir_flatten(x)
-    if(x_flat$x[[1]] > config$irp_preprocess$clip_range$start) {
-      rlang::warn(paste0("The minimum wavenumber value in `x` is ", x_flat$x[[1]], " , but should be ", config$irp_preprocess$clip_range$start, " or smaller."))
-    }
-    if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
-      rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
-    }
-
-    # preprocessing
-    x <- irp_preprocess_for(x = x, variable = target_variable_name)
-
-    # check prediction domain
-    prediction_domain <-
-      switch(
-        check_prediction_domain,
-        "train" = prediction_domain$train,
-        "test" = prediction_domain$test,
-        "none" = NULL
-      )
-
-    res_pd <-
-      if(check_prediction_domain != "none") {
-        tibble::tibble(
-          y =
-            x %>%
-            irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
-            dplyr::pull(.data$is_in_prediction_domain)
-        )
-    } else {
-      tibble::tibble(
-        y = rep(NA, nrow(x_or))
-      )
-    }
-
-    # get plsr scores
-    res <-
-      .f_dimreduce(
-        x = x,
-        m_pls = m_pls,
-        config = config
-      )
-
-    # predict
-    res <-
-      .f_predict(
-        x = res,
-        draws = m,
-        config = config
-      )
-
-    # additional transformations
-    res <-
-      switch(
-        target_variable_name,
-        "d13C_1" = purrr::map_dfc(res, function(.x) irp_atompercent_to_delta(.x * 100, r = 0.0112372)), # standard atom percent for VPDB
-        "d15N_1" = purrr::map_dfc(res, function(.x) irp_atompercent_to_delta(.x * 100, r = 0.0036765)), # standard atom percent for AIR,
-        res
-      )
-
-    # summarize and add unit
-    res <-
-      irp_summarize_predictions(
-        x = res,
-        x_unit = x_unit,
-        do_summary = do_summary,
-        summary_function_mean = mean,
-        summary_function_sd = stats::sd
-      )
-
-    res <-
-      tibble::tibble(y = res) %>%
-      stats::setNames(nm = target_variable_name)
-
-    cbind(x_or, res, res_pd %>% stats::setNames(nm = paste0(target_variable_name, "_in_pd")))
-
-  }
-
-}
-
-
-
 
 
 #' Summarizes predictions of models where predictions are given as MCMC draws from the posterior predictive distribution
@@ -210,7 +67,7 @@ irp_function_factory_eb1079 <- function(m, m_pls, config, prediction_domain, tar
 #'
 #' @keywords internal
 #' @noRd
-irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_mean = mean, summary_function_sd = stats::sd) {
+irp_summarize_predictions <- function(x, x_unit, do_summary, return_as_list, summary_function_mean = mean, summary_function_sd = stats::sd) {
 
   stopifnot(is.data.frame(x))
   stopifnot(is.character(x_unit) && length(x_unit) == 1L)
@@ -224,14 +81,17 @@ irp_summarize_predictions <- function(x, x_unit, do_summary, summary_function_me
         mode = "standard"
       ) %>%
       unname()
-  } else {
+  } else if (return_as_list) {
     purrr::map(x, units::set_units, value = x_unit, mode = "standard") %>%
       unname()
+  } else if (! return_as_list) {
+    posterior::rvar(as.matrix(x)) |>
+      irp_set_units_rvar(value = x_unit, mode = "standard")
   }
 
 }
 
-#' Predicts PLSR scores for new data (data format as in irpetpaper)
+#' Predicts PLSR scores for new data (data format as in irpeatpaper)
 #'
 #' @keywords internal
 #' @noRd
@@ -282,111 +142,130 @@ irp_make_predictions_plsr <- function(x, m_pls, config) {
 }
 
 
-#' Predicts ISPCA scores for new data (data format as in irpetpaper)
+
+#### eb1079 ####
+
+
+#' Function factory for prediction functions from project eb1149 (degree of decompsoition)
 #'
-#' @keywords internal
-#' @noRd
-irp_make_predictions_ispca <- function(x, m_pls, config) {
-
-  #---todo (code copied from irp_make_predictions_plsr)
-
-  # format data
-  x <-
-    tibble::tibble(
-      x =
-        x %>%
-        ir::ir_flatten() %>%
-        dplyr::select(-1) %>%
-        t()  %>%
-        tibble::as_tibble(.name_repair = "minimal") %>%
-        stats::setNames(nm = paste0("V", x$spectra[[1]]$x %>% as.character())) %>% # ---note: this works only because all spectra were clipped to the same range
-        as.matrix()
-    )
-
-  # get ispca scores
-  res <-
-    x %>%
-    dplyr::mutate(
-      x = {
-        # get original scores to compute standard deviation of first compound (see below)
-        # get original scores to compute standard deviation of first compound (see below)
-        res_or <-
-          m_pls$z %>%
-          tibble::as_tibble(.name_repair = "minimal")
-
-        stats::predict(
-          m_pls,
-          xnew = x
-        ) %>%
-          tibble::as_tibble() %>%
-          purrr::map_dfc( function(.x) {
-            #---note: scale the extracted components by dividing them by the standard deviation of the component with the largest variance. This is done to keep priors for slope coefficients roughly on the same scale (see Piironen.2020).
-            .x/stats::sd(res_or[, 1, drop = TRUE])
-          }) %>%
-          dplyr::select(seq_len(config$pls$ncomp)) %>%
-          as.matrix()
-      }
-    )
-}
-
-
-#' Computes predictions using draws for model coefficients for a Beta regression model with constant dispersion parameter
+#' @param model A [`brmsfit`](brms::brm) object.
 #'
-#' @keywords internal
+#' @param config A list with configuration parameters for the prediction.
+#'
+#' @param prediction_domain A list with two elements:
+#' \describe{
+#'   \item{`train`}{An
+#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
+#'   representing the prediction domain for the training data.}
+#'   \item{`test`}{An
+#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
+#'   representing the prediction domain for the testing data.}
+#' }
+#'
+#' @param target_variable_name A character value representing the column name
+#' for the column with predicted values.
+#'
+#' @param irpeatmodels_required_version A character value with format "x.y.z"
+#' representing the minimum version of the 'irpeatmodels' package required
+#' to make predictions with the function which is generated.
+#'
+#' @param .f_check_packages A function which checks whether the correct version
+#' of 'irpeatmodels' is installed and of other packages which may be required.
+#' Must take the argument `irpeatmodels_required_version` as input.
+#'
+#' @return A function that makes predictions with a model computed in
+#' project eb1079.
+#'
+#' @keywords Internal
 #' @noRd
-irp_mcmc_predictions_beta_logit <- function(x, draws, config) {
+irp_function_factory_eb1079 <- function(target_variable, model, config, prediction_domain, irpeatmodels_required_version = "0.0.0") {
 
-  # linear predictor
-  mu <- draws$Intercept + as.matrix(draws %>% dplyr::select(dplyr::starts_with("b["))) %*% t(x$x)
-  mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
+  .f_check_packages <- function() {
 
-  phi <-  draws$phi/config$parameter_scale$phi_scale
+    check_irpeatmodels(version = irpeatmodels_required_version)
+    rlang::is_installed("brms")
+    if(! requireNamespace("posterior", versionCheck = list(op = ">=", version = "1.5.0"), quietly = TRUE)) {
+      rlang::abort(paste0("You have to install the 'posterior' package (>=", "1.5.0",") to use this function."))
+    }
 
-  # predictions
-  yhat <-
-    purrr::map_dfc(mu, function(.x) {
-      if(all(is.na(.x))) {
-        rep(NA_real_, length(.x))
+  }
+
+  function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
+
+    .f_check_packages()
+    stopifnot(inherits(x, "ir"))
+    stopifnot(is.logical(do_summary) && length(do_summary) == 1)
+    stopifnot(is.logical(return_as_list) && length(return_as_list) == 1)
+    if(do_summary && return_as_list) {
+      stop("Both `do_summary` and `return_as_list` are set to `TRUE`, but only one of both must be `TRUE`.")
+    }
+
+
+    x_or <- x
+    x <- irp_preprocess_eb1079(x = x, config = config)
+
+    # check prediction domain
+    prediction_domain <-
+      switch(
+        check_prediction_domain,
+        "train" = prediction_domain$train,
+        "test" = prediction_domain$test,
+        "none" = NULL
+      )
+
+    x_in_pd <-
+      if(check_prediction_domain != "none") {
+        tibble::tibble(
+          is_in_prediction_domain =
+            x |>
+            irp_is_in_prediction_domain(prediction_domain = prediction_domain) |>
+            dplyr::pull(.data$is_in_prediction_domain)
+        )
       } else {
-        stats::rbeta(n = length(.x), shape1 = .x * phi, shape2 = (1 - .x) * phi)
+        tibble::tibble(
+          is_in_prediction_domain = rep(NA, nrow(x_or))
+        )
       }
-    })
 
-  # scale
-  yhat * config$data_scale$y_scale + config$data_scale$y_center
+    newdata <-
+      tibble::tibble(
+        x =
+          x |>
+          ir::ir_flatten() |>
+          dplyr::select(-1) |>
+          t() |>
+          tibble::as_tibble(.name_repair = "minimal") |>
+          stats::setNames(nm = paste0("V", seq_along(x$spectra[[1]]$x))) |>
+          as.matrix(),
+        y_err =
+          if(target_variable %in% c("dgf0_1")) {
+            0.00001
+          } else {
+            NULL
+          }
+      )
 
-}
 
+    yhat <-
+      brms::posterior_predict(object = model, newdata = newdata) |>
+      as.data.frame()
 
-#' Computes predictions using draws for model coefficients for a Normal regression model with constant standard deviation
-#'
-#' @keywords internal
-#' @noRd
-irp_mcmc_predictions_normal_identity_non_centered <- function(x, draws, config) {
+    yhat <-
+      irp_summarize_predictions(
+        x = yhat * config$model_scale$y_scale + config$model_scale$y_center,
+        x_unit = config$unit,
+        do_summary = do_summary,
+        return_as_list = return_as_list,
+        summary_function_mean = summary_function_mean,
+        summary_function_sd = summary_function_sd
+      )
 
-  # scale intercept and slopes
-  intercept <- draws$Intercept * config$parameter_scale$Intercept_sigma + config$parameter_scale$Intercept_mu
-  b <- draws %>%
-    dplyr::select(dplyr::starts_with("b[")) %>%
-    magrittr::multiply_by(config$parameter_scale$b_sigma) %>%
-    magrittr::add(config$parameter_scale$b_mu)
+    x_or[[target_variable]] <- yhat
+    x_or[[paste0(target_variable, "_in_pd")]] <- x_in_pd$is_in_prediction_domain
 
-  # linear predictor
-  mu <- intercept + as.matrix(b) %*% t(x$x)
-  mu <- as.data.frame(config$likelihood$linkinv(mu), stringsAsFactors = FALSE)
+    x_or
 
-  # predictions
-  yhat <-
-    purrr::map_dfc(mu, function(.x) {
-      if(all(is.na(.x))) {
-        rep(NA_real_, length(.x))
-      } else {
-        stats::rnorm(n = length(.x), mean = .x, sd = draws$sigma/config$parameter_scale$sigma_scale)
-      }
-    })
-
-  # scale
-  yhat * config$data_scale$y_scale + config$data_scale$y_center
+  }
 
 }
 
@@ -426,58 +305,73 @@ irp_preprocess_unpack_config <- function(x, config) {
 
 }
 
-#' Helper function to preprocess spectra for prediction with the models from project eb1079
-#'
-#' @keywords internal
-#' @noRd
-irp_preprocess_eb1079 <- function(x, config) {
 
-  ## custom preprocessing special to the models for eb1079
+
+#' Preprocesses spectra according to a preprocessing config object
+#'
+#' @param x An ir object to be preprocessed.
+#'
+#' @param config A list with arguments compatible with `irpeat::irp_preprocess()`.
+#'
+#' @keywords Internal
+#' @noRd
+irp_preprocess_eb1079 <- function (x, config) {
+
+  res <- x
 
   # First: get a baseline which can be subtracted from all spectra even with negative CO2 peaks. I have to do a SG smoothing and regional interpolation here to avoid negative CO2 peaks elsewhere to corrupt the baseline. I also have to interpolate linearly the CO2 peak around 670 cm$^{-1}$ since this peak corrupts the baseline and does not get smoothed out completely by the SG smoothing.
-  x_bl <-
-    x %>%
-    ir::ir_interpolate(start = NULL, dw = 1) %>%
-    ir::ir_smooth(method = "sg", n = 91) %>% #---note: new
-    ir::ir_clip(range = config$irp_preprocess$clip_range) %>%
-    ir::ir_interpolate_region(range = tibble::tibble(start = c(650, 2230), end = c(695, 2410))) %>%
-    ir::ir_bc(method = "rubberband", return_bl = TRUE, do_impute = TRUE)
+  res_bl <-
+    res |>
+    ir::ir_interpolate(start = NULL, dw = 1) |>
+    ir::ir_smooth(method = "sg", n = 91) |>
+    ir::ir_clip(range = config$irp_preprocess$clip_range[[1]]) |>
+    ir::ir_interpolate_region(range = tibble::tibble(start = c(645, 2230), end = c(695, 2410))) |>
+    ir::ir_bc(method = "rubberband", do_impute = TRUE, return_bl = TRUE)
+
+  ## Second: perform the actual correction
 
   # clipping and baseline correction
-  x <-
-    x %>%
-    ir::ir_interpolate(start = NULL, dw = 1) %>%
-    ir::ir_clip(range = config$irp_preprocess$clip_range) %>%
-    ir::ir_subtract(x_bl) %>%
-    ir::ir_bc(method = "rubberband", do_impute = TRUE)
+  res <-
+    res |>
+    ir::ir_interpolate(start = NULL, dw = 1) |>
+    ir::ir_clip(range = config$irp_preprocess$clip_range[[1]]) |>
+    ir::ir_subtract(res_bl)
 
-  # preprocess the spectra
-  irp_preprocess(
-    x,
-    do_interpolate = config$irp_preprocess$do_interpolate,
-    interpolate_start = config$irp_preprocess$interpolate_start,
-    interpolate_dw = config$irp_preprocess$interpolate_dw,
-    do_clip = config$irp_preprocess$do_clip,
-    clip_range = config$irp_preprocess$clip_range,
-    do_interpolate_region = config$irp_preprocess$do_interpolate_region,
-    interpolate_region_range = config$irp_preprocess$interpolate_region_range,
-    do_bc = config$irp_preprocess$do_bc,
-    bc_method = config$irp_preprocess$bc_method,
-    # bc_cutoff = config$irp_preprocess$bc_cutoff,
-    bc_cutoff = 0,
-    # bc_do_impute = config$irp_preprocess$bc_do_impute,
-    bc_do_impute = TRUE,
-    do_smooth = config$irp_preprocess$do_smooth,
-    do_normalise = config$irp_preprocess$do_normalise,
-    normalise_method = config$irp_preprocess$normalise_method,
-    do_bin = config$irp_preprocess$do_bin,
-    bin_width = config$irp_preprocess$bin_width,
-    bin_new_x_type = config$irp_preprocess$bin_new_x_type,
-    do_scale = config$irp_preprocess$do_scale,
-    scale_center = config$data_scale$x_center,
-    scale_scale = config$data_scale$x_scale,
-    do_return_as_ir = TRUE
-  )
+  res |>
+    #ir::ir_interpolate_region(range = tibble::tibble(start = c(645, 2250), end = c(695, 2400))) |>
+    ir::ir_interpolate_region(range = tibble::tibble(start = c(650), end = c(695))) |>
+    #ir::ir_bc(method = "rubberband", do_impute = TRUE) |>
+    irpeat::irp_preprocess(
+      do_interpolate = config$irp_preprocess$do_interpolate,
+      interpolate_start = config$irp_preprocess$interpolate_start[[1]],
+      interpolate_dw = config$irp_preprocess$interpolate_dw,
+      do_clip = config$irp_preprocess$do_clip[[1]],
+      clip_range = config$irp_preprocess$clip_range[[1]],
+      do_interpolate_region = FALSE,
+      interpolate_region_range = config$irp_preprocess$interpolate_region_range[[1]],
+      do_bc = config$irp_preprocess$do_bc,
+      bc_method = config$irp_preprocess$bc_method,
+      bc_cutoff = config$irp_preprocess$bc_cutoff,
+      bc_do_impute = config$irp_preprocess$bc_do_impute,
+      do_smooth = config$irp_preprocess$do_smooth,
+      smooth_method = config$irp_preprocess$smooth_method,
+      smooth_p = config$irp_preprocess$smooth_p,
+      smooth_n = config$irp_preprocess$smooth_n,
+      smooth_m = config$irp_preprocess$smooth_m,
+      smooth_ts = config$irp_preprocess$smooth_ts,
+      smooth_k = config$irp_preprocess$smooth_k,
+      do_normalise = config$irp_preprocess$do_normalise,
+      normalise_method = config$irp_preprocess$normalise_method,
+      do_bin = config$irp_preprocess$do_bin,
+      bin_width = config$irp_preprocess$bin_width,
+      bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+      do_scale = FALSE, #config$irp_preprocess$do_scale,
+      scale_center = config$irp_preprocess$scale_center,
+      scale_scale = config$irp_preprocess$scale_scale,
+      do_return_as_ir = TRUE
+    ) |>
+    ir::ir_clip(range = data.frame(start = c(650, 2400), end = c(2250, 4000))) |>
+    ir::ir_scale(center = config$irp_preprocess$scale_center, scale = config$irp_preprocess$scale_scale)
 
 }
 
@@ -514,4 +408,28 @@ irp_preprocess_eb1014 <- function(x, config) {
     do_return_as_ir = TRUE
   )
 
+}
+
+
+
+#### rvar ####
+
+#' Sets units of the array of an rvar object
+#'
+#' @param ... Additional arguments passed to `units::set_units()`.
+#'
+#' @keywords Internal
+#' @noRd
+irp_set_units_rvar <- function(x, ...) {
+  posterior::draws_of(x) <- units::set_units(posterior::draws_of(x), ...)
+  x
+}
+
+#' Drops units of the array of an rvar object
+#'
+#' @keywords Internal
+#' @noRd
+irp_drop_units_rvar <- function(x) {
+  posterior::draws_of(x) <- units::drop_units(posterior::draws_of(x))
+  x
 }

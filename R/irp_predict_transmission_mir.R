@@ -73,12 +73,13 @@
 #' be returned in a summarized version (`TRUE`) or not (`FALSE`).
 #' \itemize{
 #'   \item If `do_summary = FALSE`, a list column is returned and each
-#'   element of the list column is a numeric vector with draws from the
-#'   posterior distribution, including the residual variance of the model.
+#'   element of the list column is a numeric vector, or an `rvar` object is
+#'   returned as column in `x`, depending on the value of `return_as_list`. In
+#'   both cases, the column contains draws from the posterior predictive
+#'   distribution.
 #'   \item If `do_summary = TRUE`, each element is a
-#'   [quantities::quantities()] object with the
-#'   `error` attribute being the standard deviation of the unsummarized
-#'   values.
+#'   [quantities::quantities()] object with value and error summarized from
+#'   posterior draws via `summary_function_mean` and `summary_function_sd`
 #' }
 #'
 #' @param summary_function_mean A function used to summarize the predicted
@@ -86,6 +87,11 @@
 #'
 #' @param summary_function_sd A function used to summarize the predicted
 #' values (spread).
+#'
+#' @param return_as_list Logical value. If set to `TRUE`, the result will be
+#' returned as list of draws, otherwise the result will be returned as `rvar`
+#' object. This is a new argument currently only implemented for models
+#' predicting the degree of decomposition.
 #'
 #' @param check_prediction_domain A character value indicating if and how it
 #' should be checked whether the spectra in `x` are within the prediction domain
@@ -129,11 +135,17 @@
 #'
 #' @source
 #' \describe{
+#'   \item{`irp_holocellulose_2()`, `irp_klason_lignin_2()`}{
+#'     \insertCite{Teickner.2022a;textual}{irpeat}.
+#'   }
 #'   \item{`irp_eac_1()`, `irp_edc_1()`}{
 #'     \insertCite{Teickner.2022;textual}{irpeat}.
 #'   }
 #'   \item{`irp_microbial_nitrogen_content_1()`}{
 #'     \insertCite{Reuter.2020;textual}{irpeat}
+#'   }
+#'   \item{All other models}{
+#'     \insertCite{Teickner.2023;textual}{irpeat}
 #'   }
 #' }
 #'
@@ -145,6 +157,7 @@
 NULL
 
 
+
 #' @rdname irp-predict-transmission-mir
 #'
 #' @examples
@@ -154,6 +167,234 @@ NULL
 #'
 #' ## make predictions
 #'
+#' # holocellulose content
+#' x <- irpeat::irp_holocellulose_content_2(
+#'   x,
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
+
+  check_irpeatmodels(version = "0.0.0")
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  stopifnot(inherits(x, "ir"))
+  stopifnot(is.logical(do_summary) && length(do_summary) == 1)
+
+  x_or <- x
+
+  # get data
+  m <- irpeatmodels::model_holocellulose_content_2
+  config <- irpeatmodels::model_holocellulose_content_2_config
+
+  # check spectra
+  x_flat <- ir::ir_flatten(x)
+  if(x_flat$x[[1]] > config$irp_preprocess$clip_range$start) {
+    rlang::warn(paste0("The minimum wavenumber value in `x` is ", x_flat$x[[1]], " , but should be ", config$irp_preprocess$clip_range$start, " or smaller."))
+  }
+  if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
+    rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
+  }
+
+  # preprocess the spectra
+  x <-
+    irp_preprocess(
+      x,
+      do_interpolate = config$irp_preprocess$do_interpolate,
+      interpolate_start = config$irp_preprocess$interpolate_start,
+      interpolate_dw = config$irp_preprocess$interpolate_dw,
+      do_clip = config$irp_preprocess$do_clip,
+      clip_range = config$irp_preprocess$clip_range,
+      do_interpolate_region = config$irp_preprocess$do_interpolate_region,
+      interpolate_region_range = config$irp_preprocess$interpolate_region_range,
+      do_bc = config$irp_preprocess$do_bc,
+      bc_method = config$irp_preprocess$bc_method,
+      bc_cutoff = config$irp_preprocess$bc_cutoff,
+      bc_do_impute = config$irp_preprocess$bc_do_impute,
+      do_smooth = config$irp_preprocess$do_smooth,
+      do_normalise = config$irp_preprocess$do_normalise,
+      normalise_method = config$irp_preprocess$normalise_method,
+      do_bin = config$irp_preprocess$do_bin,
+      bin_width = config$irp_preprocess$bin_width,
+      bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+      do_scale = config$irp_preprocess$do_scale,
+      scale_center = config$data_scale$x_center,
+      scale_scale = config$data_scale$x_scale,
+      do_return_as_ir = TRUE
+    )
+
+  # check prediction domain
+  prediction_domain <-
+    switch(
+      check_prediction_domain,
+      "train" = irpeatmodels::model_holocellulose_content_2_prediction_domain$train,
+      "test" = irpeatmodels::model_holocellulose_content_2_prediction_domain$train,
+      "none" = NULL
+    )
+
+  res_pd <-
+    if(check_prediction_domain != "none") {
+      tibble::tibble(
+        y =
+          x %>%
+          irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
+          dplyr::pull(.data$is_in_prediction_domain)
+      )
+    } else {
+      tibble::tibble(
+        y = rep(NA, nrow(x_or))
+      )
+    }
+
+  # reformat for predictions
+  res <- ir::ir_flatten(x)
+  res_colnames <- paste0("V", res[, 1, drop= TRUE])
+  res <- as.data.frame(t(res[, -1, drop = FALSE]))
+  attr(res, "scaled:center") <- attr(x, "scaled:center")
+  attr(res, "scaled:scale") <- attr(x, "scaled:scale")
+  colnames(res) <- res_colnames
+
+  # predict
+  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(res)), stringsAsFactors = FALSE), ...))
+  res <- res * config$data_scale$y_scale + config$data_scale$y_center
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "g/g",
+      do_summary = do_summary,
+      return_as_list = return_as_list,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd
+    )
+
+  x_or$holocellulose_content_2 <- res
+  cbind(x_or, res_pd %>% stats::setNames(nm = "holocellulose_content_2_in_pd"))
+
+}
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # Klason lignin content
+#' x <- irpeat::irp_klason_lignin_content_2(
+#'   x,
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_klason_lignin_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
+
+  check_irpeatmodels(version = "0.0.0")
+  if(! requireNamespace("brms", quietly = TRUE)) {
+    rlang::abort("You have to install the 'brms' package to use this function.")
+  }
+  stopifnot(inherits(x, "ir"))
+  stopifnot(is.logical(do_summary) && length(do_summary) == 1)
+
+  x_or <- x
+
+  # get data
+  m <- irpeatmodels::model_klason_lignin_content_2
+  config <- irpeatmodels::model_klason_lignin_content_2_config
+
+  # check spectra
+  x_flat <- ir::ir_flatten(x)
+  if(x_flat$x[[1]] > config$irp_preprocess$clip_range$start) {
+    rlang::warn(paste0("The minimum wavenumber value in `x` is ", x_flat$x[[1]], " , but should be ", config$irp_preprocess$clip_range$start, " or smaller."))
+  }
+  if(x_flat$x[[nrow(x_flat)]] < config$irp_preprocess$clip_range$end) {
+    rlang::warn(paste0("The maximum wavenumber value in `x` is ", x_flat$x[[nrow(x)]], " , but should be ", config$irp_preprocess$clip_range$end, " or larger."))
+  }
+
+  # preprocess the spectra
+  x <-
+    irp_preprocess(
+      x,
+      do_interpolate = config$irp_preprocess$do_interpolate,
+      interpolate_start = config$irp_preprocess$interpolate_start,
+      interpolate_dw = config$irp_preprocess$interpolate_dw,
+      do_clip = config$irp_preprocess$do_clip,
+      clip_range = config$irp_preprocess$clip_range,
+      do_interpolate_region = config$irp_preprocess$do_interpolate_region,
+      interpolate_region_range = config$irp_preprocess$interpolate_region_range,
+      do_bc = config$irp_preprocess$do_bc,
+      bc_method = config$irp_preprocess$bc_method,
+      bc_cutoff = config$irp_preprocess$bc_cutoff,
+      bc_do_impute = config$irp_preprocess$bc_do_impute,
+      do_smooth = config$irp_preprocess$do_smooth,
+      do_normalise = config$irp_preprocess$do_normalise,
+      normalise_method = config$irp_preprocess$normalise_method,
+      do_bin = config$irp_preprocess$do_bin,
+      bin_width = config$irp_preprocess$bin_width,
+      bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+      do_scale = config$irp_preprocess$do_scale,
+      scale_center = config$data_scale$x_center,
+      scale_scale = config$data_scale$x_scale,
+      do_return_as_ir = TRUE
+    )
+
+  # check prediction domain
+  prediction_domain <-
+    switch(
+      check_prediction_domain,
+      "train" = irpeatmodels::model_klason_lignin_content_2_prediction_domain$train,
+      "test" = irpeatmodels::model_klason_lignin_content_2_prediction_domain$train,
+      "none" = NULL
+    )
+
+  res_pd <-
+    if(check_prediction_domain != "none") {
+      tibble::tibble(
+        y =
+          x %>%
+          irp_is_in_prediction_domain(prediction_domain = prediction_domain) %>%
+          dplyr::pull(.data$is_in_prediction_domain)
+      )
+    } else {
+      tibble::tibble(
+        y = rep(NA, nrow(x_or))
+      )
+    }
+
+  # reformat for predictions
+  res <- ir::ir_flatten(x)
+  res_colnames <- paste0("V", res[, 1, drop= TRUE])
+  res <- as.data.frame(t(res[, -1, drop = FALSE]))
+  attr(res, "scaled:center") <- attr(x, "scaled:center")
+  attr(res, "scaled:scale") <- attr(x, "scaled:scale")
+  colnames(res) <- res_colnames
+
+  # predict
+  res <- as.data.frame(brms::posterior_predict(m, newdata = data.frame(x = I(as.matrix(res)), stringsAsFactors = FALSE), ...))
+  res <- res * config$data_scale$y_scale + config$data_scale$y_center
+
+  # summarize and add unit
+  res <-
+    irp_summarize_predictions(
+      x = res,
+      x_unit = "g/g",
+      do_summary = do_summary,
+      return_as_list = return_as_list,
+      summary_function_mean = mean,
+      summary_function_sd = stats::sd
+    )
+
+  x_or$klason_lignin_content_2 <- res
+  cbind(x_or, res_pd %>% stats::setNames(nm = "klason_lignin_content_2_in_pd"))
+
+}
+
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
 #' # electron accepting capacity
 #' x <- irpeat::irp_eac_1(
 #'   x,
@@ -162,9 +403,10 @@ NULL
 #' )
 #'
 #' @export
-irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
   check_irpeatmodels(version = "0.0.0")
+  rlang::is_installed("rstantools")
   if(! requireNamespace("rstanarm", quietly = TRUE)) {
     rlang::abort("You have to install the 'rstanarm' package to use this function.")
   }
@@ -242,6 +484,7 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
       x = res,
       x_unit = "umol/g",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = mean,
       summary_function_sd = stats::sd
     )
@@ -280,7 +523,7 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
 #' )
 #'
 #' @export
-irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("rstanarm", quietly = TRUE)) {
@@ -360,6 +603,7 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
       x = res,
       x_unit = "umol/g",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = mean,
       summary_function_sd = stats::sd
     )
@@ -393,36 +637,23 @@ irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
 #'
 #' @examples
 #' # carbon content
-#' x <- irpeat::irp_carbon_content_1(
-#'   x,
-#'   do_summary = TRUE,
-#'   check_prediction_domain = "train"
-#' )
+#' x <-
+#'   irp_carbon_content_1(
+#'     x,
+#'     do_summary = TRUE,
+#'     check_prediction_domain = "train"
+#'   )
 #'
 #' @export
 irp_carbon_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_carbon_content_1_draws,
-    m_pls =
-      irpeatmodels::model_carbon_content_1_pls,
-    config =
-      irpeatmodels::model_carbon_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_carbon_content_1_prediction_domain,
-    target_variable_name =
-      "carbon_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "carbon_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "carbon_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "carbon_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "carbon_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
+
 
 #' @rdname irp-predict-transmission-mir
 #'
@@ -437,26 +668,11 @@ irp_carbon_content_1 <-
 #' @export
 irp_nitrogen_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_nitrogen_content_1_draws,
-    m_pls =
-      irpeatmodels::model_nitrogen_content_1_pls,
-    config =
-      irpeatmodels::model_nitrogen_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_nitrogen_content_1_prediction_domain,
-    target_variable_name =
-      "nitrogen_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "nitrogen_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "nitrogen_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "nitrogen_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "nitrogen_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 #' @rdname irp-predict-transmission-mir
@@ -472,26 +688,11 @@ irp_nitrogen_content_1 <-
 #' @export
 irp_hydrogen_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_hydrogen_content_1_draws,
-    m_pls =
-      irpeatmodels::model_hydrogen_content_1_pls,
-    config =
-      irpeatmodels::model_hydrogen_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_hydrogen_content_1_prediction_domain,
-    target_variable_name =
-      "hydrogen_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "hydrogen_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "hydrogen_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "hydrogen_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "hydrogen_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -508,26 +709,11 @@ irp_hydrogen_content_1 <-
 #' @export
 irp_oxygen_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_oxygen_content_1_draws,
-    m_pls =
-      irpeatmodels::model_oxygen_content_1_pls,
-    config =
-      irpeatmodels::model_oxygen_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_oxygen_content_1_prediction_domain,
-    target_variable_name =
-      "oxygen_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_dimreduce,
-    .f_dimreduce =
-      irp_make_predictions_ispca,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "oxygen_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "oxygen_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "oxygen_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "oxygen_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -544,26 +730,11 @@ irp_oxygen_content_1 <-
 #' @export
 irp_phosphorus_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_phosphorus_content_1_draws,
-    m_pls =
-      irpeatmodels::model_phosphorus_content_1_pls,
-    config =
-      irpeatmodels::model_phosphorus_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_phosphorus_content_1_prediction_domain,
-    target_variable_name =
-      "phosphorus_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "phosphorus_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "phosphorus_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "phosphorus_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "phosphorus_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -580,26 +751,11 @@ irp_phosphorus_content_1 <-
 #' @export
 irp_potassium_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_potassium_content_1_draws,
-    m_pls =
-      irpeatmodels::model_potassium_content_1_pls,
-    config =
-      irpeatmodels::model_potassium_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_potassium_content_1_prediction_domain,
-    target_variable_name =
-      "potassium_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "potassium_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "potassium_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "potassium_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "potassium_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -616,26 +772,11 @@ irp_potassium_content_1 <-
 #' @export
 irp_sulfur_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_sulfur_content_1_draws,
-    m_pls =
-      irpeatmodels::model_sulfur_content_1_pls,
-    config =
-      irpeatmodels::model_sulfur_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_sulfur_content_1_prediction_domain,
-    target_variable_name =
-      "sulfur_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "sulfur_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "sulfur_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "sulfur_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "sulfur_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -652,28 +793,52 @@ irp_sulfur_content_1 <-
 #' @export
 irp_titanium_content_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_titanium_content_1_draws,
-    m_pls =
-      irpeatmodels::model_titanium_content_1_pls,
-    config =
-      irpeatmodels::model_titanium_content_1_config,
-    prediction_domain =
-      irpeatmodels::model_titanium_content_1_prediction_domain,
-    target_variable_name =
-      "titanium_content_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "titanium_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "titanium_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "titanium_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "titanium_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # silicon content
+#' irpeat::irp_silicon_content_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_silicon_content_1 <-
+  irp_function_factory_eb1079(
+    target_variable = "silicon_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "silicon_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "silicon_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "silicon_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
+  )
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # calcium content
+#' irpeat::irp_calcium_content_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_calcium_content_1 <-
+  irp_function_factory_eb1079(
+    target_variable = "calcium_content_1",
+    model = readRDS(system.file("extdata", paste0("model_", "calcium_content_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "calcium_content_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "calcium_content_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
+  )
 
 #' @rdname irp-predict-transmission-mir
 #'
@@ -688,26 +853,11 @@ irp_titanium_content_1 <-
 #' @export
 irp_d13C_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_d13C_1_draws,
-    m_pls =
-      irpeatmodels::model_d13C_1_pls,
-    config =
-      irpeatmodels::model_d13C_1_config,
-    prediction_domain =
-      irpeatmodels::model_d13C_1_prediction_domain,
-    target_variable_name =
-      "d13C_1",
-    x_unit =
-      "1",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "d13C_1",
+    model = readRDS(system.file("extdata", paste0("model_", "d13C_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "d13C_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "d13C_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -724,26 +874,11 @@ irp_d13C_1 <-
 #' @export
 irp_d15N_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_d15N_1_draws,
-    m_pls =
-      irpeatmodels::model_d15N_1_pls,
-    config =
-      irpeatmodels::model_d15N_1_config,
-    prediction_domain =
-      irpeatmodels::model_d15N_1_prediction_domain,
-    target_variable_name =
-      "d15N_1",
-    x_unit =
-      "1",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "d15N_1",
+    model = readRDS(system.file("extdata", paste0("model_", "d15N_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "d15N_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "d15N_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -760,26 +895,11 @@ irp_d15N_1 <-
 #' @export
 irp_nosc_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_nosc_1_draws,
-    m_pls =
-      irpeatmodels::model_nosc_1_pls,
-    config =
-      irpeatmodels::model_nosc_1_config,
-    prediction_domain =
-      irpeatmodels::model_nosc_1_prediction_domain,
-    target_variable_name =
-      "nosc_1",
-    x_unit =
-      "mol/mol",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "nosc_1",
+    model = readRDS(system.file("extdata", paste0("model_", "nosc_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "nosc_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "nosc_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -795,28 +915,14 @@ irp_nosc_1 <-
 #'
 #' @export
 irp_dgf0_1 <-
-  irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_dgf0_1_draws,
-    m_pls =
-      irpeatmodels::model_dgf0_1_pls,
-    config =
-      irpeatmodels::model_dgf0_1_config,
-    prediction_domain =
-      irpeatmodels::model_dgf0_1_prediction_domain,
-    target_variable_name =
-      "dgf0_1",
-    x_unit =
-      "kJ/mol", #---todo: check
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_normal_identity_non_centered
-  )
+  target_variable <-
+    irp_function_factory_eb1079(
+      target_variable = "dgf0_1",
+      model = readRDS(system.file("extdata", paste0("model_", "dgf0_1", ".rds"), package = "irpeatmodels")),
+      config = readRDS(system.file("extdata", paste0("model_", "dgf0_1", "_config.rds"), package = "irpeatmodels")),
+      prediction_domain = readRDS(system.file("extdata", paste0("model_", "dgf0_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+      irpeatmodels_required_version = "0.0.0"
+    )
 
 
 #' @rdname irp-predict-transmission-mir
@@ -832,26 +938,31 @@ irp_dgf0_1 <-
 #' @export
 irp_bulk_density_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_bulk_density_1_draws,
-    m_pls =
-      irpeatmodels::model_bulk_density_1_pls,
-    config =
-      irpeatmodels::model_bulk_density_1_config,
-    prediction_domain =
-      irpeatmodels::model_bulk_density_1_prediction_domain,
-    target_variable_name =
-      "bulk_density_1",
-    x_unit =
-      "g/(cm^3)",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "bulk_density_1",
+    model = readRDS(system.file("extdata", paste0("model_", "bulk_density_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "bulk_density_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "bulk_density_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
+  )
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # loss on ignition
+#' irp_loss_on_ignition_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_loss_on_ignition_1 <-
+  irp_function_factory_eb1079(
+    target_variable = "loss_on_ignition_1",
+    model = readRDS(system.file("extdata", paste0("model_", "loss_on_ignition_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "loss_on_ignition_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "loss_on_ignition_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -868,62 +979,11 @@ irp_bulk_density_1 <-
 #' @export
 irp_O_to_C_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_O_to_C_1_draws,
-    m_pls =
-      irpeatmodels::model_O_to_C_1_pls,
-    config =
-      irpeatmodels::model_O_to_C_1_config,
-    prediction_domain =
-      irpeatmodels::model_O_to_C_1_prediction_domain,
-    target_variable_name =
-      "O_to_C_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_dimreduce,
-    .f_dimreduce =
-      irp_make_predictions_ispca,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
-  )
-
-
-#' @rdname irp-predict-transmission-mir
-#'
-#' @examples
-#' # H/C
-#' irpeat::irp_H_to_C_1(
-#'   irpeat_sample_data[1, ],
-#'   do_summary = TRUE,
-#'   check_prediction_domain = "train"
-#' )
-#'
-#' @export
-irp_H_to_C_1 <-
-  irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_H_to_C_1_draws,
-    m_pls =
-      irpeatmodels::model_H_to_C_1_pls,
-    config =
-      irpeatmodels::model_H_to_C_1_config,
-    prediction_domain =
-      irpeatmodels::model_H_to_C_1_prediction_domain,
-    target_variable_name =
-      "H_to_C_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_dimreduce,
-    .f_dimreduce =
-      irp_make_predictions_ispca,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "O_to_C_1",
+    model = readRDS(system.file("extdata", paste0("model_", "O_to_C_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "O_to_C_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "O_to_C_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
 
 
@@ -940,27 +1000,35 @@ irp_H_to_C_1 <-
 #' @export
 irp_C_to_N_1 <-
   irp_function_factory_eb1079(
-    m =
-      irpeatmodels::model_C_to_N_1_draws,
-    m_pls =
-      irpeatmodels::model_C_to_N_1_pls,
-    config =
-      irpeatmodels::model_C_to_N_1_config,
-    prediction_domain =
-      irpeatmodels::model_C_to_N_1_prediction_domain,
-    target_variable_name =
-      "C_to_N_1",
-    x_unit =
-      "g/g",
-    irpeatmodels_required_version =
-      "0.0.0",
-    .f_check_packages =
-      check_irpeatmodels_and_pls,
-    .f_dimreduce =
-      irp_make_predictions_plsr,
-    .f_predict =
-      irp_mcmc_predictions_beta_logit
+    target_variable = "C_to_N_1",
+    model = readRDS(system.file("extdata", paste0("model_", "C_to_N_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "C_to_N_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "C_to_N_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
   )
+
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # H/C
+#' irpeat::irp_H_to_C_1(
+#'   irpeat_sample_data[1, ],
+#'   do_summary = TRUE,
+#'   check_prediction_domain = "train"
+#' )
+#'
+#' @export
+irp_H_to_C_1 <-
+  irp_function_factory_eb1079(
+    target_variable = "H_to_C_1",
+    model = readRDS(system.file("extdata", paste0("model_", "H_to_C_1", ".rds"), package = "irpeatmodels")),
+    config = readRDS(system.file("extdata", paste0("model_", "H_to_C_1", "_config.rds"), package = "irpeatmodels")),
+    prediction_domain = readRDS(system.file("extdata", paste0("model_", "H_to_C_1", "_prediction_domain.rds"), package = "irpeatmodels")),
+    irpeatmodels_required_version = "0.0.0"
+  )
+
+
 
 #' @rdname irp-predict-transmission-mir
 #'
@@ -981,7 +1049,7 @@ irp_C_to_N_1 <-
 #'
 #' @noRd
 #' @keywords internal
-irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_porosity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -998,8 +1066,17 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
   config_porosity_1 <-  irpeatmodels::model_porosity_1_config
 
   # predict bulk density
-  if(!is.null(bulk_density)) {
-    if(is.list(bulk_density)) {
+  if(! is.null(bulk_density)) {
+    if(requireNamespace("posterior", quietly = TRUE) && posterior::is_rvar(bulk_density)) {
+      cond <- nrow(posterior::draws_of(bulk_density)) != nrow(m_draws_porosity_1)
+      if(cond) {
+        rlang::abort(paste0("If `bulk_density` is provided as `rvar`, it must contain ", nrow(m_draws_porosity_1), " draws."))
+      }
+      x[["bulk_density_1"]] <-
+        posterior::draws_of(bulk_density) |>
+        as.data.frame() |>
+        purrr::map(function(.x) .x)
+    } else if(is.list(bulk_density) && ! inherits(bulk_density, "rvar")) {
       cond <-
         purrr::map_lgl(bulk_density, function(.x) {
           length(.x) != nrow(m_draws_porosity_1)
@@ -1007,34 +1084,21 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
       if(any(cond)) {
         rlang::abort(paste0("If `bulk_density` is provided as list, it must contain ", nrow(m_draws_porosity_1), " values."))
       }
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 = bulk_density,
-          non_macroporosity_1_in_pd = NA,
-          macroporosity_1_in_pd = NA,
-          volume_fraction_solids_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <- bulk_density
     } else {
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 =
-            purrr::map(!!bulk_density, function(.x) {
-              rep(.x, nrow(irpeatmodels::model_porosity_1_draws))
-            }),
-          non_macroporosity_1_in_pd = NA,
-          macroporosity_1_in_pd = NA,
-          volume_fraction_solids_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <-
+        purrr::map(bulk_density, function(.x) {
+          rep(.x, nrow(irpeatmodels::model_porosity_1_draws))
+        })
     }
+    x[["non_macroporosity_1_in_pd"]] <- x[["macroporosity_1_in_pd"]] <- x[["volume_fraction_solids_1_in_pd"]] <- NA
   } else {
     x <-
       x %>%
       dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
-      irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
-      dplyr::rename(non_macroporosity_1_in_pd = "bulk_density_1_in_pd") %>%
+      irp_bulk_density_1(check_prediction_domain = check_prediction_domain, do_summary = FALSE, return_as_list = TRUE) %>%
       dplyr::mutate(
+        non_macroporosity_1_in_pd = bulk_density_1_in_pd,
         macroporosity_1_in_pd = .data$non_macroporosity_1_in_pd,
         volume_fraction_solids_1_in_pd = .data$non_macroporosity_1_in_pd
       )
@@ -1076,6 +1140,7 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
     )
   mu <- simplify2array(mu)
   mu_inv <- brms:::inv_link_categorical(mu)
+  mu_inv[mu_inv <= .Machine$double.eps] <- .Machine$double.eps
 
   # predictions
   res <-
@@ -1089,9 +1154,10 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
       tibble::tibble(
         y =
           irp_summarize_predictions(
-            as.data.frame(.x),
+            x = as.data.frame(.x),
             x_unit = "L/L",
             do_summary = do_summary,
+            return_as_list = return_as_list,
             summary_function_mean = summary_function_mean,
             summary_function_sd = summary_function_sd
           ) %>%
@@ -1100,7 +1166,9 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
         stats::setNames(nm = .y)
     })
 
-  cbind(x_or, res, x %>% dplyr::select(.data$non_macroporosity_1_in_pd, .data$macroporosity_1_in_pd, .data$volume_fraction_solids_1_in_pd))
+  x_or[, c("volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1")] <- res
+  x_or[, paste0(c("volume_fraction_solids_1", "non_macroporosity_1", "macroporosity_1"), "_in_pd")] <- x %>% dplyr::select(.data$volume_fraction_solids_1_in_pd, .data$non_macroporosity_1_in_pd, .data$macroporosity_1_in_pd)
+  x_or
 
 }
 
@@ -1123,17 +1191,18 @@ irp_porosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = m
 #' )
 #'
 #' @export
-irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_volume_fraction_solids_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
-    x,
+    x |>
+      dplyr::select(! dplyr::any_of(c("volume_fraction_solids_1", "volume_fraction_solids_1_in_pd"))),
     irp_porosity_1(
       x = x %>% dplyr::select(.data$spectra),
-      ...,
       do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd,
       check_prediction_domain = check_prediction_domain,
+      return_as_list = return_as_list,
       bulk_density = bulk_density
     ) %>%
       dplyr::select(.data$volume_fraction_solids_1, .data$volume_fraction_solids_1_in_pd)
@@ -1159,17 +1228,18 @@ irp_volume_fraction_solids_1 <- function(x, ..., do_summary = FALSE, summary_fun
 #' )
 #'
 #' @export
-irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_non_macroporosity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
-    x,
+    x |>
+      dplyr::select(! dplyr::any_of(c("non_macroporosity_1", "non_macroporosity_1_in_pd"))),
     irp_porosity_1(
       x = x %>% dplyr::select(.data$spectra),
-      ...,
       do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd,
       check_prediction_domain = check_prediction_domain,
+      return_as_list = return_as_list,
       bulk_density = bulk_density
     ) %>%
       dplyr::select(.data$non_macroporosity_1, .data$non_macroporosity_1_in_pd)
@@ -1196,17 +1266,18 @@ irp_non_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function
 #' )
 #'
 #' @export
-irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_macroporosity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   dplyr::bind_cols( #---note: to avoid conflicts when some of the porosity-related variables have already been compted for x
-    x,
+    x |>
+      dplyr::select(! dplyr::any_of(c("macroporosity_1", "macroporosity_1_in_pd"))),
     irp_porosity_1(
       x = x %>% dplyr::select(.data$spectra),
-      ...,
       do_summary = do_summary,
-      summary_function_mean = mean,
-      summary_function_sd = stats::sd,
+      summary_function_mean = summary_function_mean,
+      summary_function_sd = summary_function_sd,
       check_prediction_domain = check_prediction_domain,
+      return_as_list = return_as_list,
       bulk_density = bulk_density
     ) %>%
       dplyr::select(.data$macroporosity_1, .data$macroporosity_1_in_pd)
@@ -1234,7 +1305,7 @@ irp_macroporosity_1 <- function(x, ..., do_summary = FALSE, summary_function_mea
 #' )
 #'
 #' @export
-irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_saturated_hydraulic_conductivity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -1253,7 +1324,16 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
 
   # predict bulk density
   if(!is.null(bulk_density)) {
-    if(is.list(bulk_density)) {
+    if (requireNamespace("posterior", quietly = TRUE) && posterior::is_rvar(bulk_density)) {
+      cond <- nrow(posterior::draws_of(bulk_density)) != nrow(m_draws_ks_1)
+      if(cond) {
+        rlang::abort(paste0("If `bulk_density` is provided as `rvar`, it must contain ", nrow(m_draws_ks_1), " draws."))
+      }
+      x[["bulk_density_1"]] <-
+        posterior::draws_of(bulk_density) |>
+        as.data.frame() |>
+        purrr::map(function(.x) .x)
+    } else if(is.list(bulk_density)) {
       cond <-
         purrr::map_lgl(bulk_density, function(.x) {
           length(.x) != nrow(m_draws_ks_1)
@@ -1261,28 +1341,19 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
       if(any(cond)) {
         rlang::abort(paste0("If `bulk_density` is provided as list, it must contain ", nrow(m_draws_ks_1), " values."))
       }
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 = bulk_density,
-          saturated_hydraulic_conductivity_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <- bulk_density
     } else {
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 =
-            purrr::map(!!bulk_density, function(.x) {
-              rep(.x, nrow(m_draws_ks_1))
-            }),
-          saturated_hydraulic_conductivity_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <-
+        purrr::map(bulk_density, function(.x) {
+          rep(.x, nrow(m_draws_ks_1))
+        })
     }
+    x[["saturated_hydraulic_conductivity_1_in_pd"]] <- NA
   } else {
     x <-
       x %>%
       dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
-      irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+      irp_bulk_density_1(do_summary = FALSE, check_prediction_domain = check_prediction_domain, return_as_list = TRUE) %>%
       dplyr::rename(saturated_hydraulic_conductivity_1_in_pd = "bulk_density_1_in_pd")
   }
 
@@ -1339,6 +1410,7 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
       x = res,
       x_unit = "cm/h",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = summary_function_mean,
       summary_function_sd = summary_function_sd
     )
@@ -1374,7 +1446,7 @@ irp_saturated_hydraulic_conductivity_1 <- function(x, ..., do_summary = FALSE, s
 #' )
 #'
 #' @export
-irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", nitrogen_content = NULL) {
+irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, nitrogen_content = NULL) {
 
   stopifnot(temperature >= 0)
 
@@ -1395,7 +1467,16 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
 
   # predict N
   if(!is.null(nitrogen_content)) {
-    if(is.list(nitrogen_content)) {
+    if (requireNamespace("posterior", quietly = TRUE) && posterior::is_rvar(nitrogen_content)) {
+      cond <- nrow(posterior::draws_of(nitrogen_content)) != nrow(m_draws_cp_1)
+      if(cond) {
+        rlang::abort(paste0("If `nitrogen_content` is provided as `rvar`, it must contain ", nrow(m_draws_cp_1), " draws."))
+      }
+      x[["nitrogen_content_1"]] <-
+        posterior::draws_of(nitrogen_content) |>
+        as.data.frame() |>
+        purrr::map(function(.x) .x)
+    } else if(is.list(nitrogen_content) && ! inherits(nitrogen_content, "rvar")) {
       cond <-
         purrr::map_lgl(nitrogen_content, function(.x) {
           length(.x) != nrow(m_draws_cp_1)
@@ -1403,28 +1484,19 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
       if(any(cond)) {
         rlang::abort(paste0("If `nitrogen_content` is provided as list, it must contain ", nrow(m_draws_cp_1), " values."))
       }
-      x <-
-        x %>%
-        dplyr::mutate(
-          nitrogen_content_1 = nitrogen_content,
-          specific_heat_capacity_1_in_pd = NA
-        )
+      x[["nitrogen_content_1"]] <- nitrogen_content
     } else {
-      x <-
-        x %>%
-        dplyr::mutate(
-          nitrogen_content_1 =
-            purrr::map(!!nitrogen_content, function(.x) {
-              rep(.x, nrow(m_draws_cp_1))
-            }),
-          specific_heat_capacity_1_in_pd = NA
-        )
+      x[["nitrogen_content_1"]] <-
+        purrr::map(nitrogen_content, function(.x) {
+          rep(.x, nrow(m_draws_cp_1))
+        })
     }
+    x[["specific_heat_capacity_1_in_pd"]] <- NA
   } else {
     x <-
       x %>%
       dplyr::select(! dplyr::any_of(c("nitrogen_content_1", "nitrogen_content_1_in_pd"))) %>%
-      irp_nitrogen_content_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+      irp_nitrogen_content_1(do_summary = FALSE, check_prediction_domain = check_prediction_domain, return_as_list = TRUE) %>%
       dplyr::rename(specific_heat_capacity_1_in_pd = "nitrogen_content_1_in_pd")
   }
 
@@ -1477,6 +1549,7 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
       x = res,
       x_unit = "J/(g * K)",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = summary_function_mean,
       summary_function_sd = summary_function_sd
     )
@@ -1508,7 +1581,7 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, ..., do_summar
 #' )
 #'
 #' @export
-irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", bulk_density = NULL) {
+irp_dry_thermal_conductivity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -1527,7 +1600,16 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
 
   # predict bulk density
   if(!is.null(bulk_density)) {
-    if(is.list(bulk_density)) {
+    if (requireNamespace("posterior", quietly = TRUE) && posterior::is_rvar(bulk_density)) {
+      cond <- nrow(posterior::draws_of(bulk_density)) != nrow(m_draws_kt_1)
+      if(cond) {
+        rlang::abort(paste0("If `bulk_density` is provided as `rvar`, it must contain ", nrow(m_draws_kt_1), " draws."))
+      }
+      x[["bulk_density_1"]] <-
+        posterior::draws_of(bulk_density) |>
+        as.data.frame() |>
+        purrr::map(function(.x) .x)
+    } else if(is.list(bulk_density) && ! inherits(bulk_density, "rvar")) {
       cond <-
         purrr::map_lgl(bulk_density, function(.x) {
           length(.x) != nrow(m_draws_kt_1)
@@ -1535,28 +1617,19 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
       if(any(cond)) {
         rlang::abort(paste0("If `bulk_density` is provided as list, it must contain ", nrow(m_draws_kt_1), " values."))
       }
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 = bulk_density,
-          dry_thermal_conductivity_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <- bulk_density
     } else {
-      x <-
-        x %>%
-        dplyr::mutate(
-          bulk_density_1 =
-            purrr::map(!!bulk_density, function(.x) {
-              rep(.x, nrow(m_draws_kt_1))
-            }),
-          dry_thermal_conductivity_1_in_pd = NA
-        )
+      x[["bulk_density_1"]] <-
+        purrr::map(bulk_density, function(.x) {
+          rep(.x, nrow(m_draws_kt_1))
+        })
     }
+    x[["dry_thermal_conductivity_1_in_pd"]] <- NA
   } else {
   x <-
     x %>%
     dplyr::select(! dplyr::any_of(c("bulk_density_1", "bulk_density_1_in_pd"))) %>%
-    irp_bulk_density_1(..., do_summary = FALSE, check_prediction_domain = check_prediction_domain) %>%
+    irp_bulk_density_1(do_summary = FALSE, check_prediction_domain = check_prediction_domain, return_as_list = TRUE) %>%
     dplyr::rename(dry_thermal_conductivity_1_in_pd = "bulk_density_1_in_pd")
   }
 
@@ -1568,24 +1641,37 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
     as.matrix() %>%
     magrittr::subtract(config_kt_1$data_scale$x_center) %>%
     magrittr::divide_by(config_kt_1$data_scale$x_scale)
+  logX_bulk_density_1 <-log(X_bulk_density_1)
 
   Intercept_mu <-
     m_draws_kt_1$b_Intercept +
-    m_draws_kt_1$b_bulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]]
+    m_draws_kt_1$b_bulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]] +
+    m_draws_kt_1$b_logbulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]]
+
+  Intercept_mu_shape <-
+    m_draws_kt_1$b_shape_Intercept +
+    m_draws_kt_1$b_shape_bulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]] +
+    m_draws_kt_1$b_shape_logbulk_density * config_kt_1$model_scale$x_center[["b_bulkdensity"]]
 
   # linear predictor
   mu <-
     Intercept_mu +
-    sweep(X_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_bulk_density)), FUN = "*")
+    sweep(X_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_bulk_density)), FUN = "*") +
+    sweep(logX_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_logbulk_density)), FUN = "*")
+
+  mu_shape <-
+    Intercept_mu_shape +
+    sweep(X_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_shape_bulk_density)), FUN = "*") +
+    sweep(logX_bulk_density_1, 1, (m_draws_kt_1 %>% dplyr::pull(.data$b_shape_logbulk_density)), FUN = "*")
 
   mu <- as.data.frame(config_kt_1$likelihood$linkinv(mu))
-  shape <- m_draws_kt_1$shape
+  shape <- as.data.frame(exp(mu_shape))
 
   # predictions
   res <-
     purrr::map_dfc(seq_len(ncol(mu)), function(i) {
 
-      res <- stats::rgamma(n = nrow(mu), shape = shape, rate = shape/mu[, i])
+      res <- stats::rgamma(n = nrow(mu), shape = shape[, i], rate = shape[, i]/mu[, i])
 
       # scale
       tibble::tibble(x = res * config_kt_1$data_scale$y_scale + config_kt_1$data_scale$y_center) %>%
@@ -1599,6 +1685,7 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
       x = res,
       x_unit = "W/(m * K)",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = summary_function_mean,
       summary_function_sd = summary_function_sd
     )
@@ -1626,7 +1713,7 @@ irp_dry_thermal_conductivity_1 <- function(x, ..., do_summary = FALSE, summary_f
 #' )
 #'
 #' @export
-irp_microbial_nitrogen_content_1 <- function(x, y, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train") {
+irp_microbial_nitrogen_content_1 <- function(x, y, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
@@ -1701,6 +1788,7 @@ irp_microbial_nitrogen_content_1 <- function(x, y, ..., do_summary = FALSE, summ
       x = res,
       x_unit = "g/g",
       do_summary = do_summary,
+      return_as_list = return_as_list,
       summary_function_mean = summary_function_mean,
       summary_function_sd = summary_function_sd
     )
@@ -1712,3 +1800,4 @@ irp_microbial_nitrogen_content_1 <- function(x, y, ..., do_summary = FALSE, summ
   cbind(x_or, res, res_pd %>% dplyr::select(.data$microbial_nitrogen_content_1_in_pd))
 
 }
+

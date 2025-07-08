@@ -1,8 +1,8 @@
-# irpeat (development version)
+# irpeat 0.3.0
 
 #### Major changes
 
-* Major restructuration: The models originally included with the 'irpeat' package are now stored in a separate data package ['irpeatmodels'](---todo: add url) to reduce the size of the 'irpeat' package. The 'irpeatmodels' package can be installed from Zenodo.
+* Major restructuration: The models originally included with the 'irpeat' package are now stored in a separate data package 'irpeatmodels' to reduce the size of the 'irpeat' package. The 'irpeatmodels' package can be installed from Zenodo.
 * Add a new class `irp_prediction_domain`: This class stores the prediction domain for a model. Methods available are: Conversion from `ir` and `ir_flat` objects, plotting, check whether spectra in an `ir` object are within a prediction domain.
 * Rename:
     1. `irp_content()` to `irp_predict()`.
@@ -12,6 +12,7 @@
     5. Output from `irp_eac_1()`: `eac` --> `eac_1`.
     6. Output from `irp_edc_1()`: `edc` --> `edc_1`.
 * For existing and new models: Training and testing prediction domains were added and can now be used to check whether the models cannot be used to make reliable predictions.
+* By default, functions return Posterior
 
 #### New functions
 
@@ -24,10 +25,10 @@
 
 #### New models
 
-* New models: `irp_carbon_content_1()`, `irp_nitrogen_content_1()`, `irp_oxygen_content_1()`, `irp_hydrogen_content_1()`, `irp_phosphorus_content_1()`, `irp_potassium_content_1()`, `irp_sulfur_content_1()`, `irp_titanium_content_1()`, `irp_d13C_1()`, `irp_d15N_1()`, `irp_nosc_1()`, `irp_dgf0_1()`, `irp_bulk_density_1()`, `irp_O_to_C_1()`, `irp_H_to_C_1()`, `irp_C_to_N_1()`, `irp_volume_fraction_solids_1()`, `irp_non_macroporosity_1()`, `irp_macroporosity_1()`, `irp_saturated_hydraulic_conductivity_1()`, `irp_specific_heat_capacity_1()`, `irp_dry_thermal_conductivity_1()`, `irp_microbial_nitrogen_content_1()`.
+* `irp_carbon_content_1()`, `irp_nitrogen_content_1()`, `irp_oxygen_content_1()`, `irp_hydrogen_content_1()`, `irp_phosphorus_content_1()`, `irp_potassium_content_1()`, `irp_sulfur_content_1()`, `irp_calcium_content_1()`, `irp_silicon_content_1()`, `irp_titanium_content_1()`, `irp_d13C_1()`, `irp_d15N_1()`, `irp_nosc_1()`, `irp_dgf0_1()`, `irp_bulk_density_1()`, `irp_loss_on_ignition()`, `irp_O_to_C_1()`, `irp_H_to_C_1()`, `irp_C_to_N_1()`, `irp_volume_fraction_solids_1()`, `irp_non_macroporosity_1()`, `irp_macroporosity_1()`, `irp_saturated_hydraulic_conductivity_1()`, `irp_specific_heat_capacity_1()`, `irp_dry_thermal_conductivity_1()`, `irp_microbial_nitrogen_content_1()`.
 
 
-#### Improvements
+# irpeat 0.2.0
 
 * Performance improvement for `irp_preprocess()`.
 * Updated `irp_preprocess()`, model preprocessing configurations, and prediction functions to consider the new arguments (1) `new_x_type` from `ir::ir_bin()`, (2) `bc_do_impute` from `ir::ir_bc()`, (3) `do_return_as_ir` (allows to return the preprocessed spectra as `ir` object).
