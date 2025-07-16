@@ -5,7 +5,7 @@
 \alias{irpeat_sample_data}
 \title{Sample transmission mid infrared spectra of peat samples}
 \format{
-An \href{ir::ir_new_ir}{ir} object with 59 samples. See
+An \code{\link[ir:ir_new_ir]{ir}} object with 59 samples. See
 \code{?redoxpeat::d_mir} for additional information.
 }
 \usage{
