@@ -97,7 +97,10 @@ irp_get_prediction_domain_for <- function(variable, check_prediction_domain = "t
     "macroporosity_1" =,
     "saturated_hydraulic_conductivity_1" =,
     "specific_heat_capacity_1" =,
-    "dry_thermal_conductivity_1" = {
+    "dry_thermal_conductivity_1" =,
+    "degree_of_decomposition_1" =,
+    "degree_of_decomposition_2" =,
+    "degree_of_decomposition_3" = {
       check_irpeatmodels(version = "0.0.0")
       prediction_domain <- readRDS(system.file("extdata", paste0("model_", variable, "_prediction_domain.rds"), package = "irpeatmodels"))
     },

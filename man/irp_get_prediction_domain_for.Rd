@@ -120,6 +120,18 @@ Dry thermal conductivity as computed by
 Microbial nitrogen content as computed by
 \code{\link[=irp_microbial_nitrogen_content_1]{irp_microbial_nitrogen_content_1()}}.
 }
+\item{"degree_of_decomposition_1"}{
+Degree of decomposition as computed by
+\code{\link[=irp_degree_of_decomposition_1]{irp_degree_of_decomposition_1()}}.
+}
+\item{"degree_of_decomposition_2"}{
+Degree of decomposition as computed by
+\code{\link[=irp_degree_of_decomposition_2]{irp_degree_of_decomposition_2()}}.
+}
+\item{"degree_of_decomposition_3"}{
+Degree of decomposition as computed by
+\code{\link[=irp_degree_of_decomposition_3]{irp_degree_of_decomposition_3()}}.
+}
 }}
 
 \item{check_prediction_domain}{A character value indicating if and how it

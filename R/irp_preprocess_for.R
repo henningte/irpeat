@@ -123,6 +123,14 @@ irp_preprocess_for <- function(x, y = NULL, variable) {
         )
 
     },
+    "degree_of_decomposition_1" =,
+    "degree_of_decomposition_2" =,
+    "degree_of_decomposition_3" = {
+      check_irpeatmodels(version = "0.0.0")
+      utils::data(list = paste0("model_", variable, "_config"), package = "irpeatmodels", envir = environment())
+      config <- get(x = paste0("model_", variable, "_config"), pos = -1)
+      irp_preprocess_eb1149(x = x, config = config)
+    },
     stop(paste0("Unknown value for `variable`: ", variable))
   )
 

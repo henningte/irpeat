@@ -32,6 +32,9 @@
 \alias{irp_specific_heat_capacity_1}
 \alias{irp_dry_thermal_conductivity_1}
 \alias{irp_microbial_nitrogen_content_1}
+\alias{irp_degree_of_decomposition_1}
+\alias{irp_degree_of_decomposition_2}
+\alias{irp_degree_of_decomposition_3}
 \title{Predicts peat properties from transmission mid infrared spectra}
 \source{
 \describe{
@@ -43,6 +46,9 @@
 }
 \item{\code{irp_microbial_nitrogen_content_1()}}{
 \insertCite{Reuter.2020;textual}{irpeat}
+}
+\item{\code{irp_degree_of_decomposition_1()}, \code{irp_degree_of_decomposition_2()}, \code{irp_degree_of_decomposition_3()}}{
+\insertCite{Teickner.2025h;textual}{irpeat}
 }
 \item{All other models}{
 \insertCite{Teickner.2023;textual}{irpeat}
@@ -325,6 +331,33 @@ irp_dry_thermal_conductivity_1(
 irp_microbial_nitrogen_content_1(
   x,
   y,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_degree_of_decomposition_1(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_degree_of_decomposition_2(
+  x,
+  do_summary = FALSE,
+  summary_function_mean = mean,
+  summary_function_sd = stats::sd,
+  check_prediction_domain = "train",
+  return_as_list = FALSE
+)
+
+irp_degree_of_decomposition_3(
+  x,
   do_summary = FALSE,
   summary_function_mean = mean,
   summary_function_sd = stats::sd,
@@ -728,6 +761,39 @@ irpeat::irp_microbial_nitrogen_content_1(
   do_summary = TRUE,
   check_prediction_domain = "train"
 )
+
+# degree_of_decomposition_1
+if(! requireNamespace("posterior", quietly = TRUE)) {
+x <-
+  irpeat::irp_degree_of_decomposition_1(
+    irpeat_sample_data[1, ],
+    do_summary = TRUE,
+    check_prediction_domain = "train",
+    summary_function_sd = posterior::sd
+  )
+}
+
+# degree_of_decomposition_2
+if(! requireNamespace("posterior", quietly = TRUE)) {
+x <-
+  irpeat::irp_degree_of_decomposition_2(
+    irpeat_sample_data[1, ],
+    do_summary = TRUE,
+    check_prediction_domain = "train",
+    summary_function_sd = posterior::sd
+  )
+}
+
+# degree_of_decomposition_3
+if(! requireNamespace("posterior", quietly = TRUE)) {
+x <-
+  irpeat::irp_degree_of_decomposition_3(
+    irpeat_sample_data[1, ],
+    do_summary = TRUE,
+    check_prediction_domain = "train",
+    summary_function_sd = posterior::sd
+  )
+}
 
 }
 \references{

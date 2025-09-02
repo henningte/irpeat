@@ -144,6 +144,9 @@
 #'   \item{`irp_microbial_nitrogen_content_1()`}{
 #'     \insertCite{Reuter.2020;textual}{irpeat}
 #'   }
+#'   \item{`irp_degree_of_decomposition_1()`, `irp_degree_of_decomposition_2()`, `irp_degree_of_decomposition_3()`}{
+#'     \insertCite{Teickner.2025h;textual}{irpeat}
+#'   }
 #'   \item{All other models}{
 #'     \insertCite{Teickner.2023;textual}{irpeat}
 #'   }
@@ -1800,4 +1803,87 @@ irp_microbial_nitrogen_content_1 <- function(x, y, do_summary = FALSE, summary_f
   cbind(x_or, res, res_pd %>% dplyr::select(.data$microbial_nitrogen_content_1_in_pd))
 
 }
+
+
+#### eb1149 ####
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # degree_of_decomposition_1
+#' if(! requireNamespace("posterior", quietly = TRUE)) {
+#' x <-
+#'   irpeat::irp_degree_of_decomposition_1(
+#'     irpeat_sample_data[1, ],
+#'     do_summary = TRUE,
+#'     check_prediction_domain = "train",
+#'     summary_function_sd = posterior::sd
+#'   )
+#' }
+#'
+#' @export
+irp_degree_of_decomposition_1 <-
+  irp_function_factory_eb1149(
+    model = irpeatmodels::model_degree_of_decomposition_1_brms,
+    config = irpeatmodels::model_degree_of_decomposition_1_config,
+    prediction_domain = irpeatmodels::model_degree_of_decomposition_1_prediction_domain,
+    target_variable_name =
+      "degree_of_decomposition_1",
+    irpeatmodels_required_version =
+      "0.0.0"
+  )
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # degree_of_decomposition_2
+#' if(! requireNamespace("posterior", quietly = TRUE)) {
+#' x <-
+#'   irpeat::irp_degree_of_decomposition_2(
+#'     irpeat_sample_data[1, ],
+#'     do_summary = TRUE,
+#'     check_prediction_domain = "train",
+#'     summary_function_sd = posterior::sd
+#'   )
+#' }
+#'
+#' @export
+irp_degree_of_decomposition_2 <-
+  irp_function_factory_eb1149(
+    model = irpeatmodels::model_degree_of_decomposition_2_brms,
+    config = irpeatmodels::model_degree_of_decomposition_2_config,
+    prediction_domain = irpeatmodels::model_degree_of_decomposition_2_prediction_domain,
+    target_variable_name =
+      "degree_of_decomposition_2",
+    irpeatmodels_required_version =
+      "0.0.0"
+  )
+
+#' @rdname irp-predict-transmission-mir
+#'
+#' @examples
+#' # degree_of_decomposition_3
+#' if(! requireNamespace("posterior", quietly = TRUE)) {
+#' x <-
+#'   irpeat::irp_degree_of_decomposition_3(
+#'     irpeat_sample_data[1, ],
+#'     do_summary = TRUE,
+#'     check_prediction_domain = "train",
+#'     summary_function_sd = posterior::sd
+#'   )
+#' }
+#'
+#' @export
+irp_degree_of_decomposition_3 <-
+  irp_function_factory_eb1149(
+    model = irpeatmodels::model_degree_of_decomposition_3_brms,
+    config = irpeatmodels::model_degree_of_decomposition_3_config,
+    prediction_domain = irpeatmodels::model_degree_of_decomposition_3_prediction_domain,
+    target_variable_name =
+      "degree_of_decomposition_3",
+    irpeatmodels_required_version =
+      "0.0.0"
+  )
+
+
 

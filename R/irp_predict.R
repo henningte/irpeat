@@ -124,6 +124,18 @@
 #'     Microbial nitrogen content as computed by
 #'     [irp_microbial_nitrogen_content_1()].
 #'   }
+#'   \item{"degree_of_decomposition_1"}{
+#'     Degree of decomposition as computed by
+#'     [irp_degree_of_decomposition_1()].
+#'   }
+#'   \item{"degree_of_decomposition_2"}{
+#'     Degree of decomposition as computed by
+#'     [irp_degree_of_decomposition_2()].
+#'   }
+#'   \item{"degree_of_decomposition_3"}{
+#'     Degree of decomposition as computed by
+#'     [irp_degree_of_decomposition_3()].
+#'   }
 #' }
 #'
 #' @param ... Further arguments passed to individual prediction functions.
@@ -181,85 +193,92 @@ irp_predict <- function(x, y = NULL, variable, ...) {
 
   for(i in seq_along(variable)) {
     x <-
-      switch(variable[[i]],
-             "klason_lignin_content_1" = ,
-             "holocellulose_content_1" =
-               if(! has_holocellulose_content_1) {
-                 has_holocellulose_content_1 <<- TRUE
-                 irp_content_klh_hodgkins(
-                   x = x,
-                   export = NULL,
-                   verbose = FALSE,
-                   make_plots = FALSE
-                 )
-               } else {
-                 x
-               },
-             "klason_lignin_content_2" =
-               irp_klason_lignin_content_2(x = x, ...),
-             "holocellulose_content_2" =
-               irp_holocellulose_content_2(x = x, ...),
-             "eac_1" =
-               irp_eac_1(x = x, ...),
-             "edc_1" =
-               irp_edc_1(x = x, ...),
-             "carbon_content_1" =
-               irp_carbon_content_1(x = x, ...),
-             "nitrogen_content_1" =
-               irp_nitrogen_content_1(x = x, ...),
-             "hydrogen_content_1" =
-               irp_hydrogen_content_1(x = x, ...),
-             "oxygen_content_1" =
-               irp_oxygen_content_1(x = x, ...),
-             "phosphorus_content_1" =
-               irp_phosphorus_content_1(x = x, ...),
-             "potassium_content_1" =
-               irp_potassium_content_1(x = x, ...),
-             "sulfur_content_1" =
-               irp_sulfur_content_1(x = x, ...),
-             "titanium_content_1" =
-               irp_titanium_content_1(x = x, ...),
-             "silicon_content_1" =
-               irp_silicon_content_1(x = x, ...),
-             "calcium_content_1" =
-               irp_calcium_content_1(x = x, ...),
-             "d13C_1" =
-               irp_d13C_1(x = x, ...),
-             "d15N_1" =
-               irp_d15N_1(x = x, ...),
-             "nosc_1" =
-               irp_nosc_1(x = x, ...),
-             "dgf0_1" =
-               irp_dgf0_1(x = x, ...),
-             "bulk_density_1" =
-               irp_bulk_density_1(x = x, ...),
-             "loss_on_ignition_1" =
-               irp_loss_on_ignition_1(x = x, ...),
-             "H_to_C_1" =
-               irp_H_to_C_1(x = x, ...),
-             "O_to_C_1" =
-               irp_O_to_C_1(x = x, ...),
-             "C_to_N_1" =
-               irp_C_to_N_1(x = x, ...),
-             "volume_fraction_solids_1" =,
-             "non_macroporosity_1" =,
-             "macroporosity_1" = {
-               if(! has_porosity_1) {
-                 has_porosity_1 <<- TRUE
-                 irp_porosity_1(x = x, ...)
-               } else {
-                 x
-               }
-             },
-             "saturated_hydraulic_conductivity_1" =
-               irp_saturated_hydraulic_conductivity_1(x = x, ...),
-             "specific_heat_capacity_1" =
-               irp_specific_heat_capacity_1(x = x, ...),
-             "dry_thermal_conductivity_1" =
-               irp_dry_thermal_conductivity_1(x = x, ...),
-             "microbial_nitrogen_content_1" =
-               irp_microbial_nitrogen_content_1(x = x, y = y, ...),
-             stop(paste0("Unknown value for `variable`: ", variable[[i]]))
+      switch(
+        variable[[i]],
+        "klason_lignin_content_1" = ,
+        "holocellulose_content_1" =
+          if(! has_holocellulose_content_1) {
+            has_holocellulose_content_1 <<- TRUE
+            irp_content_klh_hodgkins(
+              x = x,
+              export = NULL,
+              verbose = FALSE,
+              make_plots = FALSE
+            )
+          } else {
+            x
+          },
+        "klason_lignin_content_2" =
+          irp_klason_lignin_content_2(x = x, ...),
+        "holocellulose_content_2" =
+          irp_holocellulose_content_2(x = x, ...),
+        "eac_1" =
+          irp_eac_1(x = x, ...),
+        "edc_1" =
+          irp_edc_1(x = x, ...),
+        "carbon_content_1" =
+          irp_carbon_content_1(x = x, ...),
+        "nitrogen_content_1" =
+          irp_nitrogen_content_1(x = x, ...),
+        "hydrogen_content_1" =
+          irp_hydrogen_content_1(x = x, ...),
+        "oxygen_content_1" =
+          irp_oxygen_content_1(x = x, ...),
+        "phosphorus_content_1" =
+          irp_phosphorus_content_1(x = x, ...),
+        "potassium_content_1" =
+          irp_potassium_content_1(x = x, ...),
+        "sulfur_content_1" =
+          irp_sulfur_content_1(x = x, ...),
+        "titanium_content_1" =
+          irp_titanium_content_1(x = x, ...),
+        "silicon_content_1" =
+          irp_silicon_content_1(x = x, ...),
+        "calcium_content_1" =
+          irp_calcium_content_1(x = x, ...),
+        "d13C_1" =
+          irp_d13C_1(x = x, ...),
+        "d15N_1" =
+          irp_d15N_1(x = x, ...),
+        "nosc_1" =
+          irp_nosc_1(x = x, ...),
+        "dgf0_1" =
+          irp_dgf0_1(x = x, ...),
+        "bulk_density_1" =
+          irp_bulk_density_1(x = x, ...),
+        "loss_on_ignition_1" =
+          irp_loss_on_ignition_1(x = x, ...),
+        "H_to_C_1" =
+          irp_H_to_C_1(x = x, ...),
+        "O_to_C_1" =
+          irp_O_to_C_1(x = x, ...),
+        "C_to_N_1" =
+          irp_C_to_N_1(x = x, ...),
+        "volume_fraction_solids_1" =,
+        "non_macroporosity_1" =,
+        "macroporosity_1" = {
+          if(! has_porosity_1) {
+            has_porosity_1 <<- TRUE
+            irp_porosity_1(x = x, ...)
+          } else {
+            x
+          }
+        },
+        "saturated_hydraulic_conductivity_1" =
+          irp_saturated_hydraulic_conductivity_1(x = x, ...),
+        "specific_heat_capacity_1" =
+          irp_specific_heat_capacity_1(x = x, ...),
+        "dry_thermal_conductivity_1" =
+          irp_dry_thermal_conductivity_1(x = x, ...),
+        "microbial_nitrogen_content_1" =
+          irp_microbial_nitrogen_content_1(x = x, y = y, ...),
+        "degree_of_decomposition_1" =
+          irp_degree_of_decomposition_1(x = x, ...),
+        "degree_of_decomposition_2" =
+          irp_degree_of_decomposition_2(x = x, ...),
+        "degree_of_decomposition_3" =
+          irp_degree_of_decomposition_3(x = x, ...),
+        stop(paste0("Unknown value for `variable`: ", variable[[i]]))
       )
   }
 

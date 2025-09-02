@@ -146,7 +146,7 @@ irp_make_predictions_plsr <- function(x, m_pls, config) {
 #### eb1079 ####
 
 
-#' Function factory for prediction functions from project eb1149 (degree of decompsoition)
+#' Function factory for prediction functions from project eb1149 (degree of decomposition)
 #'
 #' @param model A [`brmsfit`](brms::brm) object.
 #'
@@ -268,6 +268,108 @@ irp_function_factory_eb1079 <- function(target_variable, model, config, predicti
   }
 
 }
+
+
+#### eb1149 ####
+
+#' Function factory for prediction functions from project eb1149 (degree of decomposition)
+#'
+#' @param model A [`brmsfit`](brms::brm) object.
+#'
+#' @param config A list with configuration parameters for the prediction.
+#'
+#' @param prediction_domain A list with two elements:
+#' \describe{
+#'   \item{`train`}{An
+#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
+#'   representing the prediction domain for the training data.}
+#'   \item{`test`}{An
+#'   [`irp_prediction_domain`](irpeat::new_irp_prediction_domain) object
+#'   representing the prediction domain for the testing data.}
+#' }
+#'
+#' @param target_variable_name A character value representing the column name
+#' for the column with predicted values.
+#'
+#' @param irpeatmodels_required_version A character value with format "x.y.z"
+#' representing the minimum version of the 'irpeatmodels' package required
+#' to make predictions with the function which is generated.
+#'
+#' @param .f_check_packages A function which checks whether the correct version
+#' of 'irpeatmodels' is installed and of other packages which may be required.
+#' Must take the argument `irpeatmodels_required_version` as input.
+#'
+#' @return A function that makes predictions with a model computed in
+#' project eb1079.
+#'
+#' @keywords Internal
+#' @noRd
+irp_function_factory_eb1149 <- function(model, config, prediction_domain, target_variable_name, irpeatmodels_required_version = "0.0.0") {
+
+  .f_check_packages <- function() {
+
+    check_irpeatmodels(version = irpeatmodels_required_version)
+    rlang::is_installed("brms")
+    rlang::is_installed("posterior", version = "1.5.0")
+
+  }
+
+  function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
+
+    .f_check_packages()
+    stopifnot(inherits(x, "ir"))
+    stopifnot(is.logical(do_summary) && length(do_summary) == 1)
+    stopifnot(is.logical(return_as_list) && length(return_as_list) == 1)
+    if(do_summary && return_as_list) {
+      stop("Both `do_summary` and `return_as_list` are set to `TRUE`, but only one of both must be `TRUE`.")
+    }
+
+    x_or <- x
+    x <- irp_preprocess_eb1149(x = x, config = config)
+    x_in_pd <- irpeat::irp_is_in_prediction_domain(x = x, prediction_domain = prediction_domain)
+
+    newdata <-
+      tibble::tibble(
+        x =
+          x |>
+          ir::ir_flatten() |>
+          dplyr::select(-1) |>
+          t()
+      )
+
+    yhat <-
+      brms::posterior_predict(object = model, newdata = newdata) |>
+      posterior::rvar()
+
+    posterior::draws_of(yhat) <- units::set_units(posterior::draws_of(yhat), value = "g/g", mode = "standard")
+
+    if(return_as_list) {
+      yhat <-
+        posterior::draws_of(yhat) |>
+        as.data.frame() |>
+        purrr::map(function(.x) .x)
+    } else if(do_summary) {
+      yhat <-
+        purrr::map(yhat, function(.x) {
+          quantities::set_quantities(
+            x = summary_function_mean(.x),
+            unit = "g/g",
+            errors = summary_function_sd(.x),
+            mode = "standard"
+          )
+        })
+      yhat <- do.call("c", yhat)
+    }
+
+    x_or[[target_variable_name]] <- yhat
+    x_or[[paste0(target_variable_name, "_in_pd")]] <- x_in_pd$is_in_prediction_domain
+
+    x_or
+
+  }
+
+}
+
 
 
 #### preprocessing helper functions ####
@@ -410,6 +512,53 @@ irp_preprocess_eb1014 <- function(x, config) {
 
 }
 
+
+#' Preprocesses spectra according to a preprocessing config object
+#'
+#' @param x An ir object to be preprocessed.
+#'
+#' @param config A list with arguments compatible with `irpeat::irp_preprocess()`.
+#'
+#' @keywords Internal
+#' @noRd
+irp_preprocess_eb1149 <- function (x, config) {
+
+  res <- x
+
+  irpeat::irp_preprocess(
+    x = res,
+    do_interpolate = config$irp_preprocess$do_interpolate,
+    interpolate_start = config$irp_preprocess$interpolate_start[[1]],
+    interpolate_dw = config$irp_preprocess$interpolate_dw,
+    do_clip = config$irp_preprocess$do_clip[[1]],
+    clip_range = config$irp_preprocess$clip_range[[1]],
+    do_interpolate_region = FALSE,
+    interpolate_region_range = config$irp_preprocess$interpolate_region_range[[1]],
+    do_bc = config$irp_preprocess$do_bc,
+    bc_method = config$irp_preprocess$bc_method,
+    bc_cutoff = config$irp_preprocess$bc_cutoff,
+    bc_do_impute = config$irp_preprocess$bc_do_impute,
+    do_smooth = config$irp_preprocess$do_smooth,
+    smooth_method = config$irp_preprocess$smooth_method,
+    smooth_p = config$irp_preprocess$smooth_p,
+    smooth_n = config$irp_preprocess$smooth_n,
+    smooth_m = config$irp_preprocess$smooth_m,
+    smooth_ts = config$irp_preprocess$smooth_ts,
+    smooth_k = config$irp_preprocess$smooth_k,
+    do_normalise = config$irp_preprocess$do_normalise,
+    normalise_method = config$irp_preprocess$normalise_method,
+    do_bin = config$irp_preprocess$do_bin,
+    bin_width = config$irp_preprocess$bin_width,
+    bin_new_x_type = config$irp_preprocess$bin_new_x_type,
+    do_scale = FALSE,
+    scale_center = config$irp_preprocess$scale_center,
+    scale_scale = config$irp_preprocess$scale_scale,
+    do_return_as_ir = TRUE
+  ) |>
+    ir::ir_clip(range = data.frame(start = c(650, 2400), end = c(2250, 4000))) |>
+    ir::ir_scale(center = config$irp_preprocess$scale_center, scale = config$irp_preprocess$scale_scale)
+
+}
 
 
 #### rvar ####
