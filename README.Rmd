@@ -21,6 +21,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
+
 ## Overview
 
 'irpeat' is an R package which contains functions to analyze infrared spectra of peat samples. These functions are functions to compute humification indices and functions to predict peat properties. Some functions may also work with organic matter samples in general.
@@ -33,8 +34,10 @@ The following peat properties can be predicted (note model-specific limitations 
 + standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$) 
 + electrochemical properties (electron accepting capacity, electron donating capacity)
 + microbial nitrogen content (modified version of the model described in @Reuter.2020)
++ The degree of decomposition ($\gamma$, the fraction of initial mass lost).
 
 The package also contains functions to predict holocellulose and Klason lignin contents [@Hodgkins.2018; @Teickner.2022a], but these models are biased for peat samples [@Teickner.2022a].
+
 
 ### How to install
 
@@ -46,10 +49,10 @@ remotes::install_github(repo = "henningte/irpeat")
 
 'irpeat' relies on the R package ['ir'](https://github.com/henningte/ir) for handling infrared spectra.
 
-If you want to use the prediction models, you have to install the ['irpeatmodels'](---todo: add url) package in addition to the 'irpeat' package:
+If you want to use the prediction models, you have to install the ['irpeatmodels'](https://doi.org/10.5281/zenodo.17187912) package in addition to the 'irpeat' package:
 
 ```{r installation-irpeatmodels, eval=FALSE}
-remotes::install_url("---todo:add url", type = "source")
+remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.zip", type = "source")
 ```
 
 
@@ -75,25 +78,26 @@ irpeat::irpeat_sample_data
 
 `irpeat_sample_data` contains transmission mid infrared spectra of peat different samples (See @Teickner.2022 and @Teickner.2021c for details).
 
-A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples. We use only the first few spectra from `ir::ir_sample_data` to speed the computations a bit up.
+A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples.
 
-```{r sample_data_workflow}
+```{r sample_data_workflow, warning=FALSE}
 x <- 
-  irpeat_sample_data %>%                                  # data
+  irpeat_sample_data |>                                  # data
   dplyr::mutate(
     hi_1630_1090 =
-      irpeat_sample_data %>%
-      ir::ir_bc(method = "rubberband") %>%                # baseline correction
-      ir::ir_interpolate(start = NULL, dw = 1) %>%        # interpolation
-      irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
+      irpeat_sample_data |>
+      ir::ir_bc(method = "rubberband") |>                # baseline correction
+      ir::ir_interpolate(start = NULL, dw = 1) |>        # interpolation
+      irp_hi(x1 = 1630, x2 = 1090) |>                    # humification index
       dplyr::pull(hi_1630_1090)
-  ) %>%
-  irpeat::irp_nitrogen_content_1(do_summary = TRUE) %>%   # N content
-  irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
-  irpeat::irp_macroporosity_1(do_summary = TRUE)          # macroporosity
+  ) |>
+  ir::ir_interpolate(start = NULL, dw = 1) |>
+  irpeat::irp_nitrogen_content_1(do_summary = TRUE) |>   # N content
+  irpeat::irp_bulk_density_1(do_summary = TRUE) |>       # bulk density
+  irpeat::irp_macroporosity_1(do_summary = TRUE)         # macroporosity
 ```
 
-`x` is identical to `irpeat_sample_data`, but contains additional columns for the computed humification indicex (`h1_1630_1090`) and the computed nitrogen content (`nitrogen_content_1`)
+`x` is identical to `irpeat_sample_data`, but contains an additional column for the computed humification index (`h1_1630_1090`) and the computed nitrogen content (`nitrogen_content_1`)
 
 ```{r x_inspect}
 x
@@ -102,12 +106,12 @@ x
 Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
 
 ```{r x_plot}
-x %>%
+x |>
   ggplot(
     aes(
       x = 
-        nitrogen_content_1 %>%
-        units::set_units(value = "%") %>%
+        nitrogen_content_1 |>
+        units::set_units(value = "%") |>
         quantities::drop_quantities(), 
       y = 
         hi_1630_1090
@@ -115,7 +119,7 @@ x %>%
   ) + 
   geom_point() +
   labs(
-    x = "Nitrogen content [mass-%]", 
+    x = "Nitrogen content [mass %]", 
     y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
   )
 ```
@@ -123,19 +127,16 @@ x %>%
 
 All computed quantities come with units and standard errors (thanks to the [quantities](https://github.com/r-quantities/quantities) package):
 
-```{r x_klh_inspect_quantities}
+```{r x_nitrogen_inspect_quantities}
 x$nitrogen_content_1[1:5]
 ```
 
-### Future development
-
-Henning Teickner plans, as part of his PhD project, to extensively extent 'irpeat' by developing a set of calibration models that can predict various peat physicochemical properties from mid infrared spectra. These models should be finished by September 2024. Currently, a data compendium ([pmird](https://henningte.github.io/pmird/index.html)) is developed to collect the data required for this task.
 
 ### How to cite
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (`r format(Sys.Date(), "%Y")`). _irpeat: Functions to Analyze Mid Infrared Spectra of Peat Samples_. Accessed `r format(Sys.Date(), "%Y-%m-%d")`. Online at <https://github.com/henningte/irpeat>.
+> Henning Teickner, Suzanne B. Hodgkins (`r format(Sys.Date(), "%Y")`). _irpeat: Functions to Analyze Mid-Infrared Spectra of Peat Samples_. Accessed `r format(Sys.Date(), "%Y-%m-%d")`. Online at <https://github.com/henningte/irpeat>.
 
 
 ### Licenses

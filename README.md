@@ -20,19 +20,17 @@ The following peat properties can be predicted (note model-specific
 limitations described in the documentation):
 
 - Elemental contents (C, H, N, O, S, P, K, Ti)
-- isotope values
-  (![\delta^{13}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B13%7D "\delta^{13}")C
-  and
-  ![\delta^{15}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cdelta%5E%7B15%7D "\delta^{15}")N)
+- isotope values ($\delta^{13}$C and $\delta^{15}$N)
 - physical properties (bulk density, volume fraction of solids,
   non-macroporosity, macroporosity, saturated hydraulic conductivity,
   specific heat capacity, dry thermal conductivity)
-- standard Gibbs free energy of formation
-  (![\Delta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CDelta "\Delta")G![\_\text{f}^0](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;_%5Ctext%7Bf%7D%5E0 "_\text{f}^0"))
+- standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$)
 - electrochemical properties (electron accepting capacity, electron
   donating capacity)
 - microbial nitrogen content (modified version of the model described in
   Reuter et al. (2020))
+- The degree of decomposition ($\gamma$, the fraction of initial mass
+  lost).
 
 The package also contains functions to predict holocellulose and Klason
 lignin contents (Hodgkins et al. 2018; Teickner and Knorr 2022), but
@@ -50,11 +48,11 @@ remotes::install_github(repo = "henningte/irpeat")
 for handling infrared spectra.
 
 If you want to use the prediction models, you have to install the
-[‘irpeatmodels’](---todo:%20add%20url) package in addition to the
-‘irpeat’ package:
+[‘irpeatmodels’](https://doi.org/10.5281/zenodo.17187912) package in
+addition to the ‘irpeat’ package:
 
 ``` r
-remotes::install_url("---todo:add url", type = "source")
+remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.zip", type = "source")
 ```
 
 ### How to use
@@ -68,8 +66,9 @@ library(irpeat)
 library(ir)
 library(irpeatmodels)
 library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.3.3
 library(units)
-#> udunits database from C:/Users/henni/AppData/Local/R/win-library/4.2/units/share/udunits/udunits2.xml
+#> udunits database from C:/Users/henni/AppData/Local/R/win-library/4.3/units/share/udunits/udunits2.xml
 ```
 
 You can test ‘irpeat’ with sample data from the R package ‘irpeat’:
@@ -89,7 +88,8 @@ irpeat::irpeat_sample_data
 #>  8     9         9             57 <df>        0.490 0.0576 0.00885 0.394 0.0013 
 #>  9    10        10             24 <df>        0.459 0.0560 0.00838 0.454 0      
 #> 10    11        11             25 <df>        0.465 0.0566 0.00723 0.420 0      
-#> # … with 49 more rows, and 2 more variables: d15N <dbl>, d13C <dbl>
+#> # ℹ 49 more rows
+#> # ℹ 2 more variables: d15N <dbl>, d13C <dbl>
 ```
 
 `irpeat_sample_data` contains transmission mid infrared spectra of peat
@@ -99,49 +99,50 @@ Gao, and Knorr (2021) for details).
 A simple workflow could be, for example, to baseline correct the spectra
 (using functions of the package ‘ir’) compute various humification
 indices and Klason lignin and holocellulose mass fractions in the
-samples. We use only the first few spectra from `ir::ir_sample_data` to
-speed the computations a bit up.
+samples.
 
 ``` r
 x <- 
-  irpeat_sample_data %>%                                  # data
+  irpeat_sample_data |>                                  # data
   dplyr::mutate(
     hi_1630_1090 =
-      irpeat_sample_data %>%
-      ir::ir_bc(method = "rubberband") %>%                # baseline correction
-      ir::ir_interpolate(start = NULL, dw = 1) %>%        # interpolation
-      irp_hi(x1 = 1630, x2 = 1090) %>%                    # humification index
+      irpeat_sample_data |>
+      ir::ir_bc(method = "rubberband") |>                # baseline correction
+      ir::ir_interpolate(start = NULL, dw = 1) |>        # interpolation
+      irp_hi(x1 = 1630, x2 = 1090) |>                    # humification index
       dplyr::pull(hi_1630_1090)
-  ) %>%
-  irpeat::irp_nitrogen_content_1(do_summary = TRUE) %>%   # N content
-  irpeat::irp_bulk_density_1(do_summary = TRUE) %>%       # bulk density
-  irpeat::irp_macroporosity_1(do_summary = TRUE)          # macroporosity
+  ) |>
+  ir::ir_interpolate(start = NULL, dw = 1) |>
+  irpeat::irp_nitrogen_content_1(do_summary = TRUE) |>   # N content
+  irpeat::irp_bulk_density_1(do_summary = TRUE) |>       # bulk density
+  irpeat::irp_macroporosity_1(do_summary = TRUE)         # macroporosity
 ```
 
-`x` is identical to `irpeat_sample_data`, but contains additional
-columns for the computed humification indicex (`h1_1630_1090`) and the
+`x` is identical to `irpeat_sample_data`, but contains an additional
+column for the computed humification index (`h1_1630_1090`) and the
 computed nitrogen content (`nitrogen_content_1`)
 
 ``` r
 x
 #> # A tibble: 59 × 18
-#>    id_90 sample_id measurement_id          C        H        N        O        S
-#>    <int>     <int>          <int> (err) [g/… (err) [… (err) [… (err) [… (err) […
-#>  1     1         1             23 0.4790247… 0.05625… 0.00968… 0.39768… 0.00395…
-#>  2     2         2             32 0.4468899… 0.0561(… 0.00478… 0.44283…  8(0)e-5
-#>  3     3         3             38 0.4599222… 0.05598… 0.00788… 0.41248…  8(0)e-5
-#>  4     5         5             52 0.4708597… 0.05853… 0.00755… 0.41433…  8(0)e-5
-#>  5     6         6             54 0.5019724… 0.05495… 0.0127(… 0.3732(… 0.0013(…
-#>  6     7         7             55 0.4844088… 0.0557(… 0.0091(… 0.39185… 0.0012(…
-#>  7     8         8             56 0.4661264… 0.05655… 0.00725… 0.40095…  8(0)e-4
-#>  8     9         9             57 0.4897663… 0.05765… 0.00885… 0.39395… 0.0013(…
-#>  9    10        10             24 0.4594893… 0.05598… 0.00838… 0.45435…     0(0)
-#> 10    11        11             25 0.4647567… 0.05663… 0.00723… 0.42003…     0(0)
-#> # … with 49 more rows, and 10 more variables: d15N <dbl>, d13C <dbl>,
+#>    id_90 sample_id measurement_id spectra           C        H        N        O
+#>    <int>     <int>          <int> <named li> (err) [… (err) [… (err) [… (err) […
+#>  1     1         1             23 <tibble>   0.47902… 0.05625… 0.00968… 0.39768…
+#>  2     2         2             32 <tibble>   0.44688… 0.0561(… 0.00478… 0.44283…
+#>  3     3         3             38 <tibble>   0.45992… 0.05598… 0.00788… 0.41248…
+#>  4     5         5             52 <tibble>   0.47085… 0.05853… 0.00755… 0.41433…
+#>  5     6         6             54 <tibble>   0.50197… 0.05495… 0.0127(… 0.3732(…
+#>  6     7         7             55 <tibble>   0.48440… 0.0557(… 0.0091(… 0.39185…
+#>  7     8         8             56 <tibble>   0.46612… 0.05655… 0.00725… 0.40095…
+#>  8     9         9             57 <tibble>   0.48976… 0.05765… 0.00885… 0.39395…
+#>  9    10        10             24 <tibble>   0.45948… 0.05598… 0.00838… 0.45435…
+#> 10    11        11             25 <tibble>   0.46475… 0.05663… 0.00723… 0.42003…
+#> # ℹ 49 more rows
+#> # ℹ 10 more variables: S (err) [g/g], d15N <dbl>, d13C <dbl>,
 #> #   hi_1630_1090 <numeric>, nitrogen_content_1 (err) [g/g],
 #> #   nitrogen_content_1_in_pd <logical>, bulk_density_1 (err) [g/cm^3],
-#> #   bulk_density_1_in_pd <logical>, spectra <named list>,
-#> #   macroporosity_1 (err) [L/L], macroporosity_1_in_pd <logical>
+#> #   bulk_density_1_in_pd <logical>, macroporosity_1 (err) [L/L],
+#> #   macroporosity_1_in_pd <logical>
 ```
 
 Plot of the humification index (ratio of the intensities at 1420 and
@@ -149,12 +150,12 @@ Plot of the humification index (ratio of the intensities at 1420 and
 content:
 
 ``` r
-x %>%
+x |>
   ggplot(
     aes(
       x = 
-        nitrogen_content_1 %>%
-        units::set_units(value = "%") %>%
+        nitrogen_content_1 |>
+        units::set_units(value = "%") |>
         quantities::drop_quantities(), 
       y = 
         hi_1630_1090
@@ -162,7 +163,7 @@ x %>%
   ) + 
   geom_point() +
   labs(
-    x = "Nitrogen content [mass-%]", 
+    x = "Nitrogen content [mass %]", 
     y = expression("Ratio of the intensities at"~1630~and~1090~cm^{-1})
   )
 ```
@@ -175,26 +176,16 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.001157014 0.000871431 0.001076665 0.001012812 0.001258238
-#>          V1          V2          V3          V4          V5 
-#> 0.010407304 0.005570570 0.008703218 0.007687649 0.012470859
+#> Errors: 0.001997196 0.001589896 0.001854060 0.001789981 0.002276302
+#> [1] 0.010515780 0.006352945 0.008698074 0.008472305 0.012925355
 ```
-
-### Future development
-
-Henning Teickner plans, as part of his PhD project, to extensively
-extent ‘irpeat’ by developing a set of calibration models that can
-predict various peat physicochemical properties from mid infrared
-spectra. These models should be finished by September 2024. Currently, a
-data compendium ([pmird](https://henningte.github.io/pmird/index.html))
-is developed to collect the data required for this task.
 
 ### How to cite
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2023). *irpeat: Functions to
-> Analyze Mid Infrared Spectra of Peat Samples*. Accessed 2023-03-18.
+> Henning Teickner, Suzanne B. Hodgkins (2025). *irpeat: Functions to
+> Analyze Mid-Infrared Spectra of Peat Samples*. Accessed 2025-09-23.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
@@ -235,14 +226,15 @@ Data and models for the electrochemical accepting and donating
 capacities (EAC, EDC) of peat were derived from Teickner, Gao, and Knorr
 (2022) and Teickner, Gao, and Knorr (2021)
 
-This packages was developed in R (R version 4.2.0 (2022-04-22 ucrt)) (R
+This packages was developed in R (R version 4.3.1 (2023-06-16 ucrt)) (R
 Core Team 2020) using functions from devtools (Wickham et al. 2021),
 usethis (Wickham, Bryan, and Barrett 2022), and roxygen2 (Wickham et al.
 2022).
 
 ### References
 
-<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
 
 <div id="ref-Broder.2012" class="csl-entry">
 
@@ -295,7 +287,7 @@ Routine.” *Biogeosciences* 17 (2): 499–514.
 
 Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021.
 “Reproducible Research Compendium with R Code and Data for:
-’Electrochemical Properties of Üeat Particulate Organic Matter on a
+’Electrochemical Properties of Peat Particulate Organic Matter on a
 Global Scale: Relation to Peat Chemistry and Degree of Decomposition’.”
 Zenodo. <https://doi.org/10.5281/zenodo.5792970>.
 
@@ -321,16 +313,17 @@ Matter with Mid Infrared Spectra.” Preprint. Soil and methods.
 
 <div id="ref-Wickham.2022" class="csl-entry">
 
-Wickham, Hadley, Jennifer Bryan, and Malcolm Barrett. 2022. “<span
-class="nocase">usethis</span>: Automate Package and Project Setup.”
+Wickham, Hadley, Jennifer Bryan, and Malcolm Barrett. 2022.
+“<span class="nocase">usethis</span>: Automate Package and Project
+Setup.”
 
 </div>
 
 <div id="ref-Wickham.2022a" class="csl-entry">
 
 Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster.
-2022. “<span class="nocase">roxygen2</span>: <span
-class="nocase">In-line</span> Documentation for R.”
+2022. “<span class="nocase">roxygen2</span>:
+<span class="nocase">In-line</span> Documentation for R.”
 
 </div>
 
