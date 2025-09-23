@@ -1,6 +1,6 @@
 Package: irpeat
-Title: Functions to Analyze Mid Infrared Spectra of Peat Samples
-Version: 0.2.0
+Title: Functions to Analyze Mid-Infrared Spectra of Peat Samples
+Version: 0.3.0
 Authors@R: 
     c(person(given = "Henning",
            family = "Teickner",
@@ -20,10 +20,9 @@ Authors@R:
            role = c("ctb"), 
            email = "kh.knorrr@wwu.de")
            )
-Description: 'irpeat' provides functions to analyze mid infrared
-  spectra of peat samples (various humification indices, Klason lignin content,
-  holocellulose content, electron accepting capacity, electron donating 
-  capacity).
+Description: Provides functions to analyze mid-infrared
+  spectra of peat samples (humification indices, prediction models for peat
+  properties).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -39,20 +38,32 @@ Imports:
     graphics,
     utils,
     stats,
-    rstanarm (>= 2.19.3),
     lifecycle,
     magrittr,
-    brms
-RoxygenNote: 7.2.0
+    ggplot2,
+    plyr
+RoxygenNote: 7.3.2
 RdMacros: 
   Rdpack
 Suggests: 
     knitr,
     rmarkdown,
     elco,
-    spelling
+    spelling,
+    irpeatmodels,
+    brms,
+    rstanarm (>= 2.19.3),
+    kableExtra,
+    pls,
+    dimreduce,
+    stringr,
+    tibble,
+    units,
+    signal,
+    posterior,
+    rstantools
 VignetteBuilder: knitr
-Date: 2022-04-21
+Date: 2025-07-08
 Roxygen: list(markdown = TRUE)
 Language: en-US
 URL: https://henningte.github.io/irpeat/
@@ -62,3 +73,18 @@ Remotes:
 Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/henningte/elco/
+Collate: 
+    'data.R'
+    'irp_content_klh_hodgkins.R'
+    'irp_export_prepare.R'
+    'irp_get_prediction_domain_for.R'
+    'irp_hi.R'
+    'irp_predict.R'
+    'utils.R'
+    'irp_predict_transmission_mir.R'
+    'irp_preprocess.R'
+    'irp_preprocess_for.R'
+    'irpeat-package.R'
+    'prediction_domain.R'
+    'utils-isotope-signatures.R'
+    'utils-pipe.R'

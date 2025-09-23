@@ -6,7 +6,8 @@
 #' have been shown to be biased for peat samples
 #' \insertCite{Teickner.2022a}{irpeat}.
 #'
-#' @param x An object of class [`ir`][ir::ir_new_ir].
+#' @param x An object of class [`ir`][ir::ir_new_ir] with all spectra being in
+#' the range 650 to 4000 cm\deqn{^{-1}}.
 #'
 #' @param export Either a valid path to an existing directory where to
 #' store the results of the original script (see section "Source")
@@ -50,9 +51,11 @@
 #'
 #' @export
 irp_content_klh_hodgkins <- function(x,
-                            export = NULL,
-                            verbose = FALSE,
-                            make_plots = FALSE) {
+                                     export = NULL,
+                                     verbose = FALSE,
+                                     make_plots = FALSE) {
+
+  check_irpeatmodels(version = "0.0.0")
 
   stopifnot(inherits(x, "ir"))
   if(!is.null(export)) {
@@ -107,8 +110,8 @@ irp_content_klh_hodgkins_predict <- function(x,
                                              x_flat_empty,
                                              res) {
 
-  utils::data("irp_content_h_hodgkins_model", envir=environment())
-  utils::data("irp_content_kl_hodgkins_model", envir=environment())
+  # utils::data("irp_content_h_hodgkins_model", envir=environment())
+  # utils::data("irp_content_kl_hodgkins_model", envir=environment())
 
   # make sure that all values get their right row in x
   x_flat_new_names <- c(colnames(x_flat)[-1], colnames(x_flat_empty)[-1])
@@ -120,13 +123,20 @@ irp_content_klh_hodgkins_predict <- function(x,
   res$norm.Acorr <- dplyr::bind_rows(res$norm.Acorr, res_fake)[index,]
 
   # holocellulose
-  newdata_h_hodgkins <- data.frame(lm_x = res$norm.Acorr$carb,
-                                   stringsAsFactors = FALSE)
-  prediction_h_hodgkins <- as.data.frame(stats::predict(irp_content_h_hodgkins_model,
-                                                        newdata = newdata_h_hodgkins,
-                                                        se.fit = TRUE))
+  newdata_h_hodgkins <-
+    data.frame(
+      lm_x = res$norm.Acorr$carb,
+      stringsAsFactors = FALSE
+    )
+  prediction_h_hodgkins <-
+    as.data.frame(
+      stats::predict(
+        irpeatmodels::model_holocellulose_content_1,
+        newdata = newdata_h_hodgkins,
+        se.fit = TRUE)
+    )
   prediction_h_hodgkins$se_pi <- sqrt(prediction_h_hodgkins$se.fit^2 + prediction_h_hodgkins$residual.scale^2)
-  x$holocellulose_hodgkins <-
+  x$holocellulose_content_1 <-
     quantities::set_quantities(
       prediction_h_hodgkins$fit,
       unit = "g/g",
@@ -134,13 +144,20 @@ irp_content_klh_hodgkins_predict <- function(x,
     )
 
   # Klason lignin
-  newdata_kl_hodgkins <- data.frame(lm_x = res$norm.Acorr$arom15 + res$norm.Acorr$arom16,
-                                    stringsAsFactors = FALSE)
-  prediction_kl_hodgkins <- as.data.frame(stats::predict(irp_content_kl_hodgkins_model,
-                                                         newdata = newdata_kl_hodgkins,
-                                                         se.fit = TRUE))
+  newdata_kl_hodgkins <-
+    data.frame(
+      lm_x = res$norm.Acorr$arom15 + res$norm.Acorr$arom16,
+                                    stringsAsFactors = FALSE
+      )
+  prediction_kl_hodgkins <-
+    as.data.frame(
+      stats::predict(irpeatmodels::model_klason_lignin_content_1,
+                     newdata = newdata_kl_hodgkins,
+                     se.fit = TRUE
+      )
+    )
   prediction_kl_hodgkins$se_pi <- sqrt(prediction_kl_hodgkins$se.fit^2 + prediction_kl_hodgkins$residual.scale^2)
-  x$klason_lignin_hodgkins <-
+  x$klason_lignin_content_1 <-
     quantities::set_quantities(
       prediction_kl_hodgkins$fit, unit = "g/g",
       errors = prediction_kl_hodgkins$se_pi
@@ -149,10 +166,33 @@ irp_content_klh_hodgkins_predict <- function(x,
 
 }
 
+# Function to do the spectral preprocessing
+irp_content_klh_hodgkins_preprocess <- function(x) {
+
+  target_range <-
+    tibble::tibble(start = 650, end = 4000)
+
+  x_range <-
+    tibble::tibble(
+      start = purrr::map_dbl(x$spectra, function(.x) min(.x$x, na.rm = TRUE)),
+      end = purrr::map_dbl(x$spectra, function(.x) max(.x$x, na.rm = TRUE))
+    )
+
+  if(any(x_range$start > target_range$start) || any(x_range$end < target_range$end)) {
+    rlang::abort("Some spectra in `x` have a wavenumber range not covering [650, 4000] cm$^{-1}$. All spectra need to start at most at 650 cm$^{-1}$ and end at least at 4000 cm$^{-1}$.")
+  }
+
+  x %>%
+    ir::ir_interpolate(start = NULL, dw = 1) %>%
+    ir::ir_clip(range = target_range) %>% #---note: range of spectra in ir::ir_sample_data (spectra which were used in Hodgkins et al. to calibrate the models)
+    ir::ir_normalise(method = "area")
+
+}
+
 # Function to prepare objects of class ir for the main function
 irp_content_klh_hodgkins_prepare <- function(x) {
 
-  x_flat <- ir::ir_interpolate(x = x, start = NULL, dw = 1)
+  x_flat <- irp_content_klh_hodgkins_preprocess(x)
   x_flat <- ir::ir_flatten(x = x_flat, measurement_id = as.character(seq_len(nrow(x_flat))))
   x_flat <- ir::ir_flat_clean(x_flat, return_empty = FALSE)
   x_flat <- as.data.frame(x_flat[order(x_flat$x, decreasing = TRUE), ])
