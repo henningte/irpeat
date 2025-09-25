@@ -29,9 +29,9 @@ knitr::opts_chunk$set(
 The following peat properties can be predicted (note model-specific limitations described in the documentation): 
 
 + Elemental contents (C, H, N, O, S, P, K, Ti)
-+ isotope values ($\delta^{13}$C and $\delta^{15}$N)
++ isotope values (&delta;<sup>13</sup>C and &delta;<sup>15</sup>N)
 + physical properties (bulk density, volume fraction of solids, non-macroporosity, macroporosity, saturated hydraulic conductivity, specific heat capacity, dry thermal conductivity)
-+ standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$) 
++ standard Gibbs free energy of formation (&Delta;G<sub>f</sub><sup>0</sup>) 
 + electrochemical properties (electron accepting capacity, electron donating capacity)
 + microbial nitrogen content (modified version of the model described in @Reuter.2020)
 + The degree of decomposition ($\gamma$, the fraction of initial mass lost).
@@ -52,7 +52,7 @@ remotes::install_github(repo = "henningte/irpeat")
 If you want to use the prediction models, you have to install the ['irpeatmodels'](https://doi.org/10.5281/zenodo.17187912) package [@Teickner.2025g] in addition to the 'irpeat' package:
 
 ```{r installation-irpeatmodels, eval=FALSE}
-remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.zip", type = "source")
+remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz", type = "source")
 ```
 
 
@@ -68,6 +68,7 @@ library(ir)
 library(irpeatmodels)
 library(ggplot2)
 library(units)
+library(rstan)
 ```
 
 You can test 'irpeat' with sample data from the R package 'irpeat':
@@ -81,6 +82,7 @@ irpeat::irpeat_sample_data
 A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples.
 
 ```{r sample_data_workflow, warning=FALSE}
+set.seed(3453)
 x <- 
   irpeat_sample_data |>                                  # data
   dplyr::mutate(

@@ -20,11 +20,11 @@ The following peat properties can be predicted (note model-specific
 limitations described in the documentation):
 
 - Elemental contents (C, H, N, O, S, P, K, Ti)
-- isotope values ($\delta^{13}$C and $\delta^{15}$N)
+- isotope values (δ<sup>13</sup>C and δ<sup>15</sup>N)
 - physical properties (bulk density, volume fraction of solids,
   non-macroporosity, macroporosity, saturated hydraulic conductivity,
   specific heat capacity, dry thermal conductivity)
-- standard Gibbs free energy of formation ($\Delta$G$_\text{f}^0$)
+- standard Gibbs free energy of formation (ΔG<sub>f</sub><sup>0</sup>)
 - electrochemical properties (electron accepting capacity, electron
   donating capacity)
 - microbial nitrogen content (modified version of the model described in
@@ -52,7 +52,7 @@ If you want to use the prediction models, you have to install the
 (Teickner 2025) in addition to the ‘irpeat’ package:
 
 ``` r
-remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.zip", type = "source")
+remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz", type = "source")
 ```
 
 ### How to use
@@ -69,6 +69,20 @@ library(ggplot2)
 #> Warning: package 'ggplot2' was built under R version 4.3.3
 library(units)
 #> udunits database from C:/Users/henni/AppData/Local/R/win-library/4.3/units/share/udunits/udunits2.xml
+library(rstan)
+#> Warning: package 'rstan' was built under R version 4.3.3
+#> Loading required package: StanHeaders
+#> Warning: package 'StanHeaders' was built under R version 4.3.3
+#> 
+#> rstan version 2.32.7 (Stan version 2.32.2)
+#> For execution on a local, multicore CPU with excess RAM we recommend calling
+#> options(mc.cores = parallel::detectCores()).
+#> To avoid recompilation of unchanged Stan programs, we recommend calling
+#> rstan_options(auto_write = TRUE)
+#> For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,
+#> change `threads_per_chain` option:
+#> rstan_options(threads_per_chain = 1)
+#> Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file
 ```
 
 You can test ‘irpeat’ with sample data from the R package ‘irpeat’:
@@ -102,6 +116,7 @@ indices and Klason lignin and holocellulose mass fractions in the
 samples.
 
 ``` r
+set.seed(3453)
 x <- 
   irpeat_sample_data |>                                  # data
   dplyr::mutate(
@@ -176,8 +191,8 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.001991424 0.001597455 0.001833470 0.001809419 0.002258924
-#> [1] 0.010554604 0.006356645 0.008702501 0.008448717 0.012897908
+#> Errors: 0.001991921 0.001594518 0.001831531 0.001813419 0.002265446
+#> [1] 0.010547047 0.006362311 0.008705196 0.008463846 0.012894786
 ```
 
 ### How to cite

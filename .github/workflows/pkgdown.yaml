@@ -23,9 +23,18 @@ jobs:
         with:
           use-public-rspm: true
 
+      - name: Install remotes
+        run: |
+          Rscript -e "install.packages('remotes', repos='https://cran.r-project.org')"
+
+
+      - name: Install irpeatmodels
+        run: |
+          Rscript -e "remotes::install_url('https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz', type = 'source')"
+
       - name: add remote dependencies repos
         run: |
-          writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = "https://github.com/henningte/elco/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
+          writeLines('options(repos = c(ir = "https://github.com/henningte/ir/", elco = "https://github.com/henningte/elco/", irpeatmodels = "https://zenodo.org/record/17187912/files/", getOption(\"repos\")))', file("~/.Rprofile", "ab"))
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2

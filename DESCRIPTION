@@ -50,12 +50,11 @@ Suggests:
     rmarkdown,
     elco,
     spelling,
-    irpeatmodels,
+    irpeatmodels (>= 0.1.0),
     brms,
     rstanarm (>= 2.19.3),
     kableExtra,
     pls,
-    dimreduce,
     stringr,
     tibble,
     units,
@@ -73,6 +72,7 @@ Remotes:
 Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/henningte/elco/
+    https://zenodo.org/records/17187912/files/
 Collate: 
     'data.R'
     'irp_content_klh_hodgkins.R'
