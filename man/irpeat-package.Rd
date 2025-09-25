@@ -4,9 +4,9 @@
 \name{irpeat-package}
 \alias{irpeat}
 \alias{irpeat-package}
-\title{irpeat: Functions to Analyze Mid Infrared Spectra of Peat Samples}
+\title{irpeat: Functions to Analyze Mid-Infrared Spectra of Peat Samples}
 \description{
-Provides functions to analyze mid infrared spectra of peat samples (humification indices, prediction models for peat properties).
+Provides functions to analyze mid-infrared spectra of peat samples (humification indices, prediction models for peat properties).
 }
 \seealso{
 Useful links:

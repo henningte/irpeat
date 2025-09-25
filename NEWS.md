@@ -21,7 +21,7 @@
 
 #### New data
 
-* Add sample data (transmission mid infrared spectra for peat samples from the 'redoxpeat' R package): `irpeat_sample_data`.
+* Add sample data (transmission mid-infrared spectra for peat samples from the 'redoxpeat' R package): `irpeat_sample_data`.
 
 #### New models
 

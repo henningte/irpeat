@@ -2,7 +2,7 @@
 % Please edit documentation in R/irp_hi.R
 \name{irp_hi}
 \alias{irp_hi}
-\title{Compute humification indices from mid infrared spectra}
+\title{Compute humification indices from mid-infrared spectra}
 \usage{
 irp_hi(x, x1 = NULL, x2 = NULL)
 }
@@ -30,7 +30,7 @@ respective values.
 \description{
 \code{irp_hi} computes either custom humification indices or a predefined set of
 humification indices as reported by \insertCite{Broder.2012;textual}{irpeat}
-for mid infrared spectra with the x values representing wavenumber values
+for mid-infrared spectra with the x values representing wavenumber values
 (no checks are performed) (see the details section for the humification indices
 computed by default). A humification index is the ratio of the intensity
 values at two different x axis values (e.g. wavenumbers) and defined as:

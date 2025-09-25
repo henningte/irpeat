@@ -48,8 +48,8 @@ remotes::install_github(repo = "henningte/irpeat")
 for handling infrared spectra.
 
 If you want to use the prediction models, you have to install the
-[‘irpeatmodels’](https://doi.org/10.5281/zenodo.17187912) package in
-addition to the ‘irpeat’ package:
+[‘irpeatmodels’](https://doi.org/10.5281/zenodo.17187912) package
+(Teickner 2025) in addition to the ‘irpeat’ package:
 
 ``` r
 remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.zip", type = "source")
@@ -92,7 +92,7 @@ irpeat::irpeat_sample_data
 #> # ℹ 2 more variables: d15N <dbl>, d13C <dbl>
 ```
 
-`irpeat_sample_data` contains transmission mid infrared spectra of peat
+`irpeat_sample_data` contains transmission mid-infrared spectra of peat
 different samples (See Teickner, Gao, and Knorr (2022) and Teickner,
 Gao, and Knorr (2021) for details).
 
@@ -176,8 +176,8 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 ``` r
 x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.001997196 0.001589896 0.001854060 0.001789981 0.002276302
-#> [1] 0.010515780 0.006352945 0.008698074 0.008472305 0.012925355
+#> Errors: 0.001991424 0.001597455 0.001833470 0.001809419 0.002258924
+#> [1] 0.010554604 0.006356645 0.008702501 0.008448717 0.012897908
 ```
 
 ### How to cite
@@ -185,7 +185,7 @@ x$nitrogen_content_1[1:5]
 Please cite this R package as:
 
 > Henning Teickner, Suzanne B. Hodgkins (2025). *irpeat: Functions to
-> Analyze Mid-Infrared Spectra of Peat Samples*. Accessed 2025-09-23.
+> Analyze Mid-Infrared Spectra of Peat Samples*. Accessed 2025-09-25.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
@@ -283,6 +283,14 @@ Routine.” *Biogeosciences* 17 (2): 499–514.
 
 </div>
 
+<div id="ref-Teickner.2025g" class="csl-entry">
+
+Teickner, Henning. 2025. “<span class="nocase">irpeatmodels</span>:
+<span class="nocase">Mid-infrared</span> Prediction Models for Peat.”
+Zenodo. <https://doi.org/10.5281/ZENODO.17187912>.
+
+</div>
+
 <div id="ref-Teickner.2021c" class="csl-entry">
 
 Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021.
@@ -302,12 +310,12 @@ Decomposition.” *Global Biogeochemical Cycles* 36 (2): e2021GB007160.
 
 </div>
 
-<div id="ref-Teickner.2022a" class="csl-entry">
+<div id="ref-Teickner.2022f" class="csl-entry">
 
 Teickner, Henning, and Klaus-Holger Knorr. 2022. “Improving Models to
 Predict Holocellulose and Klason Lignin Contents for Peat Soil Organic
-Matter with Mid Infrared Spectra.” Preprint. Soil and methods.
-<https://doi.org/10.5194/soil-2022-27>.
+Matter with Mid-Infrared Spectra.” *SOIL* 8 (2): 699–715.
+<https://doi.org/10.5194/soil-8-699-2022>.
 
 </div>
 

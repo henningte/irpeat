@@ -3,7 +3,7 @@
 \docType{data}
 \name{irpeat_sample_data}
 \alias{irpeat_sample_data}
-\title{Sample transmission mid infrared spectra of peat samples}
+\title{Sample transmission mid-infrared spectra of peat samples}
 \format{
 An \code{\link[ir:ir_new_ir]{ir}} object with 59 samples. See
 \code{?redoxpeat::d_mir} for additional information.
@@ -12,7 +12,7 @@ An \code{\link[ir:ir_new_ir]{ir}} object with 59 samples. See
 irpeat_sample_data
 }
 \description{
-Sample transmission mid infrared spectra of peat samples from the 'redoxpeat'
+Sample transmission mid-infrared spectra of peat samples from the 'redoxpeat'
 package.
 }
 \keyword{datasets}

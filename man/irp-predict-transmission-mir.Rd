@@ -35,11 +35,11 @@
 \alias{irp_degree_of_decomposition_1}
 \alias{irp_degree_of_decomposition_2}
 \alias{irp_degree_of_decomposition_3}
-\title{Predicts peat properties from transmission mid infrared spectra}
+\title{Predicts peat properties from transmission mid-infrared spectra}
 \source{
 \describe{
 \item{\code{irp_holocellulose_2()}, \code{irp_klason_lignin_2()}}{
-\insertCite{Teickner.2022a;textual}{irpeat}.
+\insertCite{Teickner.2022f;textual}{irpeat}.
 }
 \item{\code{irp_eac_1()}, \code{irp_edc_1()}}{
 \insertCite{Teickner.2022;textual}{irpeat}.
@@ -466,7 +466,7 @@ domain for the model and \code{FALSE} if not. If
 \code{check_prediction_domain = "none"}, all values in this column are \code{NA}.
 }
 \description{
-Functions to predict peat properties from transmission mid infrared spectra.
+Functions to predict peat properties from transmission mid-infrared spectra.
 All functions below have been computed using peat samples. For detailed
 information on the underlying prediction models, see the details section.
 }

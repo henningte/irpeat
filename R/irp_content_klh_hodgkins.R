@@ -1,10 +1,10 @@
-#' Computes contents of Klason lignin and holocellulose of peat from mid infrared spectra
+#' Computes contents of Klason lignin and holocellulose of peat from mid-infrared spectra
 #'
 #' `irp_content_klh_hodgkins` computes the mass fraction of Klason lignin and
-#' holocellulose in peat from mid infrared spectra of the peat samples. This
+#' holocellulose in peat from mid-infrared spectra of the peat samples. This
 #' function may also work for organic matter in general. Note that the models
 #' have been shown to be biased for peat samples
-#' \insertCite{Teickner.2022a}{irpeat}.
+#' \insertCite{Teickner.2022f}{irpeat}.
 #'
 #' @param x An object of class [`ir`][ir::ir_new_ir] with all spectra being in
 #' the range 650 to 4000 cm\deqn{^{-1}}.
@@ -25,7 +25,7 @@
 #' (`make_plots = TRUE`) or not (`make_plots = FALSE`).
 #'
 #' @note Note that the models have been shown to be biased for peat samples
-#' \insertCite{Teickner.2022a}{irpeat}.
+#' \insertCite{Teickner.2022f}{irpeat}.
 #'
 #' @source `irp_content_klh_hodgkins` is a wrapper function to a script written by
 #' Suzanne Hodgkins (<https://github.com/shodgkins/FTIRbaselines/blob/master/FTIRbaselines.R>).

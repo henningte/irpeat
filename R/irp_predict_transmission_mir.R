@@ -1,6 +1,6 @@
-#' Predicts peat properties from transmission mid infrared spectra
+#' Predicts peat properties from transmission mid-infrared spectra
 #'
-#' Functions to predict peat properties from transmission mid infrared spectra.
+#' Functions to predict peat properties from transmission mid-infrared spectra.
 #' All functions below have been computed using peat samples. For detailed
 #' information on the underlying prediction models, see the details section.
 #'
@@ -136,7 +136,7 @@
 #' @source
 #' \describe{
 #'   \item{`irp_holocellulose_2()`, `irp_klason_lignin_2()`}{
-#'     \insertCite{Teickner.2022a;textual}{irpeat}.
+#'     \insertCite{Teickner.2022f;textual}{irpeat}.
 #'   }
 #'   \item{`irp_eac_1()`, `irp_edc_1()`}{
 #'     \insertCite{Teickner.2022;textual}{irpeat}.
@@ -1053,6 +1053,8 @@ irp_H_to_C_1 <-
 #' @noRd
 #' @keywords internal
 irp_porosity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
+
+  bulk_density_1_in_pd <- NULL
 
   # check additional packages
   if(! requireNamespace("brms", quietly = TRUE)) {
