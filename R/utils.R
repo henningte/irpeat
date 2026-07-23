@@ -41,7 +41,15 @@ check_irpeatmodels_and_dimreduce <- function(irpeatmodels_required_version) {
 
 }
 
-
+#' Checks whether the 'posterior' package is loaded
+#'
+#' @keywords internal
+#' @noRd
+check_posterior <- function(do_summary, version = "1.7.0") {
+  if(! do_summary && ! requireNamespace("posterior", versionCheck = list(op = ">=", version = version), quietly = TRUE)) {
+    rlang::abort(paste0("You have to install the 'posterior' package (>=", version,") to use this function."))
+  }
+}
 
 
 #' Summarizes predictions of models where predictions are given as MCMC draws from the posterior predictive distribution
@@ -193,6 +201,7 @@ irp_function_factory_eb1079 <- function(target_variable, model, config, predicti
   function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
 
     .f_check_packages()
+    check_posterior(do_summary = do_summary)
     stopifnot(inherits(x, "ir"))
     stopifnot(is.logical(do_summary) && length(do_summary) == 1)
     stopifnot(is.logical(return_as_list) && length(return_as_list) == 1)
@@ -317,6 +326,7 @@ irp_function_factory_eb1149 <- function(model, config, prediction_domain, target
   function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
 
     .f_check_packages()
+    check_posterior(do_summary = do_summary)
     stopifnot(inherits(x, "ir"))
     stopifnot(is.logical(do_summary) && length(do_summary) == 1)
     stopifnot(is.logical(return_as_list) && length(return_as_list) == 1)
@@ -582,3 +592,4 @@ irp_drop_units_rvar <- function(x) {
   posterior::draws_of(x) <- units::drop_units(posterior::draws_of(x))
   x
 }
+

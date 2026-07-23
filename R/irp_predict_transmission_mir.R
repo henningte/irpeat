@@ -181,6 +181,7 @@ NULL
 #' @export
 irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
+  check_posterior(do_summary = do_summary)
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
@@ -294,6 +295,7 @@ irp_holocellulose_content_2 <- function(x, ..., do_summary = FALSE, summary_func
 #' @export
 irp_klason_lignin_content_2 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
+  check_posterior(do_summary = do_summary)
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
@@ -409,6 +411,7 @@ irp_klason_lignin_content_2 <- function(x, ..., do_summary = FALSE, summary_func
 #' @export
 irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
+  check_posterior(do_summary = do_summary)
   check_irpeatmodels(version = "0.0.0")
   rlang::is_installed("rstantools")
   if(! requireNamespace("rstanarm", quietly = TRUE)) {
@@ -529,6 +532,7 @@ irp_eac_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, 
 #' @export
 irp_edc_1 <- function(x, ..., do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, return_as_list = FALSE, check_prediction_domain = "train") {
 
+  check_posterior(do_summary = do_summary)
   check_irpeatmodels(version = "0.0.0")
   if(! requireNamespace("rstanarm", quietly = TRUE)) {
     rlang::abort("You have to install the 'rstanarm' package to use this function.")
@@ -1058,6 +1062,7 @@ irp_porosity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, 
   bulk_density_1_in_pd <- NULL
 
   # check additional packages
+  check_posterior(do_summary = do_summary)
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
@@ -1314,6 +1319,7 @@ irp_macroporosity_1 <- function(x, do_summary = FALSE, summary_function_mean = m
 irp_saturated_hydraulic_conductivity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   # check additional packages
+  check_posterior(do_summary = do_summary)
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
@@ -1457,6 +1463,7 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, do_summary = F
   stopifnot(temperature >= 0)
 
   # check additional packages
+  check_posterior(do_summary = do_summary)
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
@@ -1590,6 +1597,7 @@ irp_specific_heat_capacity_1 <- function(x, temperature = 273.15, do_summary = F
 irp_dry_thermal_conductivity_1 <- function(x, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE, bulk_density = NULL) {
 
   # check additional packages
+  check_posterior(do_summary = do_summary)
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
@@ -1722,6 +1730,7 @@ irp_dry_thermal_conductivity_1 <- function(x, do_summary = FALSE, summary_functi
 irp_microbial_nitrogen_content_1 <- function(x, y, do_summary = FALSE, summary_function_mean = mean, summary_function_sd = stats::sd, check_prediction_domain = "train", return_as_list = FALSE) {
 
   # check additional packages
+  check_posterior(do_summary = do_summary)
   if(! requireNamespace("brms", quietly = TRUE)) {
     rlang::abort("You have to install the 'brms' package to use this function.")
   }
