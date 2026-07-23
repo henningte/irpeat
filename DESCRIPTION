@@ -42,7 +42,7 @@ Imports:
     magrittr,
     ggplot2,
     plyr
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 RdMacros: 
   Rdpack
 Suggests: 
@@ -59,7 +59,7 @@ Suggests:
     tibble,
     units,
     signal,
-    posterior,
+    posterior (>= 1.7.0),
     rstantools
 VignetteBuilder: knitr
 Date: 2025-07-08
