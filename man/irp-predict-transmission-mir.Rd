@@ -463,8 +463,9 @@ spectra before decomposition.}
 \code{x} with a new column with the predicted peat property and a new
 column (with the same name as the predicted peat property and ending in \verb{_pd})
 with value \code{TRUE} if the respective spectrum is within the prediction domain
-for the model and \code{FALSE} if not (see argument \code{check_prediction_domain}). If \code{check_prediction_domain = "none"},
-all values in this column are \code{NA}.
+for the model and \code{FALSE} if not (see argument \code{check_prediction_domain} and
+section 2.6 in \insertCite{Teickner.2023}{irpeat} for more details). If
+\code{check_prediction_domain = "none"}, all values in this column are \code{NA}.
 }
 \description{
 Functions to predict peat properties from transmission mid-infrared spectra.

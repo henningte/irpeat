@@ -108,8 +108,9 @@
 #' @return `x` with a new column with the predicted peat property and a new
 #' column (with the same name as the predicted peat property and ending in `_pd`)
 #' with value `TRUE` if the respective spectrum is within the prediction domain
-#' for the model and `FALSE` if not (see argument `check_prediction_domain`). If `check_prediction_domain = "none"`,
-#' all values in this column are `NA`.
+#' for the model and `FALSE` if not (see argument `check_prediction_domain` and
+#' section 2.6 in \insertCite{Teickner.2023}{irpeat} for more details). If
+#' `check_prediction_domain = "none"`, all values in this column are `NA`.
 #'
 #' @note
 #' \describe{
