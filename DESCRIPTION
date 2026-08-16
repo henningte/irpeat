@@ -48,7 +48,6 @@ RdMacros:
 Suggests: 
     knitr,
     rmarkdown,
-    elco,
     spelling,
     irpeatmodels (>= 0.1.0),
     brms,
@@ -60,19 +59,23 @@ Suggests:
     units,
     signal,
     posterior (>= 1.7.0),
-    rstantools
+    rstantools,
+    cmdstanr,
+    mmgm
 VignetteBuilder: knitr
-Date: 2025-07-08
+Date: 2026-08-16
 Roxygen: list(markdown = TRUE)
 Language: en-US
 URL: https://henningte.github.io/irpeat/
 Remotes: 
     henningte/ir,
-    henningte/elco,
+    stan-dev/cmdstanr,
+    henningte/mmgm
     irpeatmodels=url::https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz
 Additional_repositories:
     https://github.com/henningte/ir/,
-    https://github.com/henningte/elco/
+    https://github.com/stan-dev/cmdstanr/,
+    https://github.com/henningte/mmgm/,
 Collate: 
     'data.R'
     'irp_content_klh_hodgkins.R'
@@ -80,6 +83,7 @@ Collate:
     'irp_get_prediction_domain_for.R'
     'irp_hi.R'
     'irp_predict.R'
+    'irp_predict_atr_mir.R'
     'utils.R'
     'irp_predict_transmission_mir.R'
     'irp_preprocess.R'

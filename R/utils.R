@@ -25,21 +25,6 @@ check_irpeatmodels_and_pls <- function(irpeatmodels_required_version) {
 }
 
 
-#' `check_irpeatmodels` combined with a check for the 'dimreduce' package
-#'
-#' @inheritParams irp_function_factory_eb1079
-#'
-#' @keywords internal
-#' @noRd
-check_irpeatmodels_and_dimreduce <- function(irpeatmodels_required_version) {
-
-  check_irpeatmodels(version = irpeatmodels_required_version)
-  if(! requireNamespace("dimreduce", quietly = TRUE)) {
-    rlang::abort("You have to install the 'dimreduce' package to use this function. The 'dimreduce' package is available from 'https://github.com/jpiironen/dimreduce'.")
-  }
-
-
-}
 
 #' Checks whether the 'posterior' package is loaded
 #'

@@ -45,7 +45,7 @@ The following humification indices are computed by
 default (if \code{x1 = NULL} and \code{x2 = NULL}) (values
 represent wavenumbers [cm\eqn{^{-1}}]) \insertCite{Broder.2012}{irpeat} :
 \describe{
-\item{hi1: 1420/1090}{OH and CO of phenols or CH of CH{_1} and CH{_3}
+\item{hi1: 1420/1090}{OH and CO of phenols or CH of CH\eqn{_1} and CH\eqn{_3}
 groups (phenolic and aliphatic structures)/polysaccharides}
 \item{hi2: 1510/1090}{Aromatic C=C or C=O of amides/polysaccharides}
 \item{hi3: 1630/1090}{Aromatic C=C and COO\eqn{^{-1}} (aromatics and aromatic

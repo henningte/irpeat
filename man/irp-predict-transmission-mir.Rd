@@ -2,8 +2,6 @@
 % Please edit documentation in R/irp_predict_transmission_mir.R
 \name{irp-predict-transmission-mir}
 \alias{irp-predict-transmission-mir}
-\alias{irp_holocellulose_content_2}
-\alias{irp_klason_lignin_content_2}
 \alias{irp_eac_1}
 \alias{irp_edc_1}
 \alias{irp_carbon_content_1}
@@ -38,17 +36,15 @@
 \title{Predicts peat properties from transmission mid-infrared spectra}
 \source{
 \describe{
-\item{\code{irp_holocellulose_2()}, \code{irp_klason_lignin_2()}}{
-\insertCite{Teickner.2022f;textual}{irpeat}.
-}
 \item{\code{irp_eac_1()}, \code{irp_edc_1()}}{
 \insertCite{Teickner.2022;textual}{irpeat}.
 }
 \item{\code{irp_microbial_nitrogen_content_1()}}{
 \insertCite{Reuter.2020;textual}{irpeat}
 }
-\item{\code{irp_degree_of_decomposition_1()}, \code{irp_degree_of_decomposition_2()}, \code{irp_degree_of_decomposition_3()}}{
-\insertCite{Teickner.2025h;textual}{irpeat}
+\item{\code{irp_degree_of_decomposition_1()}, \code{irp_degree_of_decomposition_2()},
+\code{irp_degree_of_decomposition_3()}}{
+\insertCite{Teickner.2026f;textual}{irpeat}
 }
 \item{All other models}{
 \insertCite{Teickner.2023;textual}{irpeat}
@@ -56,26 +52,6 @@
 }
 }
 \usage{
-irp_holocellulose_content_2(
-  x,
-  ...,
-  do_summary = FALSE,
-  summary_function_mean = mean,
-  summary_function_sd = stats::sd,
-  return_as_list = FALSE,
-  check_prediction_domain = "train"
-)
-
-irp_klason_lignin_content_2(
-  x,
-  ...,
-  do_summary = FALSE,
-  summary_function_mean = mean,
-  summary_function_sd = stats::sd,
-  return_as_list = FALSE,
-  check_prediction_domain = "train"
-)
-
 irp_eac_1(
   x,
   ...,
@@ -402,8 +378,7 @@ values (spread).}
 
 \item{return_as_list}{Logical value. If set to \code{TRUE}, the result will be
 returned as list of draws, otherwise the result will be returned as \code{rvar}
-object. This is a new argument currently only implemented for models
-predicting the degree of decomposition.}
+object.}
 
 \item{check_prediction_domain}{A character value indicating if and how it
 should be checked whether the spectra in \code{x} are within the prediction domain
@@ -497,28 +472,19 @@ decomposer biomass in aerobic systems. Finally, the applicability of the
 same calibration curve for decomposed litters of different plant species
 still has to be investigated.”
 }
+\item{\code{irp_degree_of_decomposition_1()}, \code{irp_degree_of_decomposition_2()},
+\code{irp_degree_of_decomposition_3()}}{These models predict the degree of
+decomposition (fraction of initial mass lost) of individual litter types;
+for spectra of bulk peat samples and other litter mixtures, post-processing
+predictions with a mixing model like provided by \href{https://github.com/henningte/mmgm}{\code{mmgm}}
+\insertCite{Teickner.2025i}{irpeat} is necessary to avoid biases. See \insertCite{Teickner.2026f;textual}{irpeat}
+for details.}
 }
 }
 \examples{
-library(ir)
-
-x <- ir::ir_sample_data[1, ]
+x <- irpeat_sample_data[1, ]
 
 ## make predictions
-
-# holocellulose content
-x <- irpeat::irp_holocellulose_content_2(
-  x,
-  do_summary = TRUE,
-  check_prediction_domain = "train"
-)
-
-# Klason lignin content
-x <- irpeat::irp_klason_lignin_content_2(
-  x,
-  do_summary = TRUE,
-  check_prediction_domain = "train"
-)
 
 # electron accepting capacity
 x <- irpeat::irp_eac_1(

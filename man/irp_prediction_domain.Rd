@@ -12,7 +12,7 @@ new_irp_prediction_domain(x)
 data and the following columns:
 \describe{
 \item{\code{x}}{A numeric value representing the wavenumber value
-[cm$^{-1}$].}
+[cm\eqn{^{-1}}].}
 \item{\code{ymin}}{A numeric value representing the minimum predictor variable
 value in the training data at this wavenumber value.}
 \item{\code{ymax}}{A numeric value representing the maximum predictor variable

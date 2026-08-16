@@ -34,7 +34,7 @@ The following peat properties can be predicted (note model-specific limitations 
 + standard Gibbs free energy of formation (&Delta;G<sub>f</sub><sup>0</sup>) 
 + electrochemical properties (electron accepting capacity, electron donating capacity)
 + microbial nitrogen content (modified version of the model described in @Reuter.2020)
-+ The degree of decomposition ($\gamma$, the fraction of initial mass lost).
++ The degree of decomposition ($\gamma$, the fraction of initial mass lost [@Teickner.2026f; @Teickner.2025i]).
 
 The package also contains functions to predict holocellulose and Klason lignin contents [@Hodgkins.2018; @Teickner.2022f], but these models are biased for peat samples [@Teickner.2022f].
 
@@ -60,7 +60,7 @@ remotes::install_url("https://zenodo.org/record/17187912/files/irpeatmodels_0.1.
 
 You can load 'irpeat' in R with:
 
-```{r load_irpeat}
+```{r load_irpeat, message=FALSE, warning=FALSE}
 library(irpeat)
 
 # load additional packages needed for this tutorial
@@ -79,7 +79,7 @@ irpeat::irpeat_sample_data
 
 `irpeat_sample_data` contains transmission mid-infrared spectra of peat different samples (See @Teickner.2022 and @Teickner.2021c for details).
 
-A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and Klason lignin and holocellulose mass fractions in the samples.
+A simple workflow could be, for example, to baseline correct the spectra (using functions of the package 'ir') compute various humification indices and predict nitrogen content, dry bulk density, and saturated hydraulic conductivity of the samples.
 
 ```{r sample_data_workflow, warning=FALSE}
 set.seed(3453)
@@ -105,7 +105,7 @@ x <-
 x
 ```
 
-Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the Klason lignin content:
+Plot of the humification index (ratio of the intensities at 1630 and 1090 cm<sup>-1</sup> [@Broder.2012]) versus the nitrogen content:
 
 ```{r x_plot}
 x |>
@@ -161,6 +161,5 @@ Modified prediction models for holocellulose and Klason lignin (`model_holocellu
 
 Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from @Teickner.2022 and @Teickner.2021c
 
-This packages was developed in R (`r R.Version()$version.string`) [@RCoreTeam.2020] using functions from devtools [@Wickham.2021], usethis [@Wickham.2022], and roxygen2 [@Wickham.2022a].
 
 ### References

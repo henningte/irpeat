@@ -6,7 +6,7 @@
 #' data and the following columns:
 #' \describe{
 #'   \item{`x`}{A numeric value representing the wavenumber value
-#'   \[cm$^{-1}$\].}
+#'   \[cm\eqn{^{-1}}\].}
 #'   \item{`ymin`}{A numeric value representing the minimum predictor variable
 #'   value in the training data at this wavenumber value.}
 #'   \item{`ymax`}{A numeric value representing the maximum predictor variable
