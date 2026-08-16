@@ -61,7 +61,8 @@ Suggests:
     posterior (>= 1.7.0),
     rstantools,
     cmdstanr,
-    mmgm
+    mmgm,
+    instantiate
 VignetteBuilder: knitr
 Date: 2026-08-16
 Roxygen: list(markdown = TRUE)
