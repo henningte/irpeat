@@ -50,12 +50,12 @@ irp_preprocess_for(x, y = NULL, variable)
   "klason_lignin_content_2"
 
   :   Klason lignin mass fraction \[g/g\] as computed by
-      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md).
 
   "holocellulose_content_2"
 
   :   Holocellulose mass fraction \[g/g\] as computed by
-      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md).
 
   "eac_1"
 

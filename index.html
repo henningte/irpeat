@@ -65,7 +65,7 @@
 <li>standard Gibbs free energy of formation (ΔG<sub>f</sub><sup>0</sup>)</li>
 <li>electrochemical properties (electron accepting capacity, electron donating capacity)</li>
 <li>microbial nitrogen content (modified version of the model described in Reuter et al. (2020))</li>
-<li>The degree of decomposition (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics></math>, the fraction of initial mass lost).</li>
+<li>The degree of decomposition (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics></math>, the fraction of initial mass lost (Teickner et al. 2026; Teickner 2025b)).</li>
 </ul>
 <p>The package also contains functions to predict holocellulose and Klason lignin contents (Hodgkins et al. 2018; Teickner and Knorr 2022), but these models are biased for peat samples (Teickner and Knorr 2022).</p>
 <div class="section level3">
@@ -75,7 +75,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span>repo <span class="op">=</span> <span class="st">"henningte/irpeat"</span><span class="op">)</span></span></code></pre></div>
 <p>‘irpeat’ relies on the R package <a href="https://github.com/henningte/ir" class="external-link">‘ir’</a> for handling infrared spectra.</p>
-<p>If you want to use the prediction models, you have to install the <a href="https://doi.org/10.5281/zenodo.17187912" class="external-link">‘irpeatmodels’</a> package (Teickner 2025) in addition to the ‘irpeat’ package:</p>
+<p>If you want to use the prediction models, you have to install the <a href="https://doi.org/10.5281/zenodo.17187912" class="external-link">‘irpeatmodels’</a> package (Teickner 2025a) in addition to the ‘irpeat’ package:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_url</span><span class="op">(</span><span class="st">"https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -90,23 +90,8 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://henningte.github.io/ir/" class="external-link">ir</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">irpeatmodels</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'ggplot2' was built under R version 4.3.3</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-quantities.github.io/units/" class="external-link">units</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; udunits database from C:/Users/henni/AppData/Local/R/win-library/4.3/units/share/udunits/udunits2.xml</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: package 'rstan' was built under R version 4.3.3</span></span>
-<span><span class="co">#&gt; Loading required package: StanHeaders</span></span>
-<span><span class="co">#&gt; Warning: package 'StanHeaders' was built under R version 4.3.3</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; rstan version 2.32.7 (Stan version 2.32.2)</span></span>
-<span><span class="co">#&gt; For execution on a local, multicore CPU with excess RAM we recommend calling</span></span>
-<span><span class="co">#&gt; options(mc.cores = parallel::detectCores()).</span></span>
-<span><span class="co">#&gt; To avoid recompilation of unchanged Stan programs, we recommend calling</span></span>
-<span><span class="co">#&gt; rstan_options(auto_write = TRUE)</span></span>
-<span><span class="co">#&gt; For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,</span></span>
-<span><span class="co">#&gt; change `threads_per_chain` option:</span></span>
-<span><span class="co">#&gt; rstan_options(threads_per_chain = 1)</span></span>
-<span><span class="co">#&gt; Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://mc-stan.org/rstan/" class="external-link">rstan</a></span><span class="op">)</span></span></code></pre></div>
 <p>You can test ‘irpeat’ with sample data from the R package ‘irpeat’:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">irpeat</span><span class="fu">::</span><span class="va"><a href="reference/irpeat_sample_data.html">irpeat_sample_data</a></span></span>
@@ -125,8 +110,8 @@
 <span><span class="co">#&gt; 10    11        11             25 &lt;df&gt;        0.465 0.0566 0.00723 0.420 0      </span></span>
 <span><span class="co">#&gt; # ℹ 49 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 2 more variables: d15N &lt;dbl&gt;, d13C &lt;dbl&gt;</span></span></code></pre></div>
-<p><code>irpeat_sample_data</code> contains transmission mid-infrared spectra of peat different samples (See Teickner, Gao, and Knorr (2022) and Teickner, Gao, and Knorr (2021) for details).</p>
-<p>A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ‘ir’) compute various humification indices and Klason lignin and holocellulose mass fractions in the samples.</p>
+<p><code>irpeat_sample_data</code> contains transmission mid-infrared spectra of peat different samples (See Teickner et al. (2022) and Teickner et al. (2021) for details).</p>
+<p>A simple workflow could be, for example, to baseline correct the spectra (using functions of the package ‘ir’) compute various humification indices and predict nitrogen content, dry bulk density, and saturated hydraulic conductivity of the samples.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">3453</span><span class="op">)</span></span>
 <span><span class="va">x</span> <span class="op">&lt;-</span> </span>
@@ -150,9 +135,9 @@
 <span><span class="co">#&gt;    id_90 sample_id measurement_id spectra           C        H        N        O</span></span>
 <span><span class="co">#&gt;    &lt;int&gt;     &lt;int&gt;          &lt;int&gt; &lt;named li&gt; (err) [… (err) [… (err) [… (err) […</span></span>
 <span><span class="co">#&gt;  1     1         1             23 &lt;tibble&gt;   0.47902… 0.05625… 0.00968… 0.39768…</span></span>
-<span><span class="co">#&gt;  2     2         2             32 &lt;tibble&gt;   0.44688… 0.0561(… 0.00478… 0.44283…</span></span>
+<span><span class="co">#&gt;  2     2         2             32 &lt;tibble&gt;   0.44689… 0.0561(… 0.00478… 0.44283…</span></span>
 <span><span class="co">#&gt;  3     3         3             38 &lt;tibble&gt;   0.45992… 0.05598… 0.00788… 0.41248…</span></span>
-<span><span class="co">#&gt;  4     5         5             52 &lt;tibble&gt;   0.47085… 0.05853… 0.00755… 0.41433…</span></span>
+<span><span class="co">#&gt;  4     5         5             52 &lt;tibble&gt;   0.47086… 0.05853… 0.00755… 0.41433…</span></span>
 <span><span class="co">#&gt;  5     6         6             54 &lt;tibble&gt;   0.50197… 0.05495… 0.0127(… 0.3732(…</span></span>
 <span><span class="co">#&gt;  6     7         7             55 &lt;tibble&gt;   0.48440… 0.0557(… 0.0091(… 0.39185…</span></span>
 <span><span class="co">#&gt;  7     8         8             56 &lt;tibble&gt;   0.46612… 0.05655… 0.00725… 0.40095…</span></span>
@@ -161,11 +146,11 @@
 <span><span class="co">#&gt; 10    11        11             25 &lt;tibble&gt;   0.46475… 0.05663… 0.00723… 0.42003…</span></span>
 <span><span class="co">#&gt; # ℹ 49 more rows</span></span>
 <span><span class="co">#&gt; # ℹ 10 more variables: S (err) [g/g], d15N &lt;dbl&gt;, d13C &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   hi_1630_1090 &lt;numeric&gt;, nitrogen_content_1 (err) [g/g],</span></span>
-<span><span class="co">#&gt; #   nitrogen_content_1_in_pd &lt;logical&gt;, bulk_density_1 (err) [g/cm^3],</span></span>
-<span><span class="co">#&gt; #   bulk_density_1_in_pd &lt;logical&gt;, macroporosity_1 (err) [L/L],</span></span>
-<span><span class="co">#&gt; #   macroporosity_1_in_pd &lt;logical&gt;</span></span></code></pre></div>
-<p>Plot of the humification index (ratio of the intensities at 1420 and 1090 cm<sup>-1</sup> (Broder et al. 2012)) versus the Klason lignin content:</p>
+<span><span class="co">#&gt; #   hi_1630_1090 &lt;dbl&gt;, nitrogen_content_1 (err) [g/g],</span></span>
+<span><span class="co">#&gt; #   nitrogen_content_1_in_pd &lt;lgl&gt;, bulk_density_1 (err) [g/cm^3],</span></span>
+<span><span class="co">#&gt; #   bulk_density_1_in_pd &lt;lgl&gt;, macroporosity_1 (err) [L/L],</span></span>
+<span><span class="co">#&gt; #   macroporosity_1_in_pd &lt;lgl&gt;</span></span></code></pre></div>
+<p>Plot of the humification index (ratio of the intensities at 1630 and 1090 cm<sup>-1</sup> (Broder et al. 2012)) versus the nitrogen content:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span></span>
@@ -188,15 +173,15 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">x</span><span class="op">$</span><span class="va">nitrogen_content_1</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span></span>
 <span><span class="co">#&gt; Units: [g/g]</span></span>
-<span><span class="co">#&gt; Errors: 0.001991921 0.001594518 0.001831531 0.001813419 0.002265446</span></span>
-<span><span class="co">#&gt; [1] 0.010547047 0.006362311 0.008705196 0.008463846 0.012894786</span></span></code></pre></div>
+<span><span class="co">#&gt; Errors: 0.001969791 0.001599808 0.001840442 0.001817805 0.002275452</span></span>
+<span><span class="co">#&gt; [1] 0.010546122 0.006357339 0.008708040 0.008468676 0.012894928</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="how-to-cite">How to cite<a class="anchor" aria-label="anchor" href="#how-to-cite"></a>
 </h3>
 <p>Please cite this R package as:</p>
 <blockquote>
-<p>Henning Teickner, Suzanne B. Hodgkins (2025). <em>irpeat: Functions to Analyze Mid-Infrared Spectra of Peat Samples</em>. Accessed 2025-09-25. Online at <a href="https://github.com/henningte/irpeat" class="external-link uri">https://github.com/henningte/irpeat</a>.</p>
+<p>Henning Teickner, Suzanne B. Hodgkins (2026). <em>irpeat: Functions to Analyze Mid-Infrared Spectra of Peat Samples</em>. Accessed 2026-08-16. Online at <a href="https://github.com/henningte/irpeat" class="external-link uri">https://github.com/henningte/irpeat</a>.</p>
 </blockquote>
 </div>
 <div class="section level3">
@@ -214,15 +199,14 @@
 <div class="section level3">
 <h3 id="sources">Sources<a class="anchor" aria-label="anchor" href="#sources"></a>
 </h3>
-<p>The data and prediction models for holocellulose and Klason lignin (<code>irp_content_h_hodgkins_model</code>, <code>irp_content_kl_hodgkins_model</code>) are derived from Hodgkins et al. (2018) and were restructured to match the requirements of ir. The original article containing the data can be downloaded from <a href="https://www.nature.com/articles/s41467-018-06050-2" class="external-link uri">https://www.nature.com/articles/s41467-018-06050-2</a> and is distributed under the Creative Commons Attribution 4.0 International License (<a href="https://creativecommons.org/licenses/by/4.0/" class="external-link uri">https://creativecommons.org/licenses/by/4.0/</a>). The data on Klason lignin and holocellulose content was originally derived from De la Cruz, Osborne, and Barlaz (2016).</p>
+<p>The data and prediction models for holocellulose and Klason lignin (<code>irp_content_h_hodgkins_model</code>, <code>irp_content_kl_hodgkins_model</code>) are derived from Hodgkins et al. (2018) and were restructured to match the requirements of ir. The original article containing the data can be downloaded from <a href="https://www.nature.com/articles/s41467-018-06050-2" class="external-link uri">https://www.nature.com/articles/s41467-018-06050-2</a> and is distributed under the Creative Commons Attribution 4.0 International License (<a href="https://creativecommons.org/licenses/by/4.0/" class="external-link uri">https://creativecommons.org/licenses/by/4.0/</a>). The data on Klason lignin and holocellulose content was originally derived from De la Cruz et al. (2016).</p>
 <p>Modified prediction models for holocellulose and Klason lignin (<code>model_holocellulose_2</code>, <code>model_klason_lignin_2</code>) are derived from Teickner and Knorr (2022).</p>
-<p>Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from Teickner, Gao, and Knorr (2022) and Teickner, Gao, and Knorr (2021)</p>
-<p>This packages was developed in R (R version 4.3.1 (2023-06-16 ucrt)) (R Core Team 2020) using functions from devtools (Wickham et al. 2021), usethis (Wickham, Bryan, and Barrett 2022), and roxygen2 (Wickham et al. 2022).</p>
+<p>Data and models for the electrochemical accepting and donating capacities (EAC, EDC) of peat were derived from Teickner et al. (2022) and Teickner et al. (2021)</p>
 </div>
 <div class="section level3">
 <h3 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h3>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Broder.2012" class="csl-entry">
 Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat Decomposition Records in Three Pristine Ombrotrophic Bogs in Southern Patagonia.” <em>Biogeosciences</em> 9 (4): 1479–91. <a href="https://doi.org/10.5194/bg-9-1479-2012" class="external-link uri">https://doi.org/10.5194/bg-9-1479-2012</a>.
 </div>
@@ -230,34 +214,28 @@ Broder, T., C. Blodau, H. Biester, and K. H. Knorr. 2012. “Peat Decomposition 
 De la Cruz, Florentino B., Jason Osborne, and Morton A. Barlaz. 2016. “Determination of Sources of Organic Matter in Solid Waste by Analysis of Phenolic Copper Oxide Oxidation Products of Lignin.” <em>Journal of Environmental Engineering</em> 142 (2): 04015076. <a href="https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038" class="external-link uri">https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038</a>.
 </div>
 <div id="ref-Hodgkins.2018" class="csl-entry">
-Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang, Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018. “Tropical Peatland Carbon Storage Linked to Global Latitudinal Trends in Peat Recalcitrance.” <em>Nature Communications</em> 9 (1): 3640. <a href="https://doi.org/10.1038/s41467-018-06050-2" class="external-link uri">https://doi.org/10.1038/s41467-018-06050-2</a>.
-</div>
-<div id="ref-RCoreTeam.2020" class="csl-entry">
-R Core Team. 2020. <em>R: A Language and Environment for Statistical Computing</em>. Manual. Vienna, Austria: R Foundation for Statistical Computing.
+Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, et al. 2018. “Tropical Peatland Carbon Storage Linked to Global Latitudinal Trends in Peat Recalcitrance.” <em>Nature Communications</em> 9 (1): 3640. <a href="https://doi.org/10.1038/s41467-018-06050-2" class="external-link uri">https://doi.org/10.1038/s41467-018-06050-2</a>.
 </div>
 <div id="ref-Reuter.2020" class="csl-entry">
 Reuter, Hendrik, Julia Gensel, Marcus Elvert, and Dominik Zak. 2020. “Evidence for Preferential Protein Depolymerization in Wetland Soils in Response to External Nitrogen Availability Provided by a Novel FTIR Routine.” <em>Biogeosciences</em> 17 (2): 499–514. <a href="https://doi.org/10.5194/bg-17-499-2020" class="external-link uri">https://doi.org/10.5194/bg-17-499-2020</a>.
 </div>
 <div id="ref-Teickner.2025g" class="csl-entry">
-Teickner, Henning. 2025. “<span class="nocase">irpeatmodels</span>: <span class="nocase">Mid-infrared</span> Prediction Models for Peat.” Zenodo. <a href="https://doi.org/10.5281/ZENODO.17187912" class="external-link uri">https://doi.org/10.5281/ZENODO.17187912</a>.
+Teickner, Henning. 2025a. <em><span class="nocase">irpeatmodels</span>: <span class="nocase">Mid-infrared</span> Prediction Models for Peat</em>. Zenodo. <a href="https://doi.org/10.5281/ZENODO.17187912" class="external-link uri">https://doi.org/10.5281/ZENODO.17187912</a>.
+</div>
+<div id="ref-Teickner.2025i" class="csl-entry">
+Teickner, Henning. 2025b. <em><span class="nocase">mmgm</span>: Estimates the Degree of Decomposition of Peat with a Mixing Model for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>γ</mi><annotation encoding="application/x-tex">\gamma</annotation></semantics></math><sub>MIRS</sub></em>. Zenodo. <a href="https://doi.org/10.5281/ZENODO.17209338" class="external-link uri">https://doi.org/10.5281/ZENODO.17209338</a>.
+</div>
+<div id="ref-Teickner.2026f" class="csl-entry">
+Teickner, Henning, Julien Arsenault, Mariusz Gałka, and Klaus-Holger Knorr. 2026. “Estimation of the Degree of Decomposition of Peat and Past Net Primary Production from Mid-Infrared Spectra.” <em>Biogeosciences</em> 23 (15): 5549–70. <a href="https://doi.org/10.5194/bg-23-5549-2026" class="external-link uri">https://doi.org/10.5194/bg-23-5549-2026</a>.
 </div>
 <div id="ref-Teickner.2021c" class="csl-entry">
-Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021. “Reproducible Research Compendium with R Code and Data for: ’Electrochemical Properties of Peat Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry and Degree of Decomposition’.” Zenodo. <a href="https://doi.org/10.5281/zenodo.5792970" class="external-link uri">https://doi.org/10.5281/zenodo.5792970</a>.
+Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021. <em>Reproducible Research Compendium with R Code and Data for: ’Electrochemical Properties of Peat Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry and Degree of Decomposition’</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.5792970" class="external-link uri">https://doi.org/10.5281/zenodo.5792970</a>.
 </div>
 <div id="ref-Teickner.2022" class="csl-entry">
-———. 2022. “Electrochemical Properties of Peat Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry and Degree of Decomposition.” <em>Global Biogeochemical Cycles</em> 36 (2): e2021GB007160. <a href="https://doi.org/10.1029/2021GB007160" class="external-link uri">https://doi.org/10.1029/2021GB007160</a>.
+Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2022. “Electrochemical Properties of Peat Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry and Degree of Decomposition.” <em>Global Biogeochemical Cycles</em> 36 (2): e2021GB007160. <a href="https://doi.org/10.1029/2021GB007160" class="external-link uri">https://doi.org/10.1029/2021GB007160</a>.
 </div>
 <div id="ref-Teickner.2022f" class="csl-entry">
 Teickner, Henning, and Klaus-Holger Knorr. 2022. “Improving Models to Predict Holocellulose and Klason Lignin Contents for Peat Soil Organic Matter with Mid-Infrared Spectra.” <em>SOIL</em> 8 (2): 699–715. <a href="https://doi.org/10.5194/soil-8-699-2022" class="external-link uri">https://doi.org/10.5194/soil-8-699-2022</a>.
-</div>
-<div id="ref-Wickham.2022" class="csl-entry">
-Wickham, Hadley, Jennifer Bryan, and Malcolm Barrett. 2022. “<span class="nocase">usethis</span>: Automate Package and Project Setup.”
-</div>
-<div id="ref-Wickham.2022a" class="csl-entry">
-Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster. 2022. “<span class="nocase">roxygen2</span>: <span class="nocase">In-line</span> Documentation for R.”
-</div>
-<div id="ref-Wickham.2021" class="csl-entry">
-Wickham, Hadley, Jim Hester, Winston Chang, and Jennifer Bryan. 2021. “<span class="nocase">devtools</span>: Tools to Make Developing R Packages Easier.”
 </div>
 </div>
 </div>

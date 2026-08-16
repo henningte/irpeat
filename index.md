@@ -21,7 +21,7 @@ limitations described in the documentation):
 - microbial nitrogen content (modified version of the model described in
   Reuter et al. (2020))
 - The degree of decomposition ($`\gamma`$, the fraction of initial mass
-  lost).
+  lost (Teickner et al. 2026; Teickner 2025b)).
 
 The package also contains functions to predict holocellulose and Klason
 lignin contents (Hodgkins et al. 2018; Teickner and Knorr 2022), but
@@ -41,7 +41,7 @@ for handling infrared spectra.
 
 If you want to use the prediction models, you have to install the
 [‘irpeatmodels’](https://doi.org/10.5281/zenodo.17187912) package
-(Teickner 2025) in addition to the ‘irpeat’ package:
+(Teickner 2025a) in addition to the ‘irpeat’ package:
 
 ``` r
 
@@ -60,23 +60,8 @@ library(irpeat)
 library(ir)
 library(irpeatmodels)
 library(ggplot2)
-#> Warning: package 'ggplot2' was built under R version 4.3.3
 library(units)
-#> udunits database from C:/Users/henni/AppData/Local/R/win-library/4.3/units/share/udunits/udunits2.xml
 library(rstan)
-#> Warning: package 'rstan' was built under R version 4.3.3
-#> Loading required package: StanHeaders
-#> Warning: package 'StanHeaders' was built under R version 4.3.3
-#> 
-#> rstan version 2.32.7 (Stan version 2.32.2)
-#> For execution on a local, multicore CPU with excess RAM we recommend calling
-#> options(mc.cores = parallel::detectCores()).
-#> To avoid recompilation of unchanged Stan programs, we recommend calling
-#> rstan_options(auto_write = TRUE)
-#> For within-chain threading using `reduce_sum()` or `map_rect()` Stan functions,
-#> change `threads_per_chain` option:
-#> rstan_options(threads_per_chain = 1)
-#> Do not specify '-march=native' in 'LOCAL_CPPFLAGS' or a Makevars file
 ```
 
 You can test ‘irpeat’ with sample data from the R package ‘irpeat’:
@@ -102,13 +87,13 @@ irpeat::irpeat_sample_data
 ```
 
 `irpeat_sample_data` contains transmission mid-infrared spectra of peat
-different samples (See Teickner, Gao, and Knorr (2022) and Teickner,
-Gao, and Knorr (2021) for details).
+different samples (See Teickner et al. (2022) and Teickner et al. (2021)
+for details).
 
 A simple workflow could be, for example, to baseline correct the spectra
 (using functions of the package ‘ir’) compute various humification
-indices and Klason lignin and holocellulose mass fractions in the
-samples.
+indices and predict nitrogen content, dry bulk density, and saturated
+hydraulic conductivity of the samples.
 
 ``` r
 
@@ -140,9 +125,9 @@ x
 #>    id_90 sample_id measurement_id spectra           C        H        N        O
 #>    <int>     <int>          <int> <named li> (err) [… (err) [… (err) [… (err) […
 #>  1     1         1             23 <tibble>   0.47902… 0.05625… 0.00968… 0.39768…
-#>  2     2         2             32 <tibble>   0.44688… 0.0561(… 0.00478… 0.44283…
+#>  2     2         2             32 <tibble>   0.44689… 0.0561(… 0.00478… 0.44283…
 #>  3     3         3             38 <tibble>   0.45992… 0.05598… 0.00788… 0.41248…
-#>  4     5         5             52 <tibble>   0.47085… 0.05853… 0.00755… 0.41433…
+#>  4     5         5             52 <tibble>   0.47086… 0.05853… 0.00755… 0.41433…
 #>  5     6         6             54 <tibble>   0.50197… 0.05495… 0.0127(… 0.3732(…
 #>  6     7         7             55 <tibble>   0.48440… 0.0557(… 0.0091(… 0.39185…
 #>  7     8         8             56 <tibble>   0.46612… 0.05655… 0.00725… 0.40095…
@@ -151,14 +136,14 @@ x
 #> 10    11        11             25 <tibble>   0.46475… 0.05663… 0.00723… 0.42003…
 #> # ℹ 49 more rows
 #> # ℹ 10 more variables: S (err) [g/g], d15N <dbl>, d13C <dbl>,
-#> #   hi_1630_1090 <numeric>, nitrogen_content_1 (err) [g/g],
-#> #   nitrogen_content_1_in_pd <logical>, bulk_density_1 (err) [g/cm^3],
-#> #   bulk_density_1_in_pd <logical>, macroporosity_1 (err) [L/L],
-#> #   macroporosity_1_in_pd <logical>
+#> #   hi_1630_1090 <dbl>, nitrogen_content_1 (err) [g/g],
+#> #   nitrogen_content_1_in_pd <lgl>, bulk_density_1 (err) [g/cm^3],
+#> #   bulk_density_1_in_pd <lgl>, macroporosity_1 (err) [L/L],
+#> #   macroporosity_1_in_pd <lgl>
 ```
 
-Plot of the humification index (ratio of the intensities at 1420 and
-1090 cm⁻¹ (Broder et al. 2012)) versus the Klason lignin content:
+Plot of the humification index (ratio of the intensities at 1630 and
+1090 cm⁻¹ (Broder et al. 2012)) versus the nitrogen content:
 
 ``` r
 
@@ -189,16 +174,16 @@ the [quantities](https://github.com/r-quantities/quantities) package):
 
 x$nitrogen_content_1[1:5]
 #> Units: [g/g]
-#> Errors: 0.001991921 0.001594518 0.001831531 0.001813419 0.002265446
-#> [1] 0.010547047 0.006362311 0.008705196 0.008463846 0.012894786
+#> Errors: 0.001969791 0.001599808 0.001840442 0.001817805 0.002275452
+#> [1] 0.010546122 0.006357339 0.008708040 0.008468676 0.012894928
 ```
 
 ### How to cite
 
 Please cite this R package as:
 
-> Henning Teickner, Suzanne B. Hodgkins (2025). *irpeat: Functions to
-> Analyze Mid-Infrared Spectra of Peat Samples*. Accessed 2025-09-25.
+> Henning Teickner, Suzanne B. Hodgkins (2026). *irpeat: Functions to
+> Analyze Mid-Infrared Spectra of Peat Samples*. Accessed 2026-08-16.
 > Online at <https://github.com/henningte/irpeat>.
 
 ### Licenses
@@ -232,20 +217,15 @@ downloaded from <https://www.nature.com/articles/s41467-018-06050-2> and
 is distributed under the Creative Commons Attribution 4.0 International
 License (<https://creativecommons.org/licenses/by/4.0/>). The data on
 Klason lignin and holocellulose content was originally derived from De
-la Cruz, Osborne, and Barlaz (2016).
+la Cruz et al. (2016).
 
 Modified prediction models for holocellulose and Klason lignin
 (`model_holocellulose_2`, `model_klason_lignin_2`) are derived from
 Teickner and Knorr (2022).
 
 Data and models for the electrochemical accepting and donating
-capacities (EAC, EDC) of peat were derived from Teickner, Gao, and Knorr
-(2022) and Teickner, Gao, and Knorr (2021)
-
-This packages was developed in R (R version 4.3.1 (2023-06-16 ucrt)) (R
-Core Team 2020) using functions from devtools (Wickham et al. 2021),
-usethis (Wickham, Bryan, and Barrett 2022), and roxygen2 (Wickham et al.
-2022).
+capacities (EAC, EDC) of peat were derived from Teickner et al. (2022)
+and Teickner et al. (2021)
 
 ### References
 
@@ -260,15 +240,10 @@ of Phenolic Copper Oxide Oxidation Products of Lignin.” *Journal of
 Environmental Engineering* 142 (2): 04015076.
 <https://doi.org/10.1061/(ASCE)EE.1943-7870.0001038>.
 
-Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, Hongjun Wang,
-Paul H. Glaser, Brittany Verbeke, B. Rose Winkler, et al. 2018.
+Hodgkins, Suzanne B., Curtis J. Richardson, René Dommain, et al. 2018.
 “Tropical Peatland Carbon Storage Linked to Global Latitudinal Trends in
 Peat Recalcitrance.” *Nature Communications* 9 (1): 3640.
 <https://doi.org/10.1038/s41467-018-06050-2>.
-
-R Core Team. 2020. *R: A Language and Environment for Statistical
-Computing*. Manual. Vienna, Austria: R Foundation for Statistical
-Computing.
 
 Reuter, Hendrik, Julia Gensel, Marcus Elvert, and Dominik Zak. 2020.
 “Evidence for Preferential Protein Depolymerization in Wetland Soils in
@@ -276,30 +251,31 @@ Response to External Nitrogen Availability Provided by a Novel FTIR
 Routine.” *Biogeosciences* 17 (2): 499–514.
 <https://doi.org/10.5194/bg-17-499-2020>.
 
-Teickner, Henning. 2025. “irpeatmodels: Mid-infrared Prediction Models
-for Peat.” Zenodo. <https://doi.org/10.5281/ZENODO.17187912>.
+Teickner, Henning. 2025a. *irpeatmodels: Mid-infrared Prediction Models
+for Peat*. Zenodo. <https://doi.org/10.5281/ZENODO.17187912>.
+
+Teickner, Henning. 2025b. *mmgm: Estimates the Degree of Decomposition
+of Peat with a Mixing Model for $`\gamma`$_(MIRS)*. Zenodo.
+<https://doi.org/10.5281/ZENODO.17209338>.
+
+Teickner, Henning, Julien Arsenault, Mariusz Gałka, and Klaus-Holger
+Knorr. 2026. “Estimation of the Degree of Decomposition of Peat and Past
+Net Primary Production from Mid-Infrared Spectra.” *Biogeosciences* 23
+(15): 5549–70. <https://doi.org/10.5194/bg-23-5549-2026>.
 
 Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2021.
-“Reproducible Research Compendium with R Code and Data for:
+*Reproducible Research Compendium with R Code and Data for:
 ’Electrochemical Properties of Peat Particulate Organic Matter on a
-Global Scale: Relation to Peat Chemistry and Degree of Decomposition’.”
+Global Scale: Relation to Peat Chemistry and Degree of Decomposition’*.
 Zenodo. <https://doi.org/10.5281/zenodo.5792970>.
 
-———. 2022. “Electrochemical Properties of Peat Particulate Organic
-Matter on a Global Scale: Relation to Peat Chemistry and Degree of
-Decomposition.” *Global Biogeochemical Cycles* 36 (2): e2021GB007160.
+Teickner, Henning, Chuanyu Gao, and Klaus-Holger Knorr. 2022.
+“Electrochemical Properties of Peat Particulate Organic Matter on a
+Global Scale: Relation to Peat Chemistry and Degree of Decomposition.”
+*Global Biogeochemical Cycles* 36 (2): e2021GB007160.
 <https://doi.org/10.1029/2021GB007160>.
 
 Teickner, Henning, and Klaus-Holger Knorr. 2022. “Improving Models to
 Predict Holocellulose and Klason Lignin Contents for Peat Soil Organic
 Matter with Mid-Infrared Spectra.” *SOIL* 8 (2): 699–715.
 <https://doi.org/10.5194/soil-8-699-2022>.
-
-Wickham, Hadley, Jennifer Bryan, and Malcolm Barrett. 2022. “usethis:
-Automate Package and Project Setup.”
-
-Wickham, Hadley, Peter Danenberg, Gábor Csárdi, and Manuel Eugster.
-2022. “roxygen2: In-line Documentation for R.”
-
-Wickham, Hadley, Jim Hester, Winston Chang, and Jennifer Bryan. 2021.
-“devtools: Tools to Make Developing R Packages Easier.”

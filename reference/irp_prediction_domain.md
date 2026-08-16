@@ -17,7 +17,7 @@ new_irp_prediction_domain(x)
 
   `x`
 
-  :   A numeric value representing the wavenumber value \[cm\$^-1\$\].
+  :   A numeric value representing the wavenumber value \[cm\\^{-1}\\\].
 
   `ymin`
 

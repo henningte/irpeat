@@ -55,8 +55,8 @@ The following humification indices are computed by default (if
 
 - hi1: 1420/1090:
 
-  OH and CO of phenols or CH of CH_1 and CH_3 groups (phenolic and
-  aliphatic structures)/polysaccharides
+  OH and CO of phenols or CH of CH\\\_1\\ and CH\\\_3\\ groups (phenolic
+  and aliphatic structures)/polysaccharides
 
 - hi2: 1510/1090:
 

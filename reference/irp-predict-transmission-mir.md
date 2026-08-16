@@ -8,26 +8,6 @@ details section.
 ## Usage
 
 ``` r
-irp_holocellulose_content_2(
-  x,
-  ...,
-  do_summary = FALSE,
-  summary_function_mean = mean,
-  summary_function_sd = stats::sd,
-  return_as_list = FALSE,
-  check_prediction_domain = "train"
-)
-
-irp_klason_lignin_content_2(
-  x,
-  ...,
-  do_summary = FALSE,
-  summary_function_mean = mean,
-  summary_function_sd = stats::sd,
-  return_as_list = FALSE,
-  check_prediction_domain = "train"
-)
-
 irp_eac_1(
   x,
   ...,
@@ -320,10 +300,6 @@ irp_degree_of_decomposition_3(
 
 ## Source
 
-- `irp_holocellulose_2()`, `irp_klason_lignin_2()`:
-
-  Teickner and Knorr (2022) .
-
 - `irp_eac_1()`, `irp_edc_1()`:
 
   Teickner et al. (2022) .
@@ -335,7 +311,7 @@ irp_degree_of_decomposition_3(
 - `irp_degree_of_decomposition_1()`, `irp_degree_of_decomposition_2()`,
   `irp_degree_of_decomposition_3()`:
 
-  Teickner et al. (2025)
+  Teickner et al. (2026)
 
 - All other models:
 
@@ -393,9 +369,7 @@ irp_degree_of_decomposition_3(
 - return_as_list:
 
   Logical value. If set to `TRUE`, the result will be returned as list
-  of draws, otherwise the result will be returned as `rvar` object. This
-  is a new argument currently only implemented for models predicting the
-  degree of decomposition.
+  of draws, otherwise the result will be returned as `rvar` object.
 
 - check_prediction_domain:
 
@@ -522,6 +496,16 @@ package. The 'irpeatmodels' package provides information on the models.
   applicability of the same calibration curve for decomposed litters of
   different plant species still has to be investigated.”
 
+- `irp_degree_of_decomposition_1()`, `irp_degree_of_decomposition_2()`,
+  `irp_degree_of_decomposition_3()`:
+
+  These models predict the degree of decomposition (fraction of initial
+  mass lost) of individual litter types; for spectra of bulk peat
+  samples and other litter mixtures, post-processing predictions with a
+  mixing model like provided by
+  [`mmgm`](https://github.com/henningte/mmgm) (Teickner 2025) is
+  necessary to avoid biases. See Teickner et al. (2026) for details.
+
 ## References
 
 Reuter H, Gensel J, Elvert M, Zak D (2020). “Evidence for Preferential
@@ -531,9 +515,17 @@ Nitrogen Availability Provided by a Novel FTIR Routine.”
 [doi:10.5194/bg-17-499-2020](https://doi.org/10.5194/bg-17-499-2020) .
 [2022-02-15](https://henningte.github.io/irpeat/reference/2022-02-15).  
   
-Teickner H, Arsenault J, Gałka M, Knorr K (2025). “Estimation of the
+Teickner H (2025). “mmgm: Estimates the Degree of Decomposition of Peat
+with a Mixing Model for \\\gamma\\.” Zenodo.
+[doi:10.5281/ZENODO.17209338](https://doi.org/10.5281/ZENODO.17209338) .
+[2025-09-26](https://henningte.github.io/irpeat/reference/2025-09-26).  
+  
+Teickner H, Arsenault J, Gałka M, Knorr K (2026). “Estimation of the
 Degree of Decomposition of Peat and Past Net Primary Production from
-Mid-Infrared Spectra.”  
+Mid-Infrared Spectra.” *Biogeosciences*, **23**(15), 5549–5570. ISSN
+1726-4189.
+[doi:10.5194/bg-23-5549-2026](https://doi.org/10.5194/bg-23-5549-2026) .
+[2026-08-16](https://henningte.github.io/irpeat/reference/2026-08-16).  
   
 Teickner H, Gao C, Knorr K (2022). “Electrochemical Properties of Peat
 Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry
@@ -542,14 +534,10 @@ e2021GB007160. ISSN 0886-6236, 1944-9224.
 [doi:10.1029/2021GB007160](https://doi.org/10.1029/2021GB007160) .
 [2022-02-03](https://henningte.github.io/irpeat/reference/2022-02-03).  
   
-Teickner H, Knorr K (2022). “Improving Models to Predict Holocellulose
-and Klason Lignin Contents for Peat Soil Organic Matter with
-Mid-Infrared Spectra.” *SOIL*, **8**(2), 699–715.
-[doi:10.5194/soil-8-699-2022](https://doi.org/10.5194/soil-8-699-2022)
-.  
-  
 Teickner H, Knorr K (2025). “Prediction of Peat Properties from
 Transmission Mid-Infrared Spectra.”
+[doi:10.5194/egusphere-2025-4955](https://doi.org/10.5194/egusphere-2025-4955)
+. [2025-11-14](https://henningte.github.io/irpeat/reference/2025-11-14).
 
 ## See also
 
@@ -558,25 +546,9 @@ Transmission Mid-Infrared Spectra.”
 ## Examples
 
 ``` r
-library(ir)
-
-x <- ir::ir_sample_data[1, ]
+x <- irpeat_sample_data[1, ]
 
 ## make predictions
-
-# holocellulose content
-x <- irpeat::irp_holocellulose_content_2(
-  x,
-  do_summary = TRUE,
-  check_prediction_domain = "train"
-)
-
-# Klason lignin content
-x <- irpeat::irp_klason_lignin_content_2(
-  x,
-  do_summary = TRUE,
-  check_prediction_domain = "train"
-)
 
 # electron accepting capacity
 x <- irpeat::irp_eac_1(

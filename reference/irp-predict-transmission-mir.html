@@ -46,27 +46,7 @@ information on the underlying prediction models, see the details section.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">irp_holocellulose_content_2</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  do_summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  summary_function_mean <span class="op">=</span> <span class="va">mean</span>,</span>
-<span>  summary_function_sd <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span>,</span>
-<span>  return_as_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  check_prediction_domain <span class="op">=</span> <span class="st">"train"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">irp_klason_lignin_content_2</span><span class="op">(</span></span>
-<span>  <span class="va">x</span>,</span>
-<span>  <span class="va">...</span>,</span>
-<span>  do_summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  summary_function_mean <span class="op">=</span> <span class="va">mean</span>,</span>
-<span>  summary_function_sd <span class="op">=</span> <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/sd.html" class="external-link">sd</a></span>,</span>
-<span>  return_as_list <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  check_prediction_domain <span class="op">=</span> <span class="st">"train"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">irp_eac_1</span><span class="op">(</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">irp_eac_1</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">...</span>,</span>
 <span>  do_summary <span class="op">=</span> <span class="cn">FALSE</span>,</span>
@@ -359,19 +339,16 @@ information on the underlying prediction models, see the details section.</p>
     <div class="section level2">
     <h2 id="source">Source<a class="anchor" aria-label="anchor" href="#source"></a></h2>
 
-<dl><dt><code>irp_holocellulose_2()</code>, <code>irp_klason_lignin_2()</code></dt>
-<dd><p>Teickner and Knorr (2022)
-.</p></dd>
-
-<dt><code>irp_eac_1()</code>, <code>irp_edc_1()</code></dt>
+<dl><dt><code>irp_eac_1()</code>, <code>irp_edc_1()</code></dt>
 <dd><p>Teickner et al. (2022)
 .</p></dd>
 
 <dt><code>irp_microbial_nitrogen_content_1()</code></dt>
 <dd><p>Reuter et al. (2020)</p></dd>
 
-<dt><code>irp_degree_of_decomposition_1()</code>, <code>irp_degree_of_decomposition_2()</code>, <code>irp_degree_of_decomposition_3()</code></dt>
-<dd><p>Teickner et al. (2025)</p></dd>
+<dt><code>irp_degree_of_decomposition_1()</code>, <code>irp_degree_of_decomposition_2()</code>,
+<code>irp_degree_of_decomposition_3()</code></dt>
+<dd><p>Teickner et al. (2026)</p></dd>
 
 <dt>All other models</dt>
 <dd><p>Teickner and Knorr (2025)</p></dd>
@@ -428,8 +405,7 @@ values (spread).</p></dd>
 <dt id="arg-return-as-list">return_as_list<a class="anchor" aria-label="anchor" href="#arg-return-as-list"></a></dt>
 <dd><p>Logical value. If set to <code>TRUE</code>, the result will be
 returned as list of draws, otherwise the result will be returned as <code>rvar</code>
-object. This is a new argument currently only implemented for models
-predicting the degree of decomposition.</p></dd>
+object.</p></dd>
 
 
 <dt id="arg-check-prediction-domain">check_prediction_domain<a class="anchor" aria-label="anchor" href="#arg-check-prediction-domain"></a></dt>
@@ -552,6 +528,17 @@ decomposer biomass in aerobic systems. Finally, the applicability of the
 same calibration curve for decomposed litters of different plant species
 still has to be investigated.”</p></dd>
 
+<dt><code>irp_degree_of_decomposition_1()</code>, <code>irp_degree_of_decomposition_2()</code>,
+<code>irp_degree_of_decomposition_3()</code></dt>
+<dd><p>These models predict the degree of
+decomposition (fraction of initial mass lost) of individual litter types;
+for spectra of bulk peat samples and other litter mixtures, post-processing
+predictions with a mixing model like provided by <a href="https://github.com/henningte/mmgm" class="external-link"><code>mmgm</code></a>
+(Teickner 2025)
+ is necessary to avoid biases. See Teickner et al. (2026)
+
+for details.</p></dd>
+
 
 </dl></div>
     <div class="section level2">
@@ -562,19 +549,28 @@ still has to be investigated.”</p></dd>
 ISSN 1726-4189.
 <a href="https://doi.org/10.5194/bg-17-499-2020" class="external-link">doi:10.5194/bg-17-499-2020</a>
 .
-<a href="2022-02-15">2022-02-15</a>.<br><br> Teickner H, Arsenault J, Gałka M, Knorr K (2025).
-“Estimation of the Degree of Decomposition of Peat and Past Net Primary Production from Mid-Infrared Spectra.”<br><br> Teickner H, Gao C, Knorr K (2022).
+<a href="2022-02-15">2022-02-15</a>.<br><br> Teickner H (2025).
+“mmgm: Estimates the Degree of Decomposition of Peat with a Mixing Model for \(\gamma\).”
+Zenodo.
+<a href="https://doi.org/10.5281/ZENODO.17209338" class="external-link">doi:10.5281/ZENODO.17209338</a>
+.
+<a href="2025-09-26">2025-09-26</a>.<br><br> Teickner H, Arsenault J, Gałka M, Knorr K (2026).
+“Estimation of the Degree of Decomposition of Peat and Past Net Primary Production from Mid-Infrared Spectra.”
+<em>Biogeosciences</em>, <b>23</b>(15), 5549–5570.
+ISSN 1726-4189.
+<a href="https://doi.org/10.5194/bg-23-5549-2026" class="external-link">doi:10.5194/bg-23-5549-2026</a>
+.
+<a href="2026-08-16">2026-08-16</a>.<br><br> Teickner H, Gao C, Knorr K (2022).
 “Electrochemical Properties of Peat Particulate Organic Matter on a Global Scale: Relation to Peat Chemistry and Degree of Decomposition.”
 <em>Global Biogeochemical Cycles</em>, <b>36</b>(2), e2021GB007160.
 ISSN 0886-6236, 1944-9224.
 <a href="https://doi.org/10.1029/2021GB007160" class="external-link">doi:10.1029/2021GB007160</a>
 .
-<a href="2022-02-03">2022-02-03</a>.<br><br> Teickner H, Knorr K (2022).
-“Improving Models to Predict Holocellulose and Klason Lignin Contents for Peat Soil Organic Matter with Mid-Infrared Spectra.”
-<em>SOIL</em>, <b>8</b>(2), 699–715.
-<a href="https://doi.org/10.5194/soil-8-699-2022" class="external-link">doi:10.5194/soil-8-699-2022</a>
-.<br><br> Teickner H, Knorr K (2025).
-“Prediction of Peat Properties from Transmission Mid-Infrared Spectra.”</p>
+<a href="2022-02-03">2022-02-03</a>.<br><br> Teickner H, Knorr K (2025).
+“Prediction of Peat Properties from Transmission Mid-Infrared Spectra.”
+<a href="https://doi.org/10.5194/egusphere-2025-4955" class="external-link">doi:10.5194/egusphere-2025-4955</a>
+.
+<a href="2025-11-14">2025-11-14</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -583,25 +579,9 @@ ISSN 0886-6236, 1944-9224.
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://henningte.github.io/ir/" class="external-link">ir</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">ir</span><span class="fu">::</span><span class="va"><a href="https://henningte.github.io/ir/reference/ir_sample_data.html" class="external-link">ir_sample_data</a></span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="va">irpeat_sample_data</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## make predictions</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># holocellulose content</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">irpeat</span><span class="fu">::</span><span class="fu">irp_holocellulose_content_2</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">x</span>,</span></span>
-<span class="r-in"><span>  do_summary <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  check_prediction_domain <span class="op">=</span> <span class="st">"train"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Klason lignin content</span></span></span>
-<span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">irpeat</span><span class="fu">::</span><span class="fu">irp_klason_lignin_content_2</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">x</span>,</span></span>
-<span class="r-in"><span>  do_summary <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  check_prediction_domain <span class="op">=</span> <span class="st">"train"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># electron accepting capacity</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">irpeat</span><span class="fu">::</span><span class="fu">irp_eac_1</span><span class="op">(</span></span></span>

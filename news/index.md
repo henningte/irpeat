@@ -17,9 +17,9 @@
       to
       [`irp_predict()`](https://henningte.github.io/irpeat/reference/irp_predict.md).
   2.  `irp_holocellulose_2()` to
-      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md).
   3.  `irp_klason_lignin_2()` to
-      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md).
   4.  Output from `irp_hkl_hodgkins()`: `holocellulose_hodgkins` –\>
       `holocellulose_content_1`, `klason_lignin_hodgkins` –\>
       `klason_lignin_content_1`.

@@ -2,9 +2,12 @@
 
 ## All functions
 
-- [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
-  [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
-  [`irp_eac_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
+- [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md)
+  [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-atr-mir.md)
+  : Predicts sample properties from attenuated total reflection
+  mid-infrared spectra
+
+- [`irp_eac_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
   [`irp_edc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
   [`irp_carbon_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
   [`irp_nitrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md)
