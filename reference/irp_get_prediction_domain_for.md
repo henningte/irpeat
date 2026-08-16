@@ -1,0 +1,254 @@
+# Preprocesses spectra as for the prediction of a peat property
+
+This function lets you extract the spectra after automated preprocessing
+for the prediction of a specific peat property. This allows to inspect
+the preprocessed spectra.
+
+## Usage
+
+``` r
+irp_get_prediction_domain_for(variable, check_prediction_domain = "train")
+```
+
+## Arguments
+
+- variable:
+
+  A character vector with one or more values that define for which
+  components contents are computed for the spectra in `x`. Currently
+  allowed values are:
+
+  "all"
+
+  :   `irp_content` computes all of the values below.
+
+  "klason_lignin_content_1"
+
+  :   Klason lignin mass fraction \[g/g\] as computed by
+      [`irp_content_klh_hodgkins()`](https://henningte.github.io/irpeat/reference/irp_content_klh_hodgkins.md).
+
+  "holocellulose_content_1"
+
+  :   Holocellulose mass fraction \[g/g\] as computed by
+      [`irp_content_klh_hodgkins()`](https://henningte.github.io/irpeat/reference/irp_content_klh_hodgkins.md).
+
+  "klason_lignin_content_2"
+
+  :   Klason lignin mass fraction \[g/g\] as computed by
+      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "holocellulose_content_2"
+
+  :   Holocellulose mass fraction \[g/g\] as computed by
+      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "eac_1"
+
+  :   Electron accepting capacity as computed by
+      [`irp_eac_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "edc_1"
+
+  :   Electron donating capacity as computed by
+      [`irp_edc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "carbon_content_1"
+
+  :   Carbon content as computed by
+      [`irp_carbon_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "nitrogen_content_1"
+
+  :   Nitrogen content as computed by
+      [`irp_nitrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "hydrogen_content_1"
+
+  :   Hydrogen content as computed by
+      [`irp_hydrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "oxygen_content_1"
+
+  :   Oxygen content as computed by
+      [`irp_oxygen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "phosphorus_content_1"
+
+  :   Phosphorus content as computed by
+      [`irp_phosphorus_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "potassium_content_1"
+
+  :   Potassium content as computed by
+      [`irp_potassium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "sulfur_content_1"
+
+  :   Sulfur content as computed by
+      [`irp_sulfur_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "titanium_content_1"
+
+  :   Titanium content as computed by
+      [`irp_titanium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "silicon_content_1"
+
+  :   Silicon content as computed by
+      [`irp_silicon_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "calcium_content_1"
+
+  :   Calcium content as computed by
+      [`irp_calcium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "d13C_1"
+
+  :   \\\delta^{13}\\C values as computed by
+      [`irp_d13C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "d15N_1"
+
+  :   \\\delta^{15}\\N values as computed by
+      [`irp_d15N_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "nosc_1"
+
+  :   The nominal oxidation state of carbon as computed by
+      [`irp_nosc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "dgf0_1"
+
+  :   The standard Gibbs free energy of formation content as computed by
+      [`irp_dgf0_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "bulk_density_1"
+
+  :   Bulk density as computed by
+      [`irp_bulk_density_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "loss_on_ignition_1"
+
+  :   Loss on ignition as computed by
+      [`irp_loss_on_ignition_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "O_to_C_1"
+
+  :   O/C ratio as computed by
+      [`irp_O_to_C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "H_to_C_1"
+
+  :   H/C ratio as computed by
+      [`irp_H_to_C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "C_to_N_1"
+
+  :   C/N ratio as computed by
+      [`irp_C_to_N_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "volume_fraction_solids_1"
+
+  :   Volume fraction of solids as computed by
+      [`irp_volume_fraction_solids_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "non_macroporosity_1"
+
+  :   Non-macroporosity as computed by
+      [`irp_non_macroporosity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "macroporosity_1"
+
+  :   Macroporosity as computed by
+      [`irp_macroporosity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "saturated_hydraulic_conductivity_1"
+
+  :   Saturated hydraulic conductivity as computed by
+      [`irp_saturated_hydraulic_conductivity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "specific_heat_capacity_1"
+
+  :   Specific heat capacity as computed by
+      [`irp_specific_heat_capacity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "dry_thermal_conductivity_1"
+
+  :   Dry thermal conductivity as computed by
+      [`irp_dry_thermal_conductivity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "microbial_nitrogen_content_1"
+
+  :   Microbial nitrogen content as computed by
+      [`irp_microbial_nitrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "degree_of_decomposition_1"
+
+  :   Degree of decomposition as computed by
+      [`irp_degree_of_decomposition_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "degree_of_decomposition_2"
+
+  :   Degree of decomposition as computed by
+      [`irp_degree_of_decomposition_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+  "degree_of_decomposition_3"
+
+  :   Degree of decomposition as computed by
+      [`irp_degree_of_decomposition_3()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+- check_prediction_domain:
+
+  A character value indicating if and how it should be checked whether
+  the spectra in `x` are within the prediction domain of the model. One
+  of:
+
+  `"train"`
+
+  :   It is checked whether the spectra in `x` are within the prediction
+      domain formed by the training data for the model.
+
+  `"test"`
+
+  :   It is checked whether the spectra in `x` are within the prediction
+      domain formed by the testing data for the model.
+
+  `"none"`
+
+  :   It is not checked whether the spectra in `x` are within the
+      prediction domain for the model.
+
+## Value
+
+An object of class `irp_prediction_domain` with the specified prediction
+domain for the selected variable.
+
+## Examples
+
+``` r
+library(ir)
+
+irp_get_prediction_domain_for(
+   variable = "carbon_content_1"
+) |>
+  plot()
+
+
+irp_get_prediction_domain_for(
+   variable = "klason_lignin_content_1"
+) |>
+  plot()
+
+
+irp_get_prediction_domain_for(
+   variable = "klason_lignin_content_2"
+) |>
+  plot()
+
+
+irp_get_prediction_domain_for(
+   variable = "eac_1"
+) |>
+  plot()
+
+```

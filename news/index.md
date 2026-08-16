@@ -1,0 +1,137 @@
+# Changelog
+
+## irpeat 0.3.0
+
+##### Major changes
+
+- Major restructuring: The models originally included with the ‘irpeat’
+  package are now stored in a separate data package ‘irpeatmodels’ to
+  reduce the size of the ‘irpeat’ package. The ‘irpeatmodels’ package
+  can be installed from Zenodo.
+- Add a new class `irp_prediction_domain`: This class stores the
+  prediction domain for a model. Methods available are: Conversion from
+  `ir` and `ir_flat` objects, plotting, check whether spectra in an `ir`
+  object are within a prediction domain.
+- Rename:
+  1.  [`irp_content()`](https://henningte.github.io/irpeat/reference/irp_predict.md)
+      to
+      [`irp_predict()`](https://henningte.github.io/irpeat/reference/irp_predict.md).
+  2.  `irp_holocellulose_2()` to
+      [`irp_holocellulose_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+  3.  `irp_klason_lignin_2()` to
+      [`irp_klason_lignin_content_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+  4.  Output from `irp_hkl_hodgkins()`: `holocellulose_hodgkins` –\>
+      `holocellulose_content_1`, `klason_lignin_hodgkins` –\>
+      `klason_lignin_content_1`.
+  5.  Output from
+      [`irp_eac_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md):
+      `eac` –\> `eac_1`.
+  6.  Output from
+      [`irp_edc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md):
+      `edc` –\> `edc_1`.
+- For existing and new models: Training and testing prediction domains
+  were added and can now be used to check whether the models cannot be
+  used to make reliable predictions.
+- By default, functions return Posterior
+
+##### New functions
+
+- Add
+  [`irp_preprocess_for()`](https://henningte.github.io/irpeat/reference/irp_preprocess_for.md):
+  Allows to extract the spectra after automated preprocessing as they
+  would be used to make predictions.
+- Add
+  [`irp_get_prediction_domain_for()`](https://henningte.github.io/irpeat/reference/irp_get_prediction_domain_for.md):
+  Allows to extract the prediction domain for a specific model.
+
+##### New data
+
+- Add sample data (transmission mid-infrared spectra for peat samples
+  from the ‘redoxpeat’ R package): `irpeat_sample_data`.
+
+##### New models
+
+- [`irp_carbon_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_nitrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_oxygen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_hydrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_phosphorus_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_potassium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_sulfur_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_calcium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_silicon_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_titanium_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_d13C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_d15N_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_nosc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_dgf0_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_bulk_density_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  `irp_loss_on_ignition()`,
+  [`irp_O_to_C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_H_to_C_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_C_to_N_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_volume_fraction_solids_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_non_macroporosity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_macroporosity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_saturated_hydraulic_conductivity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_specific_heat_capacity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_dry_thermal_conductivity_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_microbial_nitrogen_content_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_degree_of_decomposition_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_degree_of_decomposition_2()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_degree_of_decomposition_3()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md).
+
+## irpeat 0.2.0
+
+- Performance improvement for
+  [`irp_preprocess()`](https://henningte.github.io/irpeat/reference/irp_preprocess.md).
+- Updated
+  [`irp_preprocess()`](https://henningte.github.io/irpeat/reference/irp_preprocess.md),
+  model preprocessing configurations, and prediction functions to
+  consider the new arguments (1) `new_x_type` from
+  [`ir::ir_bin()`](https://henningte.github.io/ir/reference/ir_bin.html), (2)
+  `bc_do_impute` from
+  [`ir::ir_bc()`](https://henningte.github.io/ir/reference/ir_bc.html), (3)
+  `do_return_as_ir` (allows to return the preprocessed spectra as `ir`
+  object).
+- Update the documentation: Adding explicit warnings to
+  [`irp_content_klh_hodgkins()`](https://henningte.github.io/irpeat/reference/irp_content_klh_hodgkins.md),
+  `irp_content_kl_hodgkins_model`, and `irp_content_h_hodgkins_model`
+  that the related models are not reliable for peat.
+
+##### Bug fixes
+
+- Correct a typo which made it impossible to compute `holocellulose_2`
+  with
+  [`irp_content()`](https://henningte.github.io/irpeat/reference/irp_predict.md)
+  (now:
+  [`irp_predict()`](https://henningte.github.io/irpeat/reference/irp_predict.md),
+  see below).
+- `irp_content_klh_hodgkins_predict()`: The function now checks that
+  spectra have the correct wavenumber range.
+- [`irp_eac_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md),
+  [`irp_edc_1()`](https://henningte.github.io/irpeat/reference/irp-predict-transmission-mir.md):
+  Both functions now also accept `ir` objects with empty spectra as
+  arguments.
+
+## irpeat 0.1.0
+
+- Added a `NEWS.md` file to track changes to the package.
+- Update the documentation (adding missing examples).
+- Add pkgdown site.
+
+##### Bug fixes
+
+- Fix bugs caused by changes in ‘ir’ 0.2.0 (`ir::ir_check_ir()` no
+  longer is exported, `measurement_id` is no longer a required column in
+  `ir` objects).
+- Fix bug in
+  [`irp_content()`](https://henningte.github.io/irpeat/reference/irp_predict.md)
+  if `variable = "klason_lignin_hodgkins"` (no values were computed).
+
+##### New models
+
+- New models to predict holocellulose (`model_holocellulose_2`) and
+  Klason lignin (`model_klason_lingin_2`) contents.
+
+##### Deprecated functions
