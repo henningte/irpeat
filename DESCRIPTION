@@ -70,12 +70,14 @@ URL: https://henningte.github.io/irpeat/
 Remotes: 
     henningte/ir,
     stan-dev/cmdstanr,
+    wlandau/instantiate,
     henningte/mmgm,
     irpeatmodels=url::https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz
 Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/stan-dev/cmdstanr/,
-    https://github.com/henningte/mmgm/,
+    https://github.com/wlandau/instantiate,
+    https://github.com/henningte/mmgm/
 Collate: 
     'data.R'
     'irp_content_klh_hodgkins.R'
