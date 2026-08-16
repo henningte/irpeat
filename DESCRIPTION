@@ -69,7 +69,7 @@ URL: https://henningte.github.io/irpeat/
 Remotes: 
     henningte/ir,
     henningte/elco,
-    https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz
+    irpeatmodels=https://zenodo.org/record/17187912/files/irpeatmodels_0.1.0.tar.gz
 Additional_repositories:
     https://github.com/henningte/ir/,
     https://github.com/henningte/elco/
